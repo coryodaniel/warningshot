@@ -1,0 +1,43 @@
+WarningShot Dependency Resolution Framework
+
+
+==== Usage
+  ---- Command Line
+  
+  ---- Ruby API
+
+==== Extending WarningShot
+
+==== Contributing
+ * Source Available at Github: 
+ * All modifications should also have applicable rpsecs
+ * All code should be documented using YARD
+  
+==== Credit
+  Based on the archaic warning-shot script I released at Ripple Networks
+  Available @ https://rubyforge.org/frs/?group_id=5651
+  
+==== WarningShot Dependencies...
+  Ive cheap-o implemented some dependencies just so WarningShot wouldn't have to install a bunch of gems.
+  If you feel the need to buff them up (things like FileSystemResource, Growl) feel free.  If you think
+  we should include the full gem, lets talk.
+
+==== Yard Example
+# This is a super awesome method
+#
+# @param name [~to_s]
+#   The name of the list
+#
+# @param *list [~to_s]
+#   A list of things
+#
+# @return [Array(String)]
+#   The list in an array, how useful.
+#
+# @example
+#   Any examples
+#
+# @notes
+#   Any notes
+#
+# @api public
