@@ -1,0 +1,18 @@
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+
+# --- 
+# :localdev:
+# - my_requirement
+# :global:
+# - /etc/nginx/nginx.conf
+# - { dest: "/tmp/ws_test/ws_test.conf", src: "http://example.com/index.html"}
+# - { dest: "file:///tmp/ws_test/ws_test.conf", src: "http://example.com/index.html"}
+---
+:name: files
+:environments: 
+  :development: []
+  :global: []
+  :test: []
+  :qa: []
+  :production: []

@@ -1,0 +1,18 @@
+# Checks to see that core libraries are available
+
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+# --- 
+# :localdev:
+#  - logger
+# :global:
+#  - yaml
+#
+---
+:name: core_lib
+:environments: 
+  :development: []
+  :global: []
+  :test: []
+  :qa: []
+  :production: []

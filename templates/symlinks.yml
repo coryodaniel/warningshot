@@ -1,0 +1,30 @@
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+
+#Symlink just check for the link to exist, not the target, the target should be specified in 
+# a FileManager or Directory Manager
+
+#Options for recursive chown|chmod|none|both
+#User & Group default to 'nobody' if user is provided and group is not, group defaults to user
+# Force defaults to false
+
+#No healing is done if a src is not provided
+
+# --- 
+# :localdev:
+# - /my/path/to/symlink
+# :global:
+# - /another/great/symlink
+# - { dest: "/a/simple/heal/example", src: "/the/path/to/the/goods", force: false}
+# - { dest: "/super/symlink", src: "/some/target/directory/", mode: "0755", user: "localdev", group: "",recursive: "chmod"}
+# - { dest: "/etc/my/awesome.conf", src: "/etc/the/real.conf", mode: "0755", user: "localdev", group: "",recursive: "chown"}
+
+#Test below , in order simple, unhealable, healable with need for mkdir_p, healable with chmod/chown
+---
+:name: symlinks
+:environments: 
+  :development: []
+  :global: []
+  :test: []
+  :qa: []
+  :production: []

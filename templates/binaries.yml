@@ -1,0 +1,22 @@
+# Tests for executables/binaries (uses `which`, apt, yum, gems)
+
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+# --- 
+# :localdev:
+# - ls
+# - mkdir
+# :global:
+# - /usr/sbin/sendmail
+# :production:
+# -
+
+--- 
+:name: binaries
+:environments: 
+  :development: []
+  :global: []
+  :test: []
+  :qa: []
+  :production: []
+  

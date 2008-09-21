@@ -1,0 +1,2 @@
+# { path: "/path/to/data.txt", mode: "0755", user: "localdev", group: "" }
+# { dest: "/path/to/dir",mode: "0755", user: "localdev", group: "" }

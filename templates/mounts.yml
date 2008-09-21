@@ -1,0 +1,8 @@
+---
+:name: mounts
+:environments: 
+  :development: []
+  :global: []
+  :test: []
+  :qa: []
+  :production: []
