@@ -1,0 +1,10 @@
+---
+:name: mock
+:environments:
+  :rspec:
+    - { this: 'is this.yaml', that: 'is that.yaml' }
+    - { less: 'is less', more: 'is more' }
+  :global:
+    - { this_g: 'is this.global.yaml', that_g: 'is that.global.yaml' }
+    - { data: 'is raw', info: 'is processed' }
+    - { less: 'is more', more: 'is less' }

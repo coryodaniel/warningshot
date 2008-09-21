@@ -1,0 +1,11 @@
+#! /usr/bin/env ruby
+# WarningShot Command Line
+
+require 'lib/warning_shot'
+require 'lib/suite'
+
+#require 'warning_shot'
+#require 'warning_shot/suite'
+
+WarningShot::Config.parse_args
+WarningShot.fire!
