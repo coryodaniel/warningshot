@@ -1,18 +1,17 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 
-# --- 
-# :localdev:
-# - my_requirement
-# :global:
-# - /etc/nginx/nginx.conf
-# - { dest: "/tmp/ws_test/ws_test.conf", src: "http://example.com/index.html"}
-# - { dest: "file:///tmp/ws_test/ws_test.conf", src: "http://example.com/index.html"}
+# Each environt takes an array of strings or hashes(src,dest)
+# TODO CHANGE HASH NAMES TO SOMETHING MORE CLEAR
+
 ---
-:name: files
+:name: file
 :environments: 
   :development: []
-  :global: []
+  :global:
+    - /etc/nginx/nginx.conf
   :test: []
+    - { dest: "./public/this.txt", src: "http://example.com/index.html"}
+    - { dest: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
   :qa: []
   :production: []

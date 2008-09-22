@@ -1,5 +1,5 @@
 =begin
-# All example script files still need to be written, after ScriptDependency is re-written
+# All example script files still need to be written, after ScriptResolver is re-written
 # General idea is:
   load 'pre.rb' if File.exists? 'pre.rb'
   

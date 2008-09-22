@@ -1,10 +1,10 @@
 describe WarningShot do
   
-  it 'should be able to detect successes in dependencies' do
+  it 'should be able to detect successful resolutions' do
     pending
   end
   
-  it 'should be able to detect failures in dependencies' do
+  it 'should be able to detect failed resolutions' do
     pending
   end
   

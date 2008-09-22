@@ -1,2 +1,17 @@
-# { path: "/path/to/data.txt", mode: "0755", user: "localdev", group: "" }
-# { dest: "/path/to/dir",mode: "0755", user: "localdev", group: "" }
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+
+# Each environt takes an array hashes
+# path REQUIRED
+# recursive, mode, user, group OPTIONAL (one required)
+---
+:name: permissions
+:environments:
+  :global: 
+    - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
+    - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
+  :test: 
+    - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
+  :production: []
+  :development: []
+  :qa: []
