@@ -8,14 +8,14 @@
 #User & Group default to 'nobody' if user is provided and group is not, group defaults to user
 # Force defaults to false
 
-#No healing is done if a src is not provided
+#No resolving is done if a src is not provided
 
 # --- 
 # :localdev:
 # - /my/path/to/symlink
 # :global:
 # - /another/great/symlink
-# - { dest: "/a/simple/heal/example", src: "/the/path/to/the/goods", force: false}
+# - { dest: "/a/simple/resolution/example", src: "/the/path/to/the/goods", force: false}
 # - { dest: "/super/symlink", src: "/some/target/directory/", mode: "0755", user: "localdev", group: "",recursive: "chmod"}
 # - { dest: "/etc/my/awesome.conf", src: "/etc/the/real.conf", mode: "0755", user: "localdev", group: "",recursive: "chown"}
 

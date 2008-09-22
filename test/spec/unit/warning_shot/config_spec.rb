@@ -5,10 +5,10 @@ describe WarningShot::Config do
   end
   
   it 'should be able to parse an ARGV string' do
-    args = ['--no-verbose','--heal','--environment=rspec_test','-g','-aRspecTest']
+    args = ['--no-verbose','--resolve','--environment=rspec_test','-g','-aRspecTest']
     WarningShot::Config.parse_args(args)
     WarningShot::Config.configuration[:verbose].should be(false)
-    WarningShot::Config.configuration[:heal].should be(true)
+    WarningShot::Config.configuration[:resolve].should be(true)
     WarningShot::Config.configuration[:environment].should == 'rspec_test'
     WarningShot::Config.configuration[:growl].should be(true)
     WarningShot::Config.configuration[:application].should == 'RspecTest'
@@ -26,10 +26,10 @@ describe WarningShot::Config do
   it 'should allow configurations to be changed with a block' do
     WarningShot::Config.use do|c|
       c[:growl] = true
-      c[:heal]= true
+      c[:resolve]= true
     end
     
     WarningShot::Config[:growl].should be(true)
-    WarningShot::Config[:heal].should be(true)
+    WarningShot::Config[:resolve].should be(true)
   end
 end

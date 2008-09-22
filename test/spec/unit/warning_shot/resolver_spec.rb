@@ -121,36 +121,81 @@ describe WarningShot::Resolver do
     MockResolver.instance_variable_get("@test_blocks").last[:test].call(nil).should == 'Pass two'
   end
   
-  it 'should be able to register a healer' do
-    #:name, :desc, :condition (w & w/o |dep|)
-    #block (w & w/o |dep|)
-    pending
+  it 'should be able to register a resolution' do
+    MockResolver.register_resolution do |dependency|
+      "I resolved the issue, #{dependency}."
+    end
+    
+    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call('sirs').should == "I resolved the issue, sirs."
+    
+    MockResolver.flush_resolutions!
+    
+    MockResolver.register_resolution do
+      "This is a resolution"
+    end
+    
+    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call(nil).should == "This is a resolution"
   end
   
-  it 'should allow a resolver to flush out healers' do
-    pending
+  it 'should allow a resolver to flush out resolutions' do
+    MockResolver.register_resolution do |dependency|
+      'This is a dependency resolution'
+    end
+    
+    MockResolver.instance_variable_get("@resolution_blocks").empty?.should be(false)
+    MockResolver.flush_resolutions!
+    MockResolver.instance_variable_get("@resolution_blocks").empty?.should be(true)
   end
   
-  it 'should be able to register a conditional healer' do
-    pending
+  it 'should be able to register a conditional resolution' do
+    is_test_env = lambda{ |dependency| 
+      WarningShot.environment == 'production'
+    }
+    MockResolver.flush_resolutions!
+    MockResolver.register_resolution :condition => is_test_env do |dependency|
+      "id only resolve if this was production"
+    end
+    
+    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call(nil).should == "id only resolve if this was production"
+    MockResolver.instance_variable_get("@resolution_blocks").first[:condition].class.should be(Proc)
   end
   
-  it 'should be able to specify additional attributes for a healer' do
-    pending
+  it 'should be able to specify additional attributes for a resolution' do
+    res = {
+      :name => :named_resolution,
+      :desc => "This is a named resolution",
+    }
+    
+    MockResolver.flush_resolutions!
+    MockResolver.register_resolution res do |dependency|
+      'This is a named resolution'
+    end
+
+    (MockResolver.instance_variable_get("@resolution_blocks").first[:name]== :named_resolution).should be(true)
+    MockResolver.instance_variable_get("@resolution_blocks").first[:desc].should == res[:desc]
   end
   
-  it 'should be able to register multiple healers' do
-    pending
+  it 'should be able to register multiple resolutions' do
+    MockResolver.flush_resolutions!
+    MockResolver.register_resolution do 
+      'Part one of fix'
+    end
+    MockResolver.register_resolution do 
+      'Part two of fix'
+    end
+    
+    MockResolver.instance_variable_get("@resolution_blocks").length.should be(2)
+    MockResolver.instance_variable_get("@resolution_blocks").last[:resolution].call(nil).should == 'Part two of fix'
   end
     
-  it 'should allow before filters for healers and tests (also, named)' do
+  it 'should allow before filters for resolutions and tests (also, named)' do
     # TODO after implementing in resolver.rb & dependency_resolver.rb
     # two arrays named and unnamed
     # :name, &block
     pending
   end
   
-  it 'should allow after filters for healers and tests (also, named)' do
+  it 'should allow after filters for resolutions and tests (also, named)' do
     # TODO after implementing in resolver.rb & dependency_resolver.rb
     # two arrays named and unnamed
     # :name, &block
