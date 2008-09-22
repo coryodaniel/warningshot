@@ -1,24 +1,19 @@
 puts require File.join(%w(. lib resolvers core_lib_resolver))
 
 describe WarningShot::CoreLibResolver do
-  before :all do
-    @@logger = Logger.new STDOUT
-    @@logger.level = Logger::FATAL
+  
+  it 'should have tests registered' do
+    WarningShot::CoreLibResolver.tests.empty?.should be(false)
   end
   
-  it 'should respond to CoreLibResolver#test' do
-    WarningShot::CoreLibResolver.new.respond_to?(:test).should be(true)
-  end
-  
-  it 'should not respond to CoreLibResolver#heal' do
-    WarningShot::CoreLibResolver.new.respond_to?(:heal).should be(false)
+  it 'should not have resolutions registered' do
+    WarningShot::CoreLibResolver.resolutions.empty?.should be(true)
   end
   
   it 'should increment #errors for unloadable core libs' do
     cld = WarningShot::CoreLibResolver.new
     cld.init ['bogus_core_lib_name']
-    cld.logger = @@logger
-    cld.test
+    cld.test!
     
     cld.errors.should be(1)
   end

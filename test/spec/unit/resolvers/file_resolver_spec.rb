@@ -24,11 +24,11 @@ describe WarningShot::FileResolver do
   end
 
   it 'should have tests registered' do
-    WarningShot::FileResolver.instance_variable_get("@test_blocks").empty?.should be(false)
+    WarningShot::FileResolver.tests.empty?.should be(false)
   end
 
   it 'should have resolutions regsitered' do
-    WarningShot::FileResolver.instance_variable_get("@resolution_blocks").empty?.should be(false)
+    WarningShot::FileResolver.resolutions.empty?.should be(false)
   end
   
   it 'should treate relative paths as from directory specified by WarningShot::Config[:application]' do
