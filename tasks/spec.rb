@@ -3,6 +3,8 @@ task :spec => [ "spec:default" ]
 
 namespace :spec do
   OPTS_FILENAME = "./spec/spec.opts"
+  ENV["WARNING_SHOT_ENV"] = 'test'
+  
   if File.exist?(OPTS_FILENAME)
     SPEC_OPTS = ["--options", OPTS_FILENAME]
   else
