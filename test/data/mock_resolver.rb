@@ -6,7 +6,7 @@ class MockResolver
   rescue_me!
   
   ######### Attributes
-  priority 1
+  order 1
   name 'mock'
   description 'A mock resolver'
   
@@ -15,4 +15,4 @@ class MockResolver
   
 end
 
-# TODO RENAME priority to order
+# TODO RENAME order to order

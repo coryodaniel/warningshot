@@ -1,8 +1,9 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 
-# Each environt takes an array of strings or hashes(src,dest)
-# TODO CHANGE HASH NAMES TO SOMETHING MORE CLEAR
+# Each environt takes an array of strings or hashes(src,local)
+# src is where it can be found
+# local is where it should be
 
 ---
 :name: file
@@ -11,7 +12,7 @@
   :global:
     - /etc/nginx/nginx.conf
   :test: []
-    - { dest: "./public/this.txt", src: "http://example.com/index.html"}
-    - { dest: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
+    - { local: "./public/this.txt", src: "http://example.com/index.html"}
+    - { local: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
   :qa: []
   :production: []

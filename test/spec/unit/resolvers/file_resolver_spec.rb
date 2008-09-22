@@ -9,8 +9,6 @@ require File.join(%w(. lib resolvers file_resolver))
 
 describe WarningShot::FileResolver do
   before :all do
-    @@logger = Logger.new STDOUT
-    @@logger.level = Logger::FATAL
     @@base_path = File.expand_path(File.join(%w(. test data resolvers file)))
     @@src_path  = File.join(@@base_path,'src')
     @@dest_path = File.join(@@base_path,'dest')
@@ -24,29 +22,23 @@ describe WarningShot::FileResolver do
   after :each do
     FileUtils.rm_rf @@dest_path
   end
-  it 'should respond to FileResolver#test' do
-    WarningShot::FileResolver.new.respond_to?(:test).should be(true)
+
+  it 'should have tests registered' do
+    WarningShot::FileResolver.instance_variable_get("@test_blocks").empty?.should be(false)
+  end
+
+  it 'should have resolutions regsitered' do
+    WarningShot::FileResolver.instance_variable_get("@resolution_blocks").empty?.should be(false)
   end
   
-  it 'should respond to FileResolver#heal' do
-    WarningShot::FileResolver.new.respond_to?(:heal).should be(true)
-  end
-  
-  it 'should treate relative paths as from app directory' do
+  it 'should treate relative paths as from directory specified by WarningShot::Config[:application]' do
     pending
   end
    
   describe 'with healing enabled' do
     describe 'with heal instructions' do
-      it 'should raise an error if the protocol is invalid' do
-        that_file = File.join @@src_path, 'that.txt'
-        this_file = File.join @@dest_path, 'this.txt'
-        
-        fd = WarningShot::FileResolver.new
-        fd.logger = @@logger
-        fd.init [{:src  => "fake://#{that_file}",:dest => this_file}]
-        fd.test
-        lambda {fd.heal}.should raise_error(WarningShot::FileResolver::UnsupportedProtocolException)
+      it 'should raise an error if the protocol is not supported' do
+        pending
       end
       
       describe 'file exists' do
@@ -56,16 +48,15 @@ describe WarningShot::FileResolver do
       end # End healing enabled, instructions provided, file exists
       
       describe 'file does not exist' do
-        it 'should increment #errors that the file is missing' do
+        it 'should add failed dependencies to #failed' do
           that_file = File.join @@src_path, 'that.txt'
           this_file = File.join @@dest_path, 'this.txt'
           
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:src  => "file://#{that_file}",:dest => this_file}]
-          fd.test
+          fd.init [{:src  => "file://#{that_file}",:local => this_file}]
+          fd.test!
           
-          fd.errors.should be(1)
+          fd.failed.length.should be(1)
         end 
         
         it 'should heal a file from file://' do
@@ -73,50 +64,49 @@ describe WarningShot::FileResolver do
           this_file = File.join @@dest_path, 'this.txt'
           
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:src  => "file://#{that_file}",:dest => this_file}]
-          fd.test
-          fd.heal
-          fd.healed.should be(1)
+          fd.init [{:src  => "file://#{that_file}",:local => this_file}]
+          fd.test!
+          fd.failed.length.should be(1)
+          fd.resolve!
+          fd.resolved.length.should be(1)
         end
         
         it 'should heal a file from http://' do
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:src  => "http://www.example.com/",:dest => File.join(@@dest_path,'internetz.html')}]
 
-          fd.test
-          fd.heal
-          fd.healed.should be(1)
+          fd.init [{:src  => "http://www.example.com/",:local => File.join(@@dest_path,'internetz.html')}]
+
+          fd.test!
+          fd.failed.length.should be(1)
+          fd.resolve!
+          fd.resolved.length.should be(1)
         end
                 
-        it 'should increment #errors if the healing fails' do
+        it 'should note increment #resolved if the resolution fails' do
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:src  => "http://www.example.com/DOESNT.EXIST",:dest => File.join(@@dest_path,'doesnt_exist.html')}]
-          fd.test
-          fd.errors.should be(1)
-          fd.heal
-          fd.errors.should be(2)
+          fd.init [{:src  => "http://www.example.com/DOESNT.EXIST",:local => File.join(@@dest_path,'doesnt_exist.html')}]
+          fd.test!
+          fd.failed.length.should be(1)
+          fd.resolve!
+          fd.failed.length.should_not be(2)
         end
       end # End healing enabled, instructions provided, file does not exists
     end # End healing enabled, instructions provided
     
     describe 'without heal instructions' do
-      it 'should raise a warning for missing heal instructions' do
+      it 'should be able to return unresolvable ' do
         this_file = File.join @@dest_path, 'this.txt'
         
         fd = WarningShot::FileResolver.new
-        fd.logger = @@logger
-        fd.init [{:dest => this_file}]
-        fd.test
-        fd.heal
-        fd.warnings.should be(1)
+        fd.init [{:local => this_file}]
+        fd.test!
+        fd.resolve!
+        fd.unresolved.length.should be(1)
         
         fd.init [this_file]
-        fd.test
-        fd.heal
-        fd.warnings.should be(1)
+        fd.test!
+        fd.resolve!
+        fd.unresolved.length.should be(1)
       end
       
       describe 'file exists' do
@@ -126,16 +116,15 @@ describe WarningShot::FileResolver do
       end # End healing enabled, instructions not provided, file exists
       
       describe 'file does not exist' do 
-        it 'should increment #errors' do
+        it 'should add dependency to #failed' do
           this_file = File.join @@dest_path, 'this.txt'
 
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:dest => this_file}]
-          fd.test
-          fd.errors.should be(1)
-          fd.heal
-          fd.errors.should be(2)
+          fd.init [{:local => this_file}]
+          fd.test!
+          fd.failed.length.should be(1)
+          fd.resolve!
+          fd.unresolved.length.should be(1)
         end
       end # End healing enabled, instructions not provided, file does not exists
     end # End healing enabled, instructions not provided
@@ -150,15 +139,14 @@ describe WarningShot::FileResolver do
       end # End healing disabled, instructions provided, file exists
       
       describe 'file does not exist' do 
-        it 'should increment #errors' do
+        it 'should add dependency to #failed' do
           that_file = File.join @@src_path, 'that.txt'
           this_file = File.join @@dest_path, 'this.txt'
 
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:dest => this_file,:src => that_file}]
-          fd.test
-          fd.errors.should be(1)
+          fd.init [{:local => this_file,:src => that_file}]
+          fd.test!
+          fd.failed.length.should be(1)
         end
       end # End healing disabled, instructions provided, file does not exists
     end
@@ -171,14 +159,14 @@ describe WarningShot::FileResolver do
       end # End healing disabled, instructions not provided, file exists
       
       describe 'file does not exist' do 
-        it 'should increment #errors' do
+        it 'should add dependency to #failed' do
           this_file = File.join @@dest_path, 'this.txt'
 
           fd = WarningShot::FileResolver.new
-          fd.logger = @@logger
-          fd.init [{:dest => this_file}]
-          fd.test
-          fd.errors.should be(1)
+
+          fd.init [{:local => this_file}]
+          fd.test!
+          fd.failed.length.should be(1)
         end
       end # End healing disabled, instructions not provided, file does not exists
     end # End healing disabled, instructions not provided

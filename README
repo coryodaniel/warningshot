@@ -1,22 +1,3 @@
-TOOD rewrite File/CoreLib w/ new API
-
-TODO GETTING STARTED MANUAL
-TODO Dependency Yml files to HTML pages
-TODO HardWare Dependencies (Test for different hardware, memory, hd, cdburner)
-
-Documenation for the Following use cases
- Deploying software
- Setting up applications for new developers
- Setting up your workstation for personal preference
- Setting up warningshot to configure your app
- Extending warning shot with newplugins
- Modifying plugins on the fly (Generating onboot encryption keys)
- => 
- HWResolver.register_test :condition => lambda {|hw| hw.type == 'cdrom'} do |hw|
-      Dir.exists? '/mnt/cdrom'
-    end
- 
-
 WarningShot Dependency Resolution Framework
 
 ==== Usage

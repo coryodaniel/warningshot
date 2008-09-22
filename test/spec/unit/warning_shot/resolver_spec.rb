@@ -6,9 +6,9 @@ describe WarningShot::Resolver do
     WarningShot::Resolver.descendents.empty?.should be(false)
   end
   
-  it 'should allow a resolver to set a priority' do
-    MockResolver.priority 500
-    MockResolver.priority.should be(500)
+  it 'should allow a resolver to set a order' do
+    MockResolver.order 500
+    MockResolver.order.should be(500)
   end
   
   it 'should allow a resolver to be disabled' do
