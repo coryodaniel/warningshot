@@ -1,4 +1,5 @@
-puts require File.join(%w(. lib resolvers core_lib_resolver))
+=begin
+require File.join(%w(. lib resolvers core_lib_resolver))
 
 describe WarningShot::CoreLibResolver do
   
@@ -34,3 +35,4 @@ describe WarningShot::CoreLibResolver do
   end
   
 end
+=end

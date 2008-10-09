@@ -1,14 +1,23 @@
 describe WarningShot::DependencyResolver do
+  it 'should accept a glob to find config files' do
+    # Consider taking a glob instead of a set of paths
+    pending
+  end
   
-  it 'should be able to load and store a set of config files' do
+  it 'should create a dependency tree from a set of config files' do
     config = {
       :config_paths => [$test_data],
       :environment => 'rspec'
     }
     
     dr = WarningShot::DependencyResolver.new(config)
-    dr.data[:mock].empty?.should be(false)
-    dr.data[:mock].class.should be(Array)  
+    
+    dr.dependency_tree[:mock].empty?.should be(false)
+    dr.dependency_tree[:mock].class.should be(Array)
+    dr.dependency_tree[:mock].size.should == 10
+
+    dr.dependency_tree.key?(:faux).should be(true)
+    dr.dependency_tree[:faux].empty?.should be(true)        
   end
   
   it 'should have some sort of neat way to deal with conflicts between files & environments.' do
@@ -18,7 +27,7 @@ describe WarningShot::DependencyResolver do
   end
   
   it 'should be able to determine if a test applies' do
-    #:condition
+    #:if | :Unless
     pending
   end
   

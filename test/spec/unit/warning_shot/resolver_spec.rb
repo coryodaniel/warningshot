@@ -55,29 +55,29 @@ describe WarningShot::Resolver do
   
 
   it 'should be able to register a test' do
-    MockResolver.register_test do |dependency|
+    MockResolver.register :test do |dependency|
       "This is a dependency test #{dependency}"
     end
         
-    MockResolver.instance_variable_get("@test_blocks").first[:test].call("TEST").should == "This is a dependency test TEST"
+    MockResolver.tests.first[:test].call("TEST").should == "This is a dependency test TEST"
     
     MockResolver.flush_tests!
     
-    MockResolver.register_test do
+    MockResolver.register :test do
       "This is a test"
     end
     
-    MockResolver.instance_variable_get("@test_blocks").first[:test].call("TEST").should == "This is a test"
+    MockResolver.tests.first[:test].call("TEST").should == "This is a test"
   end
 
   it 'should allow a resolver to flush out tests' do
-    MockResolver.register_test do |dependency|
+    MockResolver.register :test do |dependency|
       'This is a dependency test'
     end
     
-    MockResolver.instance_variable_get("@test_blocks").empty?.should be(false)
+    MockResolver.tests.empty?.should be(false)
     MockResolver.flush_tests!
-    MockResolver.instance_variable_get("@test_blocks").empty?.should be(true)
+    MockResolver.tests.empty?.should be(true)
   end
   
   it 'should be able to register a conditional test' do
@@ -85,12 +85,12 @@ describe WarningShot::Resolver do
       WarningShot.environment == 'test'
     }
     MockResolver.flush_tests!
-    MockResolver.register_test :condition => is_test_env do |dependency|
+    MockResolver.register :test, :if => is_test_env do |dependency|
       'This is a conditional dependency test'
     end
     
-    MockResolver.instance_variable_get("@test_blocks").first[:test].call(nil).should == 'This is a conditional dependency test'
-    MockResolver.instance_variable_get("@test_blocks").first[:condition].class.should be(Proc)
+    MockResolver.tests.first[:test].call(nil).should == 'This is a conditional dependency test'
+    MockResolver.tests.first[:if].class.should be(Proc)
   end
   
   it 'should be able to specify additional attributes for a test' do
@@ -100,51 +100,65 @@ describe WarningShot::Resolver do
     }
     
     MockResolver.flush_tests!
-    MockResolver.register_test test do |dependency|
+    MockResolver.register :test do |dependency|
       'This is a named test'
     end
 
-    (MockResolver.instance_variable_get("@test_blocks").first[:name]== :named_test).should be(true)
-    MockResolver.instance_variable_get("@test_blocks").first[:desc].should == test[:desc]
+    (MockResolver.tests.first[:name]== :named_test).should be(true)
+    MockResolver.tests.first[:desc].should == test[:desc]
   end
   
   it 'should be able to register multiple tests' do
     MockResolver.flush_tests!
-    MockResolver.register_test do 
+    MockResolver.register :test do 
       'Pass one'
     end
-    MockResolver.register_test do 
+    MockResolver.register :test do 
       'Pass two'
     end
     
-    MockResolver.instance_variable_get("@test_blocks").length.should be(2)
-    MockResolver.instance_variable_get("@test_blocks").last[:test].call(nil).should == 'Pass two'
+    MockResolver.tests.length.should be(2)
+    MockResolver.tests.last[:test].call(nil).should == 'Pass two'
   end
   
   it 'should be able to register a resolution' do
-    MockResolver.register_resolution do |dependency|
+    MockResolver.register :resolution do |dependency|
       "I resolved the issue, #{dependency}."
     end
     
-    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call('sirs').should == "I resolved the issue, sirs."
+    MockResolver.resolutions.first[:resolution].call('sirs').should == "I resolved the issue, sirs."
     
     MockResolver.flush_resolutions!
     
-    MockResolver.register_resolution do
+    MockResolver.register :resolution do
       "This is a resolution"
     end
     
-    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call(nil).should == "This is a resolution"
+    MockResolver.resolutions.first[:resolution].call(nil).should == "This is a resolution"
+  end
+  
+  it 'should raise an exception if :if and :unless are specified on the same test or resolution' do
+    lambda{
+      MockResolver.register :resolution, :if => lambda{}, :unless => lambda{} do
+        puts 'This should fail'
+      end
+    }.should raise_error(Exception)
+    
+    lambda{
+      MockResolver.register :test, :if => lambda{}, :unless => lambda{} do
+        puts 'This should fail'
+      end
+    }.should raise_error(Exception)
   end
   
   it 'should allow a resolver to flush out resolutions' do
-    MockResolver.register_resolution do |dependency|
+    MockResolver.register :resolution do |dependency|
       'This is a dependency resolution'
     end
     
-    MockResolver.instance_variable_get("@resolution_blocks").empty?.should be(false)
+    MockResolver.resolutions.empty?.should be(false)
     MockResolver.flush_resolutions!
-    MockResolver.instance_variable_get("@resolution_blocks").empty?.should be(true)
+    MockResolver.resolutions.empty?.should be(true)
   end
   
   it 'should be able to register a conditional resolution' do
@@ -152,12 +166,12 @@ describe WarningShot::Resolver do
       WarningShot.environment == 'production'
     }
     MockResolver.flush_resolutions!
-    MockResolver.register_resolution :condition => is_test_env do |dependency|
+    MockResolver.register :resolution, :if => is_test_env do |dependency|
       "id only resolve if this was production"
     end
     
-    MockResolver.instance_variable_get("@resolution_blocks").first[:resolution].call(nil).should == "id only resolve if this was production"
-    MockResolver.instance_variable_get("@resolution_blocks").first[:condition].class.should be(Proc)
+    MockResolver.resolutions.first[:resolution].call(nil).should == "id only resolve if this was production"
+    MockResolver.resolutions.first[:if].class.should be(Proc)
   end
   
   it 'should be able to specify additional attributes for a resolution' do
@@ -167,38 +181,76 @@ describe WarningShot::Resolver do
     }
     
     MockResolver.flush_resolutions!
-    MockResolver.register_resolution res do |dependency|
+    MockResolver.register :resolution do |dependency|
       'This is a named resolution'
     end
 
-    (MockResolver.instance_variable_get("@resolution_blocks").first[:name]== :named_resolution).should be(true)
-    MockResolver.instance_variable_get("@resolution_blocks").first[:desc].should == res[:desc]
+    (MockResolver.resolutions.first[:name]== :named_resolution).should be(true)
+    MockResolver.resolutions.first[:desc].should == res[:desc]
   end
   
   it 'should be able to register multiple resolutions' do
     MockResolver.flush_resolutions!
-    MockResolver.register_resolution do 
+    MockResolver.register :resolution do 
       'Part one of fix'
     end
-    MockResolver.register_resolution do 
+    MockResolver.register :resolution do 
       'Part two of fix'
     end
     
-    MockResolver.instance_variable_get("@resolution_blocks").length.should be(2)
-    MockResolver.instance_variable_get("@resolution_blocks").last[:resolution].call(nil).should == 'Part two of fix'
+    MockResolver.resolutions.length.should be(2)
+    MockResolver.resolutions.last[:resolution].call(nil).should == 'Part two of fix'
   end
-    
-  it 'should allow before filters for resolutions and tests (also, named)' do
+  
+  it 'should allow before filters for tests' do
     # TODO after implementing in resolver.rb & dependency_resolver.rb
     # two arrays named and unnamed
-    # :name, &block
+    # :type, &block
     pending
   end
   
-  it 'should allow after filters for resolutions and tests (also, named)' do
+  it 'should allow after filters for tests' do
     # TODO after implementing in resolver.rb & dependency_resolver.rb
     # two arrays named and unnamed
-    # :name, &block
+    # :type, &block
+    pending
+  end
+    
+  it 'should allow before filters for resolutions' do
+    # TODO after implementing in resolver.rb & dependency_resolver.rb
+    # two arrays named and unnamed
+    # :type, &block
+    pending
+  end
+  
+  it 'should allow after filters for resolutions' do
+    # TODO after implementing in resolver.rb & dependency_resolver.rb
+    # two arrays named and unnamed
+    # :type, &block
+    pending
+  end
+  
+  it 'should be able to specify an :if condition on tests' do
+    pending
+  end
+  
+  it 'should be able to specify an :unless condition on tests' do
+    pending
+  end
+  
+  it 'should be able to specify an :if condition on resolutions' do
+    pending
+  end
+  
+  it 'should be able to specify an :unless condition on resolutions' do
+    pending
+  end
+  
+  it 'should run matched tests until one passes' do
+    pending
+  end
+  
+  it 'should run matched resolutions until on passes' do
     pending
   end
 end

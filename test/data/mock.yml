@@ -1,10 +1,10 @@
 ---
-:name: mock
-:environments:
-  :rspec:
-    - { something: 'is great', something_else: 'is better' }
-    - { this: 'is this.yml', that: 'is that.yml' }
-  :global:
-    - { this_g: 'is this.global.yml', that_g: 'is that.global.yml' }
-    - { data: 'is raw', info: 'is processed' }
-    - { less: 'is more', more: 'is less' }
+- :name: mock
+  :environments:
+    :rspec:
+      - { something: 'is great', something_else: 'is better' }
+      - { this: 'is this.yml', that: 'is that.yml' }
+    :global:
+      - { this_g: 'is this.global.yml', that_g: 'is that.global.yml' }
+      - { data: 'is raw', info: 'is processed' }
+      - { less: 'is more', more: 'is less' }

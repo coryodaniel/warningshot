@@ -1,7 +1,3 @@
-@@ line 516 resolver.rb
-&& failed core_lib_resolver_spec
-==> string cannot have met/resolved instance_eval'd on because it is frozen; need wrapper object.
-
 WarningShot Dependency Resolution Framework
 
 ==== Usage

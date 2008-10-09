@@ -9,10 +9,10 @@
 #  - yaml
 #
 ---
-:name: core_lib
-:environments: 
-  :development: []
-  :global: []
-  :test: []
-  :qa: []
-  :production: []
+- :name: core_lib
+  :environments: 
+    :development: []
+    :global: []
+    :test: []
+    :qa: []
+    :production: []

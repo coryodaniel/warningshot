@@ -6,13 +6,13 @@
 # local is where it should be
 
 ---
-:name: file
-:environments: 
-  :development: []
-  :global:
-    - /etc/nginx/nginx.conf
-  :test: []
-    - { local: "./public/this.txt", src: "http://example.com/index.html"}
-    - { local: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
-  :qa: []
-  :production: []
+- :name: file
+  :environments: 
+    :development: []
+    :global:
+      - /etc/nginx/nginx.conf
+    :test: []
+      - { local: "./public/this.txt", src: "http://example.com/index.html"}
+      - { local: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
+    :qa: []
+    :production: []
