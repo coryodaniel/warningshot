@@ -94,18 +94,18 @@ describe WarningShot::Resolver do
   end
   
   it 'should be able to specify additional attributes for a test' do
-    test = {
+    test_details = {
       :name => :named_test,
       :desc => "This is a named test",
     }
     
     MockResolver.flush_tests!
-    MockResolver.register :test do |dependency|
+    MockResolver.register :test, test_details do |dependency|
       'This is a named test'
     end
 
     (MockResolver.tests.first[:name]== :named_test).should be(true)
-    MockResolver.tests.first[:desc].should == test[:desc]
+    MockResolver.tests.first[:desc].should == test_details[:desc]
   end
   
   it 'should be able to register multiple tests' do
@@ -173,22 +173,22 @@ describe WarningShot::Resolver do
     MockResolver.resolutions.first[:resolution].call(nil).should == "id only resolve if this was production"
     MockResolver.resolutions.first[:if].class.should be(Proc)
   end
-  
+
   it 'should be able to specify additional attributes for a resolution' do
-    res = {
+    res_details = {
       :name => :named_resolution,
       :desc => "This is a named resolution",
     }
-    
+
     MockResolver.flush_resolutions!
-    MockResolver.register :resolution do |dependency|
+    MockResolver.register :resolution, res_details do |dependency|
       'This is a named resolution'
     end
 
     (MockResolver.resolutions.first[:name]== :named_resolution).should be(true)
-    MockResolver.resolutions.first[:desc].should == res[:desc]
+    MockResolver.resolutions.first[:desc].should == res_details[:desc]
   end
-  
+
   it 'should be able to register multiple resolutions' do
     MockResolver.flush_resolutions!
     MockResolver.register :resolution do 
@@ -201,55 +201,90 @@ describe WarningShot::Resolver do
     MockResolver.resolutions.length.should be(2)
     MockResolver.resolutions.last[:resolution].call(nil).should == 'Part two of fix'
   end
-  
+
   it 'should allow before filters for tests' do
-    # TODO after implementing in resolver.rb & dependency_resolver.rb
-    # two arrays named and unnamed
-    # :type, &block
-    pending
+    MockResolver.before :test do
+      puts "Im before a test"
+    end
+
+    MockResolver.before_filters(:test).length.should be(1)
   end
-  
+
   it 'should allow after filters for tests' do
-    # TODO after implementing in resolver.rb & dependency_resolver.rb
-    # two arrays named and unnamed
-    # :type, &block
-    pending
+    MockResolver.after :test do
+      puts "Im after a test"
+    end
+
+    MockResolver.after_filters(:test).length.should be(1)
   end
-    
+
   it 'should allow before filters for resolutions' do
-    # TODO after implementing in resolver.rb & dependency_resolver.rb
-    # two arrays named and unnamed
-    # :type, &block
-    pending
+    MockResolver.before :resolution do
+      puts "Im before a resolution"
+    end
+
+    MockResolver.before_filters(:resolution).length.should be(1)
   end
-  
+
   it 'should allow after filters for resolutions' do
-    # TODO after implementing in resolver.rb & dependency_resolver.rb
-    # two arrays named and unnamed
-    # :type, &block
-    pending
+    MockResolver.after :resolution do
+      puts "Im after a resolution"
+    end
+
+    MockResolver.after_filters(:resolution).length.should be(1)
   end
-  
+
   it 'should be able to specify an :if condition on tests' do
-    pending
+    #This is false, wtf? Fuck string comparison.
+    condition = lambda{ ("david lee roth" > "eddie van halen") }
+    MockResolver.register(:test, :if => condition, :name => :rock_out_test) {|dep| true}
+
+    MockResolver.tests(:rock_out_test)[:if].call.should be(false)
   end
-  
+
   it 'should be able to specify an :unless condition on tests' do
-    pending
-  end
+    # String comparison has no taste in music
+    condition = lambda{ ("weezer" > "the rentals") }
+    MockResolver.register(:test, :unless => condition, :name => :rock_out_test2) {|dep| true}
   
+    MockResolver.tests(:rock_out_test2)[:unless].call.should be(true)
+  end
+
   it 'should be able to specify an :if condition on resolutions' do
-    pending
-  end
+    condition = lambda{ (3 > 5) }
+    MockResolver.register(:resolution, :if => condition, :name => :number_resolution) {|dep| true}
   
+    MockResolver.resolutions(:number_resolution)[:if].call.should be(false)
+  end
+
   it 'should be able to specify an :unless condition on resolutions' do
+    condition = lambda{ (5 == 5) }
+    MockResolver.register(:resolution, :unless => condition, :name => :number_resolution1) {|dep| true}
+
+    MockResolver.resolutions(:number_resolution1)[:unless].call.should be(true)
+  end
+
+  it 'should be able to determine if a test passed' do
     pending
   end
-  
+
+  it 'should be able to determine if a resolution passed' do
+    pending
+  end
+
+  it 'should be able to determine if a test applies' do
+    #:if | :Unless
+    pending
+  end
+
+  it 'should be able to determine if a resolution applies' do
+    pending
+  end
+
   it 'should run matched tests until one passes' do
     pending
   end
-  
+
   it 'should run matched resolutions until on passes' do
     pending
   end

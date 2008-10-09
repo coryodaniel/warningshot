@@ -1,3 +1,4 @@
+=begin
 require File.join(%w(. lib resolvers file_resolver))
 
 # VALID YAML (mode,user,group, src are all optional)
@@ -75,7 +76,6 @@ describe WarningShot::FileResolver do
           fd = WarningShot::FileResolver.new
 
           fd.init [{:src  => "http://www.example.com/",:local => File.join(@@dest_path,'internetz.html')}]
-
           fd.test!
           fd.failed.length.should be(1)
           fd.resolve!
@@ -94,7 +94,7 @@ describe WarningShot::FileResolver do
     end # End healing enabled, instructions provided
     
     describe 'without heal instructions' do
-      it 'should be able to return unresolvable ' do
+      it 'should be able to return unresolved dependencies' do
         this_file = File.join @@dest_path, 'this.txt'
         
         fd = WarningShot::FileResolver.new
@@ -172,3 +172,4 @@ describe WarningShot::FileResolver do
     end # End healing disabled, instructions not provided
   end # End healing disabled
 end
+=end

@@ -25,17 +25,4 @@ describe WarningShot::DependencyResolver do
     # if fileA and fileB have to conflicting settings, WHO WINS?!
     pending
   end
-  
-  it 'should be able to determine if a test applies' do
-    #:if | :Unless
-    pending
-  end
-  
-  it 'should be able to determine if a test passed' do
-    pending
-  end
-  
-  it 'should be able to run multiple tests on a dependency and determine if it passed' do
-    pending
-  end
 end
