@@ -5,13 +5,13 @@
 # path REQUIRED
 # recursive, mode, user, group OPTIONAL (one required)
 ---
-:name: permissions
-:environments:
-  :global: 
-    - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
-    - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
-  :test: 
-    - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
-  :production: []
-  :development: []
-  :qa: []
+- :name: permissions
+  :environments:
+    :global: 
+      - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
+      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
+    :test: 
+      - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
+    :production: []
+    :development: []
+    :qa: []

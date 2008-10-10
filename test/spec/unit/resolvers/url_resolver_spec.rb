@@ -1,0 +1,65 @@
+require File.join(%w(. lib resolvers url_resolver))
+
+describe WarningShot::UrlResolver do
+
+  it 'should have tests registered' do
+    WarningShot::UrlResolver.tests.empty?.should be(false)
+  end
+
+  it 'should have resolutions registered' do
+    WarningShot::UrlResolver.resolutions.empty?.should be(true)
+  end
+
+  it 'should extend the command line interface' do
+    WarningShot.parser.to_s.include?("Success is only for 200 instead of 2xx").should be(true)    
+    WarningShot.parser.to_s.include?("SSL Verify Peer Depth").should be(true)    
+    WarningShot.parser.to_s.include?("Path to root ca certificate").should be(true)    
+  end
+
+  it 'should be able to determine if an http address is reachable' do
+    resolver = WarningShot::UrlResolver.new
+    resolver.init ["http://example.com"]
+    resolver.test!
+    resolver.failed.length.should be(0)
+  end
+  
+  it 'should be able to determine if an https address is reachable' do
+    resolver = WarningShot::UrlResolver.new
+    #Yeah, what https page to use, huh?
+    resolver.init ["https://www.google.com/analytics/home/"]
+    resolver.test!
+    resolver.failed.length.should be(0)
+  end
+  
+  it 'should be able to determine if an http address is unreachable' do
+    resolver = WarningShot::UrlResolver.new
+    resolver.init ["http://example.com", "http://127.0.0.1:31337"]
+    resolver.test!
+    resolver.failed.length.should be(1)
+    resolver.succeeded.length.should be(1)
+  end
+  
+  it 'should be able to determine if an https address is unreachable' do
+    resolver = WarningShot::UrlResolver.new
+    resolver.init ["https://www.google.com/analytics/home/", "https://127.0.0.1:31337"]
+    resolver.test!
+    resolver.failed.length.should be(1)
+    resolver.succeeded.length.should be(1)
+  end
+    
+  it 'should be able to receive --strict from the command line' do
+    WarningShot::Config.configuration[:url_strict] = true
+    WarningShot::Config.configuration[:url_strict].should be(true)
+    
+    resolver = WarningShot::UrlResolver.new
+    #google redirects
+    resolver.init ["http://example.com","http://google.com"]
+    resolver.test!
+    resolver.failed.length.should be(1)
+    resolver.succeeded.length.should be(1)
+  end
+  
+  it 'should be able to verify CA certificate and peer' do
+    pending
+  end
+end

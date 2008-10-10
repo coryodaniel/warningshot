@@ -1,33 +1,18 @@
 # Directories that your application depends on
-
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 # --- 
-# :localdev:
-#  - /tmp 
-# :global:
-#  - ~ 
-#  - "/my/far/away/data/" #I make sure this directory exists before i symlink it
-#  - { dest: "/tmp/ws_test/my_ln_s", src: "/my/far/away/data", type: "symlink", mode: "0755", user: "localdev", group: "localdev", recursive: "both" }
+# - :name: directories
+#   :environments: 
+#     :development: []
+#     :global:
+#       - /etc/nginx
+#       - /tmp
+#       - /mnt/media
+#     :test: []
+#     :qa: []
+#     :production: []
 
-
-# A string (given: /tmp) instead of a hash should be treated as
-#   - { dest: "/tmp", src: "", type: "directory", mode: "0755", user: "nobody", group: "def_to_user", recursive: chown|chmod|both|none(default)}
-# Permissions are set on the dest resource.  If you set permissions of "0755" it will be set on the symlink itself, not the underlying directory
-# To set permissions on the underlying directory you should make that directory a dependency, then make the symlink a dependency... see below:
-
-##recursively chown'd and chmod'd to localdev:0755
-# - { dest: "/tmp/ws_test/dir_to_link", type: "directory", mode: "0777", user: "root", recursive: "both"}
-# - { dest: "/tmp/ws_test/sym_to_dir", src: "/tmp/ws_test/dir_to_link", type: "symlink", mode: "0755", user: "localdev", recursive: "both" }
-# results in:
-# lrwxr-xr-x localdev /tmp/ws_test/sym_to_dir => /tmp/ws_test/dir_to_link
-# drwxrwxrwx root     /tmp/ws_test/dir_to_link
-
- 
-# Types:
-#   symlink   => Results in symlink being created
-#   nfs       => Results in nfs mount
-#   directory => Creates directory (ignores src field)
 ---
 :name: directories
 :environments: 

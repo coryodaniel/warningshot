@@ -1,9 +1,10 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 
-# Each environt takes an array of strings or hashes(src,local)
+# Each environt takes an array of strings or hashes(src,local,md5)
 # src is where it can be found
 # local is where it should be
+# md5 is the md5 the 'local' copy should hash to, this is optional and used by IntegrityResolver
 
 ---
 - :name: file

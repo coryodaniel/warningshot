@@ -1,16 +1,21 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
-# --- 
-# :localdev:
-#  - http://localhost
-# :global:
-#  - "http://www.google.com"
-#  - "http://www.yahoo.com"
-#  - "http://www.microsoft.com"  #Haha, jk.  Dont depend on that.
+#  --- 
+#  - :name: url
+#    :environments:
+#      :test: []
+#      :global:
+#        - "http://maps.google.com"
+#        - "http://microsoft.com" #jk dont depend on that
+#      :development: []
+#      :qa: []
+#      :production: []
 
 --- 
-:test: []
-:global: []
-:development: []
-:qa: []
-:production: []
+- :name: url
+  :environments:
+    :test: []
+    :global: []
+    :development: []
+    :qa: []
+    :production: []

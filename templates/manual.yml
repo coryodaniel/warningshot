@@ -1,0 +1,29 @@
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+
+# Manual resolvers are essentially glorified todo notes.  Since WarningShot
+#   parses all yaml files into a dependency tree you can actually add manual resolvers
+#   to your other files, for example file.yml
+#
+# --- 
+# - :name: file
+#   :environments: 
+#     :development: []
+#     :global:
+#       - /etc/nginx/nginx.conf
+#
+# - :name: manual
+#   :environments:
+#     :global:
+#       - "wash the dog"
+#       - "do dishes"
+#       - "finish deployment"
+
+- :name: manual
+  :environments:
+    :global:
+      - "Make sure you've updated your WarningShot config files for any new requirements!"
+    :development: []
+    :qa: []
+    :production: []
+    :test: []

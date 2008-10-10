@@ -1,4 +1,3 @@
-=begin
 require File.join(%w(. lib resolvers file_resolver))
 
 # VALID YAML (mode,user,group, src are all optional)
@@ -38,9 +37,6 @@ describe WarningShot::FileResolver do
    
   describe 'with healing enabled' do
     describe 'with heal instructions' do
-      it 'should raise an error if the protocol is not supported' do
-        pending
-      end
       
       describe 'file exists' do
         it 'should do nothing' do
@@ -80,6 +76,10 @@ describe WarningShot::FileResolver do
           fd.failed.length.should be(1)
           fd.resolve!
           fd.resolved.length.should be(1)
+        end
+        
+        it 'should be able to verify the root ca and peer when healing over https' do
+          pending
         end
                 
         it 'should note increment #resolved if the resolution fails' do
@@ -172,4 +172,3 @@ describe WarningShot::FileResolver do
     end # End healing disabled, instructions not provided
   end # End healing disabled
 end
-=end

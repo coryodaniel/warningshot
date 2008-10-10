@@ -5,6 +5,8 @@ WarningShot Dependency Resolution Framework
   
   ---- Ruby API
 
+==== Using Config Files
+ * How the dependency tree works
 
 ==== Extending WarningShot
 

@@ -15,17 +15,17 @@ describe WarningShot::Resolver do
     MockResolver.disabled!
     MockResolver.disabled?.should be(false)
   end
-  
+
   it 'should allow a name to be set' do
     MockResolver.name "Boogertron"
     MockResolver.name.should == "Boogertron"
   end
-  
+
   it 'should allow a description to be set' do
     MockResolver.description "An awesome mock resolver"
     MockResolver.description.should == "An awesome mock resolver"
   end
-  
+
   it 'should allow the CLI to be extended' do
     MockResolver.cli(
       :short        => "-t",
@@ -36,37 +36,35 @@ describe WarningShot::Resolver do
       :type         => String,
       :default_desc => "Default: whatever"
     )
-    
+
     WarningShot.parser.to_s.include?("Test extending the CLI").should be(true)    
   end
-  
+
   it 'should be able to cast YAML data to an Object the resolver can work with' do
     MockDependency = Struct.new :more, :less
-    
+
     MockResolver.cast do |dep|
       MockDependency.new dep[:more], dep[:less]
     end
-    
+
     yaml_hash = {:more => 'is less', :less => 'is more'}
     my_obj = MockResolver.yaml_to_object(yaml_hash)
     my_obj.class.should be(MockDependency)
     my_obj.more.should == (yaml_hash[:more])
   end
-  
 
   it 'should be able to register a test' do
     MockResolver.register :test do |dependency|
       "This is a dependency test #{dependency}"
     end
-        
+
     MockResolver.tests.first[:test].call("TEST").should == "This is a dependency test TEST"
-    
     MockResolver.flush_tests!
-    
+
     MockResolver.register :test do
       "This is a test"
     end
-    
+
     MockResolver.tests.first[:test].call("TEST").should == "This is a test"
   end
 
@@ -74,12 +72,12 @@ describe WarningShot::Resolver do
     MockResolver.register :test do |dependency|
       'This is a dependency test'
     end
-    
+
     MockResolver.tests.empty?.should be(false)
     MockResolver.flush_tests!
     MockResolver.tests.empty?.should be(true)
   end
-  
+
   it 'should be able to register a conditional test' do
     is_test_env = lambda{ |dependency| 
       WarningShot.environment == 'test'
@@ -88,7 +86,7 @@ describe WarningShot::Resolver do
     MockResolver.register :test, :if => is_test_env do |dependency|
       'This is a conditional dependency test'
     end
-    
+
     MockResolver.tests.first[:test].call(nil).should == 'This is a conditional dependency test'
     MockResolver.tests.first[:if].class.should be(Proc)
   end
@@ -265,27 +263,68 @@ describe WarningShot::Resolver do
   end
 
   it 'should be able to determine if a test passed' do
-    pending
+    MockResolver.flush_tests!
+    MockResolver.flush_resolutions!
+
+    test_meta = {
+      :name => :process_block_test,
+      :test => lambda {|dep| dep[:fav_color] == :blue}
+    }
+    
+    dep = {:fav_color => :blue}
+
+    MockResolver.new.send(:process_block, :test, dep, test_meta).should be(true)
+  end
+  
+  it 'should be able to determine if a test failed' do
+    MockResolver.flush_tests!
+    MockResolver.flush_resolutions!
+
+    test_meta = {
+      :name => :process_block_test,
+      :test => lambda {|dep| dep[:fav_color] == :blue}
+    }
+    
+    dep = {:fav_color => :red}
+
+    MockResolver.new.send(:process_block, :test, dep, test_meta).should be(false)
   end
 
   it 'should be able to determine if a resolution passed' do
-    pending
+    MockResolver.flush_tests!
+    MockResolver.flush_resolutions!
+
+    resolution_meta = {
+      :name => :process_block_test,
+      :resolution => lambda {|dep| 
+        dep[:fav_color] = :blue
+        dep[:fav_color] == :blue
+      }
+    }
+    
+    dep = {:fav_color => :red}
+
+    MockResolver.new.send(:process_block, :resolution, dep, resolution_meta).should be(true)
   end
 
-  it 'should be able to determine if a test applies' do
-    #:if | :Unless
-    pending
-  end
+  it 'should be able to determine if a resolution failed' do
+    MockResolver.flush_tests!
+    MockResolver.flush_resolutions!
 
-  it 'should be able to determine if a resolution applies' do
-    pending
-  end
+    resolution_meta = {
+      :name => :process_block_test,
+      :resolution => lambda {|dep| 
+        begin
+          dep[:fav_color] = :blue
+        rescue Exception
+          # nada
+        end
+        dep[:fav_color] == :blue
+      }
+    }
+    
+    dep = {:fav_color => :red}.freeze
 
-  it 'should run matched tests until one passes' do
-    pending
-  end
-
-  it 'should run matched resolutions until on passes' do
-    pending
+    MockResolver.new.send(:process_block, :resolution, dep, resolution_meta).should be(false)
   end
 end
