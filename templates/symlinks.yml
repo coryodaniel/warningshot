@@ -2,26 +2,26 @@
 # the 'global' environment are always checked
 
 #Symlink just check for the link to exist, not the target, the target should be specified in 
-# a FileManager or Directory Manager
+# a FileResolver or DirectoryResolver
 
-#Options for recursive chown|chmod|none|both
-#User & Group default to 'nobody' if user is provided and group is not, group defaults to user
-# Force defaults to false
+#No resolving is done if a source is not provided
 
-#No resolving is done if a src is not provided
+# Options
+#   target - <String> the link
+#   source - <String> where the link should link to (ln -s source target)
+#   force  - <Boolean> (default true)   -f flag
 
 # --- 
 # :localdev:
 # - /my/path/to/symlink
 # :global:
 # - /another/great/symlink
-# - { dest: "/a/simple/resolution/example", src: "/the/path/to/the/goods", force: false}
-# - { dest: "/super/symlink", src: "/some/target/directory/", mode: "0755", user: "localdev", group: "",recursive: "chmod"}
-# - { dest: "/etc/my/awesome.conf", src: "/etc/the/real.conf", mode: "0755", user: "localdev", group: "",recursive: "chown"}
+# - { target: "/a/simple/resolution/example", source: "/the/path/to/the/goods", force: false}
+# - { target: "/super/symlink", source: "/some/target/directory/"}
+# - { target: "/etc/my/awesome.conf", source: "/etc/the/real.conf"}
 
-#Test below , in order simple, unhealable, healable with need for mkdir_p, healable with chmod/chown
 ---
-:branch: symlinks
+:branch: symlink
 :environments: 
   :development: []
   :global: []

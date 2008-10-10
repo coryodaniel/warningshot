@@ -11,8 +11,7 @@ describe WarningShot::CoreLibResolver do
   end
   
   it 'should increment #errors for unloadable core libs' do
-    cld = WarningShot::CoreLibResolver.new
-    cld.init ['bogus_core_lib_name']
+    cld = WarningShot::CoreLibResolver.new 'bogus_core_lib_name'
     cld.test!
     
     cld.failed.length.should be(1)

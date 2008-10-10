@@ -19,13 +19,11 @@ describe WarningShot::DirectoryResolver do
   
   describe 'with resolutions enabled & with resolution instructions' do
 
-    it 'should create the directory if it does not exist' do
-      resolver = WarningShot::DirectoryResolver.new
-      
+    it 'should create the directory if it does not exist' do      
       control_dir = File.expand_path('.')
       test_dir1 = File.join(@@base_path,'test1')
       test_dir2 = File.join(@@base_path,'test2')
-      resolver.init [control_dir,test_dir1, test_dir2]
+      resolver = WarningShot::DirectoryResolver.new control_dir,test_dir1, test_dir2
       resolver.test!
       resolver.succeeded.length.should be(1)
       resolver.failed.length.should be(2)

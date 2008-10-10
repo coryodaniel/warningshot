@@ -263,7 +263,7 @@ describe WarningShot::Resolver do
     MockResolver.resolutions(:number_resolution1)[:unless].call.should be(true)
   end
   
-  it 'should incremenet #succeeded if the test passed' do
+  it 'should increment #succeeded if the test passed' do
     pending
   end
   

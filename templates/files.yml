@@ -1,10 +1,10 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 
-# Each environt takes an array of strings or hashes(src,local,md5)
-# src is where it can be found
-# local is where it should be
-# md5 is the md5 the 'local' copy should hash to, this is optional and used by IntegrityResolver
+# Each environt takes an array of strings or hashes(source,target,md5)
+# source is where it can be found
+# target is where it should be
+# md5 is the md5 the 'target' copy should hash to, this is optional and used by IntegrityResolver
 
 ---
 - :branch: file
@@ -13,7 +13,7 @@
     :global:
       - /etc/nginx/nginx.conf
     :test: []
-      - { local: "./public/this.txt", src: "http://example.com/index.html"}
-      - { local: "file:///tmp/somefile.txt", src: "~/.secret/file.txt"}
+      - { target: "./public/this.txt", source: "http://example.com/index.html"}
+      - { target: "file:///tmp/somefile.txt", source: "~/.secret/file.txt"}
     :qa: []
     :production: []

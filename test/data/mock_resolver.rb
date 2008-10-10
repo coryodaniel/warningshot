@@ -3,7 +3,6 @@ class MockResolver
   
   ######### Flags
   disable!
-  rescue_me!
   
   ######### Attributes
   order 1
