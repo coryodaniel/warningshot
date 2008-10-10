@@ -9,7 +9,7 @@
 #  - yaml
 #
 ---
-- :name: core_lib
+- :branch: core_lib
   :environments: 
     :development: []
     :global: []

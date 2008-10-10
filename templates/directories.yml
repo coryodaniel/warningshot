@@ -2,7 +2,7 @@
 # You can add your own environments below.  Requirements listed in
 # the 'global' environment are always checked
 # --- 
-# - :name: directories
+# - :branch: directories
 #   :environments: 
 #     :development: []
 #     :global:
@@ -14,7 +14,7 @@
 #     :production: []
 
 ---
-:name: directories
+:branch: directories
 :environments: 
   :development: []
   :global: []

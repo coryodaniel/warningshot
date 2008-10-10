@@ -16,9 +16,9 @@ describe WarningShot::Resolver do
     MockResolver.disabled?.should be(false)
   end
 
-  it 'should allow a name to be set' do
-    MockResolver.name "Boogertron"
-    MockResolver.name.should == "Boogertron"
+  it 'should allow a resolution branch to be set' do
+    MockResolver.branch "Boogertron"
+    MockResolver.branch.should == "Boogertron"
   end
 
   it 'should allow a description to be set' do

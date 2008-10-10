@@ -1,5 +1,5 @@
 ---
-- :name: mock
+- :branch: mock
   :environments:
     :rspec:
       - { something: 'is great', something_else: 'is better' }

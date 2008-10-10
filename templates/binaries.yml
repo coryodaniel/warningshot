@@ -12,7 +12,7 @@
 # -
 
 --- 
-:name: binaries
+:branch: binaries
 :environments: 
   :development: []
   :global: []

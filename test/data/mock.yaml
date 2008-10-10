@@ -1,5 +1,5 @@
 ---
-- :name: mock
+- :branch: mock
   :environments:
     :rspec:
       - { this: 'is this.yaml', that: 'is that.yaml' }
@@ -10,7 +10,7 @@
       - { less: 'is more', more: 'is less' }
     :development:
 
-- :name: faux
+- :branch: faux
   :environments:
     :development:
       - { this: 'is faux', that: 'is faux' }

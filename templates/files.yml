@@ -7,7 +7,7 @@
 # md5 is the md5 the 'local' copy should hash to, this is optional and used by IntegrityResolver
 
 ---
-- :name: file
+- :branch: file
   :environments: 
     :development: []
     :global:

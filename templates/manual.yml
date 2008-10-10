@@ -6,20 +6,20 @@
 #   to your other files, for example file.yml
 #
 # --- 
-# - :name: file
+# - :branch: file
 #   :environments: 
 #     :development: []
 #     :global:
 #       - /etc/nginx/nginx.conf
 #
-# - :name: manual
+# - :branch: manual
 #   :environments:
 #     :global:
 #       - "wash the dog"
 #       - "do dishes"
 #       - "finish deployment"
 
-- :name: manual
+- :branch: manual
   :environments:
     :global:
       - "Make sure you've updated your WarningShot config files for any new requirements!"

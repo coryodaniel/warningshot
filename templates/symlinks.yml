@@ -21,7 +21,7 @@
 
 #Test below , in order simple, unhealable, healable with need for mkdir_p, healable with chmod/chown
 ---
-:name: symlinks
+:branch: symlinks
 :environments: 
   :development: []
   :global: []
