@@ -12,8 +12,9 @@ describe WarningShot::Resolver do
   end
   
   it 'should allow a resolver to be disabled' do
-    MockResolver.disabled!
-    MockResolver.disabled?.should be(false)
+    MockResolver.disable!
+    MockResolver.disabled?.should be(true)
+    MockResolver.instance_variable_set('@disabled',false)
   end
 
   it 'should allow a resolution branch to be set' do
@@ -260,6 +261,22 @@ describe WarningShot::Resolver do
     MockResolver.register(:resolution, :unless => condition, :name => :number_resolution1) {|dep| true}
 
     MockResolver.resolutions(:number_resolution1)[:unless].call.should be(true)
+  end
+  
+  it 'should incremenet #succeeded if the test passed' do
+    pending
+  end
+  
+  it 'should increment #failed if the test failed' do
+    pending
+  end
+  
+  it 'should increment #resolved if the resolution succeeded' do
+    pending
+  end
+  
+  it 'should increment #unresolved if the resolution was unresolved' do
+    pending
   end
 
   it 'should be able to determine if a test passed' do

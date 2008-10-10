@@ -30,20 +30,13 @@ describe WarningShot::FileResolver do
   it 'should have resolutions regsitered' do
     WarningShot::FileResolver.resolutions.empty?.should be(false)
   end
-  
+    
   it 'should treate relative paths as from directory specified by WarningShot::Config[:application]' do
     pending
   end
    
   describe 'with healing enabled' do
     describe 'with heal instructions' do
-      
-      describe 'file exists' do
-        it 'should do nothing' do
-          #nothing
-        end
-      end # End healing enabled, instructions provided, file exists
-      
       describe 'file does not exist' do
         it 'should add failed dependencies to #failed' do
           that_file = File.join @@src_path, 'that.txt'
@@ -82,7 +75,7 @@ describe WarningShot::FileResolver do
           pending
         end
                 
-        it 'should note increment #resolved if the resolution fails' do
+        it 'should not increment #resolved if the resolution fails' do
           fd = WarningShot::FileResolver.new
           fd.init [{:src  => "http://www.example.com/DOESNT.EXIST",:local => File.join(@@dest_path,'doesnt_exist.html')}]
           fd.test!
@@ -109,12 +102,6 @@ describe WarningShot::FileResolver do
         fd.unresolved.length.should be(1)
       end
       
-      describe 'file exists' do
-        it 'should do nothing' do
-          #nothing
-        end
-      end # End healing enabled, instructions not provided, file exists
-      
       describe 'file does not exist' do 
         it 'should add dependency to #failed' do
           this_file = File.join @@dest_path, 'this.txt'
@@ -131,13 +118,7 @@ describe WarningShot::FileResolver do
   end # End healing enabled
   
   describe 'with healing disabled' do
-    describe 'with heal instructions' do
-      describe 'file exists' do
-        it 'should do nothing' do
-          #Does nothing
-        end
-      end # End healing disabled, instructions provided, file exists
-      
+    describe 'with heal instructions' do      
       describe 'file does not exist' do 
         it 'should add dependency to #failed' do
           that_file = File.join @@src_path, 'that.txt'
@@ -151,13 +132,7 @@ describe WarningShot::FileResolver do
       end # End healing disabled, instructions provided, file does not exists
     end
     
-    describe 'without heal instructions' do
-      describe 'file exists' do
-        it 'should do nothing' do
-          #Does nothing
-        end
-      end # End healing disabled, instructions not provided, file exists
-      
+    describe 'without heal instructions' do      
       describe 'file does not exist' do 
         it 'should add dependency to #failed' do
           this_file = File.join @@dest_path, 'this.txt'

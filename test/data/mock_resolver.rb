@@ -2,7 +2,7 @@ class MockResolver
   include WarningShot::Resolver
   
   ######### Flags
-  disabled!
+  disable!
   rescue_me!
   
   ######### Attributes

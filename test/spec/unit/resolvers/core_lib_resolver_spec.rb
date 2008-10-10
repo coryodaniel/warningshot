@@ -1,4 +1,3 @@
-=begin
 require File.join(%w(. lib resolvers core_lib_resolver))
 
 describe WarningShot::CoreLibResolver do
@@ -16,7 +15,7 @@ describe WarningShot::CoreLibResolver do
     cld.init ['bogus_core_lib_name']
     cld.test!
     
-    cld.errors.should be(1)
+    cld.failed.length.should be(1)
   end
   
   it 'should be able to unload file references from $"' do
@@ -35,4 +34,3 @@ describe WarningShot::CoreLibResolver do
   end
   
 end
-=end
