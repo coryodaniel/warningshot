@@ -7,7 +7,7 @@ class MockResolver
   
   ######### Attributes
   order 1
-  branch 'mock'
+  branch :mock
   description 'A mock resolver'
 
   def initialize;end;

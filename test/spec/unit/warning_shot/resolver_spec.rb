@@ -17,8 +17,8 @@ describe WarningShot::Resolver do
   end
 
   it 'should allow a resolution branch to be set' do
-    MockResolver.branch "Boogertron"
-    MockResolver.branch.should == "Boogertron"
+    MockResolver.branch :a_test_branch
+    MockResolver.branch.should == :a_test_branch
   end
 
   it 'should allow a description to be set' do
