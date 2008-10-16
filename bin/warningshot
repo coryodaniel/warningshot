@@ -1,11 +1,8 @@
 #! /usr/bin/env ruby
-# WarningShot Command Line
+require 'rubygems'
 
-require 'lib/warning_shot'
-require 'lib/suite'
-
-#require 'warning_shot'
-#require 'warning_shot/suite'
+gem 'warningshot'
+require 'warning_shot/suite'
 
 WarningShot::Config.parse_args
 WarningShot.fire!

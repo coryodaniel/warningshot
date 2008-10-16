@@ -1,6 +1,6 @@
-Gem::Specification.new do |s|
-  s.name = %q{warningshot}
-  s.version = "0.9.4"
+spec = Gem::Specification.new do |s|
+  s.name = NAME
+  s.version = WarningShot::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Cory ODaniel"]
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email = %q{warningshot@coryodaniel.com.com}
   s.executables = ["warningshot"]
   s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
-  s.files = ["LICENSE", "README", "Rakefile", "TODO", "CHANGELOG", "CONTRIBUTORS", "bin/warningshot", "bin/ws-stage.exe","bin/ws-stage.bat"]
+  s.files = ["LICENSE", "README", "Rakefile", "TODO", "CHANGELOG", "CONTRIBUTORS", "bin/warningshot", "bin/ws-stage.sh","bin/ws-stage.bat"]
   s.has_rdoc = true
   s.homepage = %q{http://warningshot.lighthouseapp.com}
   s.require_paths = ["lib"]
@@ -30,4 +30,18 @@ Gem::Specification.new do |s|
   #else
   #  #s.add_runtime_dependency(%q<gem>, [">= version"])
   #end
+end
+
+Rake::GemPackageTask.new(spec) do |package|
+  package.gem_spec = spec
+end
+
+desc "Run :package and install the resulting .gem"
+task :install => :package do
+  sh %{sudo gem install --local pkg/#{NAME}-#{WarningShot::VERSION}.gem --no-rdoc --no-ri}
+end
+
+desc "Run :clean and uninstall the .gem"
+task :uninstall => :clean do
+  sh %{sudo gem uninstall #{NAME}}
 end

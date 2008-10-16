@@ -1,11 +1,25 @@
+require 'pathname'
 require 'rubygems'
 require 'rake'
-require 'spec'
+require 'rake/clean'
+require 'rake/rdoctask'
+require 'rake/gempackagetask'
+require 'rake/contrib/rubyforgepublisher'
 require 'spec/rake/spectask'
-require 'fileutils'
+require "rake/testtask"
+require "spec"
+require "spec/story"
+require 'spec/story/extensions/main'
+require "spec/rake/spectask"
+require "fileutils"
 
+NAME = 'warningshot'
+ROOT = Pathname(__FILE__).dirname.expand_path
+
+require 'lib/warning_shot/version'
+
+CLEAN.include ["**/.*.sw?", "pkg", "lib/*.bundle", "*.gem", "doc/rdoc", "test/output/*", "coverage", "cache"]
 Dir['tasks/*.rb'].each {|r| require r}
-
 
 
 ##############################################################################
