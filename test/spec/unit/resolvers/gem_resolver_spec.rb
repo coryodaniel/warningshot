@@ -3,8 +3,11 @@
 # test, this may also install software, sorry.
 
 require File.join(%w(. lib resolvers gem_resolver))
-
+require 'fileutils'
 describe WarningShot::GemResolver do
+  before :all do
+    FileUtils.rm_rf "./test/output/gems"
+  end
 
   it 'should have tests registered' do
     WarningShot::GemResolver.tests.empty?.should be(false)
@@ -25,11 +28,11 @@ describe WarningShot::GemResolver do
   end
   
   it 'should override Gem.path if gem_path is given' do
-    WarningShot::Config.configuration[:gem_path] = "./test/path/1:/tmp/test/path/2"
+    WarningShot::Config.configuration[:gem_path] = "./test/output/gems:./test/outputs/gems2"
     WarningShot::GemResolver.load_paths
     
-    Gem.path[0].should == "./test/path/1"
-    Gem.path[1].should == "/tmp/test/path/2"
+    Gem.path[0].should == "./test/output/gems"
+    Gem.path[1].should == "./test/outputs/gems2"
   end
   
   it 'should be able to determine if a gem is installed' do
@@ -50,11 +53,7 @@ describe WarningShot::GemResolver do
     resolver.resolve!
     resolver.resolved.size.should be(1)
   end
-  
-  it 'should install the gems to the alternate path when specified' do
-    pending
-  end
-  
+    
   it 'should use warningshot_dummy instead of the gems listed above' do
     #it should also uninstall it before :all and after :all
     pending

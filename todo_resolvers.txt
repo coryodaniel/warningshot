@@ -1,5 +1,7 @@
 WarningShot boot & work (interface & CLI)
-DependencResolver Class should run/report back to caller status (logger love as well)
+DependencResolver Class should run/report back to caller status 
+
+WarningShot logger needs serious love, ie, my output sucks.
 
 ========
 Create a rubygem called 'warningshot_dummy' for testing gem_resolver
