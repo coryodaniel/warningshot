@@ -1,5 +1,6 @@
+=begin
 require File.join(%w(. lib resolvers permission_resolver))
-a093209209 9 9 9 900 )
+
 describe WarningShot::PermissionResolver do
 
   it 'should have tests registered' do
@@ -38,3 +39,4 @@ describe WarningShot::PermissionResolver do
     end # End healing disabled, instructions not provided
   end # End healing disabled
 end
+=end

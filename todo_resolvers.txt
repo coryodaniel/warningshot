@@ -1,14 +1,17 @@
-Permissions Resolver
 Gem Resolver (Alt gem path)
 WarningShot boot & work (interface & CLI)
 
+
 ========
+Permissions Resolver
+ * chmod, chown
+ 
 Binary Resolver
  * Apt, Yum, Gems, Ports
  * Stay resident option
  * Minigems option, prepares gems as minigems
  
-DependencResolver Class should run/report back to caller status (logger love as well)
+Git, Svn Resolver
 
 ServicesResolver
   * memcached, mysql, etc...
@@ -19,26 +22,6 @@ IpTableResolver
 Connections Resolver
  * test network connections
  # ifconfig -a => active interfaces
- # /((?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2})/i
- # /^([0-9a-f]{2}([:-]|$)){6}$/i
- for nic in $(ifconfig -a|awk '/eth/ {print $1}')
- do
-   echo "Bringing $nic up"
-
-   if ifconfig $nic up 
-   then
-      ping 10.0.0.0
-      if ifconfig $nic down
-      then
-         echo "$nic brought down"
-      else
-         echo "Problem bring $nic down"
-      fi
-
-   else
-      echo "Problem bring $nic up"
-   fi
- done
 
 Hardware Resolver
  * Determines if hardware requirements are met
@@ -66,19 +49,16 @@ QA Resolvers
   - :branch: yslow
     :environments:
       :production:
-        - {page: "http://vokle.com/login", grade: ">90"}
-        - {page: "http://vokle.com/sports", grade: ">90", rollback: "true"}
+        - {page: "http://example.com/login", grade: ">90"}
+        - {page: "http://example.com/index", grade: ">=99", rollback: "true"}
  
 
 warningshot should get platform information to allow for platfrom specific resolutions
-Interfaces for Cap, Vertebra, and Vlad
 
-XMPP/EMAIL interface for exception notification/live reporting && url dependency failure (check every)
+Interfaces for Cap, Vertebra, and Vlad
  
 ==== Old SHit.
-# TODO dump this file, make all attributes inner classes of applicable Dependency classes
-# @notes
-#   Open4 Usage:
+# This is old shit from a prototype i did of file/permissions resolver...
 #     http://www.workingwithrails.com/railsplugin/6146-open4-9-3
 #     http://codeforpeople.com/lib/ruby/open4/open4-0.9.3/README
 

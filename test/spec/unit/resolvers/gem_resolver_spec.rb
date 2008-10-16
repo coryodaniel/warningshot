@@ -1,13 +1,13 @@
-require File.join(%w(. lib resolvers RESOLVER_NAME))
+require File.join(%w(. lib resolvers gem_resolver))
 
-describe WarningShot::RESOLVER_NAME do
+describe WarningShot::GemResolver do
 
   it 'should have tests registered' do
-    WarningShot::RESOLVER_NAME.tests.empty?.should be(false)
+    WarningShot::GemResolver.tests.empty?.should be(false)
   end
 
   it 'should have resolutions registered' do
-    WarningShot::RESOLVER_NAME.resolutions.empty?.should be(false)
+    WarningShot::GemResolver.resolutions.empty?.should be(false)
   end
      
   describe 'with healing enabled' do
