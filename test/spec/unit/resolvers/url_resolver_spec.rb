@@ -33,14 +33,14 @@ describe WarningShot::UrlResolver do
     resolver = WarningShot::UrlResolver.new "http://example.com", "http://127.0.0.1:31337"
     resolver.test!
     resolver.failed.length.should be(1)
-    resolver.succeeded.length.should be(1)
+    resolver.passed.length.should be(1)
   end
   
   it 'should be able to determine if an https address is unreachable' do
     resolver = WarningShot::UrlResolver.new "https://www.google.com/analytics/home/", "https://127.0.0.1:31337"
     resolver.test!
     resolver.failed.length.should be(1)
-    resolver.succeeded.length.should be(1)
+    resolver.passed.length.should be(1)
   end
     
   it 'should be able to receive --strict from the command line' do
@@ -52,7 +52,7 @@ describe WarningShot::UrlResolver do
 
     resolver.test!
     resolver.failed.length.should be(1)
-    resolver.succeeded.length.should be(1)
+    resolver.passed.length.should be(1)
   end
   
   it 'should be able to verify CA certificate and peer' do

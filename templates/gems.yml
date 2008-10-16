@@ -1,0 +1,26 @@
+# Checks for and installs ruby gems
+# You can add your own environments below.  Requirements listed in
+# the 'global' environment are always checked
+
+# Each environment takes an array of hashes or strings, if a gem is a listed as a string
+#   it is assumed the version to install is the newest (>=0.0.0)
+
+#---
+#- :branch: gem
+#  :environments: 
+#    :development: []
+#    :global:
+#      - {name: "rails", :version ">=2.0.0"}
+#      - image_science
+#    :test: []
+#    :qa: []
+#    :production: []
+
+---
+- :branch: gem
+  :environments: 
+    :development: []
+    :global: []
+    :test: []
+    :qa: []
+    :production: []

@@ -25,7 +25,7 @@ describe WarningShot::DirectoryResolver do
       test_dir2 = File.join(@@base_path,'test2')
       resolver = WarningShot::DirectoryResolver.new control_dir,test_dir1, test_dir2
       resolver.test!
-      resolver.succeeded.length.should be(1)
+      resolver.passed.length.should be(1)
       resolver.failed.length.should be(2)
       
       resolver.resolve!

@@ -1,15 +1,20 @@
-Gem Resolver (Alt gem path)
 WarningShot boot & work (interface & CLI)
-
+DependencResolver Class should run/report back to caller status (logger love as well)
 
 ========
+Create a rubygem called 'warningshot_dummy' for testing gem_resolver
+
+Cyclical healing (loop resolution call until unresolved == 0 or unresolved == last_unresolved)
+
+Gems 
+ * Minigems option, prepares gems as minigems
+
 Permissions Resolver
  * chmod, chown
  
 Binary Resolver
- * Apt, Yum, Gems, Ports
- * Stay resident option
- * Minigems option, prepares gems as minigems
+ * Apt, Yum, Ports
+ * Random binaries like awk, vi, etc... (previously used `which BINARY`)
  
 Git, Svn Resolver
 

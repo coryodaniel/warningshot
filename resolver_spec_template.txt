@@ -1,0 +1,40 @@
+require File.join(%w(. lib resolvers RESOLVER_NAME))
+
+describe WarningShot::RESOLVER_NAME do
+
+  it 'should have tests registered' do
+    WarningShot::RESOLVER_NAME.tests.empty?.should be(false)
+  end
+
+  it 'should have resolutions registered' do
+    WarningShot::RESOLVER_NAME.resolutions.empty?.should be(false)
+  end
+     
+  describe 'with healing enabled' do
+    describe 'with heal instructions' do
+      it 'should' do
+        pending
+      end
+    end # End healing enabled, instructions provided
+    
+    describe 'without heal instructions' do
+      it 'should' do
+        pending
+      end
+    end # End healing enabled, instructions not provided
+  end # End healing enabled
+  
+  describe 'with healing disabled' do
+    describe 'with heal instructions' do
+      it 'should' do
+        pending
+      end
+    end #End healing disabled, instructions provided
+    
+    describe 'without heal instructions' do
+      it 'should' do
+        pending
+      end
+    end # End healing disabled, instructions not provided
+  end # End healing disabled
+end
