@@ -5,7 +5,7 @@
 # path REQUIRED
 # recursive, mode, user, group OPTIONAL (one required)
 ---
-- :branch: permissions
+- :branch: permission
   :environments:
     :global: 
       - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}

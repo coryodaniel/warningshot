@@ -1,0 +1,171 @@
+Permissions Resolver
+Gem Resolver (Alt gem path)
+WarningShot boot & work (interface & CLI)
+
+========
+Binary Resolver
+ * Apt, Yum, Gems, Ports
+ * Stay resident option
+ * Minigems option, prepares gems as minigems
+ 
+DependencResolver Class should run/report back to caller status (logger love as well)
+
+ServicesResolver
+  * memcached, mysql, etc...
+
+IpTableResolver
+ * Confirms, sets up, and saves Iptables
+ 
+Connections Resolver
+ * test network connections
+ # ifconfig -a => active interfaces
+ # /((?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2})/i
+ # /^([0-9a-f]{2}([:-]|$)){6}$/i
+ for nic in $(ifconfig -a|awk '/eth/ {print $1}')
+ do
+   echo "Bringing $nic up"
+
+   if ifconfig $nic up 
+   then
+      ping 10.0.0.0
+      if ifconfig $nic down
+      then
+         echo "$nic brought down"
+      else
+         echo "Problem bring $nic down"
+      fi
+
+   else
+      echo "Problem bring $nic up"
+   fi
+ done
+
+Hardware Resolver
+ * Determines if hardware requirements are met
+ 
+Script Resolver
+ * A scripting interface... was in old WS that enabled people to do most of this stuff
+    Should it just be left out since its so easy to extend?
+    
+MountResolver / NFSMount Resolver
+ * God knows.
+  
+QA Resolvers
+  * Rspec
+  * YSlow
+  * RCoverage
+  * Watir, etc etc
+
+  - :branch: quality
+    :environments:
+      :production:
+        - {attrib: "rspec", grade: ">98"}
+        - {attrib: "rcov", grade: ">90", rollback: "true"}
+
+
+  - :branch: yslow
+    :environments:
+      :production:
+        - {page: "http://vokle.com/login", grade: ">90"}
+        - {page: "http://vokle.com/sports", grade: ">90", rollback: "true"}
+ 
+
+warningshot should get platform information to allow for platfrom specific resolutions
+Interfaces for Cap, Vertebra, and Vlad
+
+XMPP/EMAIL interface for exception notification/live reporting && url dependency failure (check every)
+ 
+==== Old SHit.
+# TODO dump this file, make all attributes inner classes of applicable Dependency classes
+# @notes
+#   Open4 Usage:
+#     http://www.workingwithrails.com/railsplugin/6146-open4-9-3
+#     http://codeforpeople.com/lib/ruby/open4/open4-0.9.3/README
+
+module WarningShot
+  class FileSystemResource
+  
+    def initialize(path_data)
+      @attributes = parse_params(path_data)
+    end
+  
+    def [](key)
+      return @attributes[key]
+    end
+
+    def []=(key,val)
+      return @attributes[key] = val
+    end
+  
+    def chown
+      status = Open4::popen4("sh") do |p,i,o,e|
+        command = ["chown"]
+        command.push "-R" if ["chown","both"].member? self[:recursive]
+        command.push "#{self[:user]}:#{self[:group]}"
+        command.push self[:target]
+      
+        i.puts command.join(" ")
+        i.close
+      end
+    
+      if status.exitstatus == 0
+        return true
+      else
+        raise Exception, "Could not chown:\n ~ #{@attributes.inspect}"
+      end
+    end
+  
+    def chmod
+      status = Open4::popen4("sh") do |p,i,o,e|
+        command = ["chmod"]
+        command.push "-R" if ["chmod","both"].member? self[:recursive]
+        command.push self[:mode]
+        command.push self[:target]
+      
+        i.puts command.join(" ")
+        i.close
+      end  
+    
+      if status.exitstatus == 0
+        return true
+      else
+        raise Exception, "Could not chmod:\n ~ #{@attributes.inspect}"
+      end
+    end
+  
+    private
+
+    def parse_params(path_data)
+      attributes = defaults
+  
+      #Make path_data a hash if it was passed as a string
+      path_data = {:target => path_data} if path_data.is_a? String
+  
+      attributes.merge! path_data.symbolize_keys!
+      orig_group = attributes[:group]
+  
+      #Group defaults to user
+      attributes[:group] = attributes[:user] if orig_group.nil? || orig_group.empty?
+  
+      #Expand source and dest paths
+      #attributes[:source]   = File.expand_path(attributes[:source]) unless attributes[:source].nil?
+      #attributes[:target]  = File.expand_path(attributes[:target])
+  
+      attributes[:recursive].downcase!
+  
+      return attributes
+    end
+
+    def defaults
+      {
+        :target       => nil,
+        :source        => nil,
+        :mode       => "0755",
+        :user       => "nobody",
+        :group      => "nobody",
+        :recursive  => "none"
+      }    
+    end
+  
+  end
+end
