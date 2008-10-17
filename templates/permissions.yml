@@ -4,14 +4,14 @@
 # Each environt takes an array hashes
 # path REQUIRED
 # recursive, mode, user, group OPTIONAL (one required)
+#      - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
+#      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
+#      - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
 ---
 - :branch: permission
   :environments:
-    :global: 
-      - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
-      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
-    :test: 
-      - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
+    :global: []
+    :test: []
     :production: []
     :development: []
     :qa: []

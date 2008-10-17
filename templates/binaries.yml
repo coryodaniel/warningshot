@@ -10,6 +10,11 @@
 # - /usr/sbin/sendmail
 # :production:
 # -
+#  
+#   - {manager: 'apt',name:'banshee', version: '>0.1.0'}
+#   - {manager: 'gems',name:'merb', version: '>0.9.0'}
+#   - {manager: 'ports',name:'libmemcached', version: '>0.1.0'}
+#   - {manager: 'yum',name:'libmemcached', version: '>0.1.0'}
 
 --- 
 :branch: binaries
@@ -19,7 +24,3 @@
   :test: []
   :qa: []
   :production: []
-   - {manager: 'apt',name:'banshee', version: '>0.1.0'}
-   - {manager: 'gems',name:'merb', version: '>0.9.0'}
-   - {manager: 'ports',name:'libmemcached', version: '>0.1.0'}
-   - {manager: 'yum',name:'libmemcached', version: '>0.1.0'} 

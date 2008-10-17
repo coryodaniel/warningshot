@@ -18,13 +18,4 @@ describe WarningShot::TemplateGenerator do
     yaml_files.empty?.should be(false)
   end
   
-  it "should have generate example Ruby scripts" do
-    ruby_scripts = Dir[File.join(@test_path, 'scripts','ruby','*.rb')]
-    ruby_scripts.empty?.should be(false)
-  end
-  
-  it "should have generate example Bash scripts" do
-    bash_scripts = Dir[File.join(@test_path, 'scripts','bash','*.sh')]
-    bash_scripts.empty?.should be(false)
-  end
 end

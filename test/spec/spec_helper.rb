@@ -1,3 +1,3 @@
-require 'lib/warning_shot'
+require 'lib/warningshot'
 
 $test_data  = File.join(%w(. test data))

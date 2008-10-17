@@ -1,8 +1,6 @@
 #! /usr/bin/env ruby
-require 'rubygems'
 
-gem 'warningshot'
-require 'warning_shot/suite'
+require 'warningshot'
 
 WarningShot::Config.parse_args
 WarningShot.fire!
