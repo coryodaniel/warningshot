@@ -49,7 +49,7 @@ describe WarningShot::GemResolver do
   # The gem name is the healing instructions, so if its provide, there
   #   are instructions 
   it 'should install the gems when healing is enabled' do
-    resolver = WarningShot::GemResolver.new({:name => "pdf-writer"})
+    resolver = WarningShot::GemResolver.new({:name => "yard"})
     resolver.test!
     
     resolver.failed.size.should be(1)
