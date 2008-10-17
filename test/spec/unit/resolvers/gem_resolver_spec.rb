@@ -8,6 +8,10 @@ describe WarningShot::GemResolver do
   before :all do
     FileUtils.rm_rf "./test/output/gems"
   end
+  
+  after :all do
+    FileUtils.rm_rf "./test/output/gems"
+  end
 
   it 'should have tests registered' do
     WarningShot::GemResolver.tests.empty?.should be(false)
