@@ -1,3 +1,6 @@
+#Note, this fails if the gem yard is already installed, which sucks.  Waiting on rubyforge to
+# approve ws-dummy gem
+
 require File.join(%w(. lib resolvers gem_resolver))
 require 'fileutils'
 describe WarningShot::GemResolver do

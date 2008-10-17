@@ -10,11 +10,15 @@ module WarningShot
     }
     
     def call(severity, timestamp, progname, msg)
-      sprintf(ESCAPE_SEQ[severity],"#{msg}\n")
+      @colorize ? sprintf(ESCAPE_SEQ[severity],"#{msg}\n") : "#{msg}\n"
     end
     
     def time_format=(fmt)
       @time_format = fmt
+    end
+    
+    def colorize=(color)
+      @colorize = color
     end
         
   end

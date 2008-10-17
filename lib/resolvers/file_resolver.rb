@@ -11,7 +11,6 @@ require 'net/https'
 class WarningShot::FileResolver
   include WarningShot::Resolver
   order  500
-  #disable!
 
   branch :file
   description 'Validates presence of files'

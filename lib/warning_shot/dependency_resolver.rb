@@ -1,10 +1,3 @@
-# Auto-generated ruby debug require       
-require "ruby-debug"
-Debugger.start
-Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-
-# TODO callbacks, casting, conditional test, test, resolve, etc        
-
 module WarningShot
   class DependencyResolver
     
@@ -46,12 +39,17 @@ module WarningShot
     # 
     # @api private
     def init_logger
+      FileUtils.mkdir_p(File.dirname(File.expand_path(@config[:log_path]))) unless @config[:verbose]
+      
       @logger = Logger.new(
         @config[:verbose] ? STDOUT : @config[:log_path], 10, 1024000
       )
       _log_level = (@config[:log_level] || :debug).to_s.upcase
 
-      @logger.formatter = WarningShot::LoggerFormatter.new
+      _formatter = WarningShot::LoggerFormatter.new
+      _formatter.colorize = @config[:colorize]
+
+      @logger.formatter = _formatter
       @logger.level     = Object.class_eval("Logger::#{_log_level}")
     end
     
@@ -63,6 +61,8 @@ module WarningShot
       @logger.info "Environment: #{@environment}; Application: #{WarningShot.framework}"
       
       WarningShot::Resolver.descendents.each do |klass|
+        @logger.info "\n#{'*'*60}"
+
         branch = @dependency_tree[klass.branch.to_sym]
 
         if branch.nil?
@@ -78,21 +78,23 @@ module WarningShot
         @logger.info "Testing branch #{klass.branch} w/ #{resolver.class}"
                 
         # Start test
+        klass.before_filters(:test).each{|p| p.call}
         resolver.test!
+        klass.after_filters(:test).each{|p| p.call}
         
         @logger.info "Passed: #{resolver.passed.size}"
         @logger.info "Failed: #{resolver.failed.size}"
 
         if WarningShot::Config.configuration[:resolve] && !klass.resolutions.empty?
           @logger.info "Resolving branch #{klass.branch} w/ #{resolver.class}"
+
+          klass.before_filters(:resolution).each{|p| p.call}
           resolver.resolve! 
+          klass.after_filters(:resolution).each{|p| p.call}
           
           @logger.info "Resolved: #{resolver.resolved.size}"
           @logger.info "Unresolved: #{resolver.unresolved.size}"
         end
-        
-        @logger.info "*" * 60
-        @logger.info "\n"
       end
     end
     

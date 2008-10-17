@@ -14,7 +14,7 @@ module WarningShot
           :log_path     => File.join('.','log','warningshot.log'),
           :log_level    => :info,
           :growl        => false,
-          :verbose      => true,
+          :verbose      => false,
           :colorize     => true
         }
       end

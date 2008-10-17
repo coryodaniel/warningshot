@@ -337,7 +337,7 @@ module WarningShot
       #   Before filters
       # @api private
       def before_filters(type)
-        @before_filters[type]
+        @before_filters ? @before_filters[type] : []
       end
       
       # gets after filters for type
@@ -348,7 +348,7 @@ module WarningShot
       #   after filters
       # @api private
       def after_filters(type)
-        @after_filters[type]
+        @after_filters ? @after_filters[type] : []
       end
 
       # add after filters to test/resolution blocks
