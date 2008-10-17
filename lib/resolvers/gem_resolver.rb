@@ -1,3 +1,8 @@
+# Auto-generated ruby debug require       
+require "ruby-debug"
+Debugger.start
+Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+
 require 'rubygems/dependency_installer'
 class WarningShot::GemResolver
   include WarningShot::Resolver
@@ -89,7 +94,7 @@ class WarningShot::GemResolver
     begin
       dep_inst = Gem::DependencyInstaller.new({:install_dir => Gem.path.first})
       dep_inst.install(dep.name,Gem::Requirement.new(dep.version))
-      
+      debugger
       Gem::cache.refresh!
     rescue Exception => ex
       logger.error " ~ Could not install gem: #{dep.name}:#{dep.version}"
