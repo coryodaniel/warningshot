@@ -1,6 +1,10 @@
 require File.join(%w(. lib resolvers core_lib_resolver))
 
 describe WarningShot::CoreLibResolver do
+  before :all do
+    WarningShot::CoreLibResolver.logger = $logger
+  end
+  
   
   it 'should have tests registered' do
     WarningShot::CoreLibResolver.tests.empty?.should be(false)

@@ -2,6 +2,8 @@ require File.join(%w(. lib resolvers directory_resolver))
 
 describe WarningShot::DirectoryResolver do
   before :all do
+    WarningShot::DirectoryResolver.logger = $logger
+    
     @@base_path = File.expand_path(File.join(%w(. test data resolvers directory)))
   end
   

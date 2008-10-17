@@ -1,6 +1,9 @@
 require File.join(%w(. lib resolvers url_resolver))
 
 describe WarningShot::UrlResolver do
+  before :all do    
+    WarningShot::UrlResolver.logger = $logger 
+  end
 
   it 'should have tests registered' do
     WarningShot::UrlResolver.tests.empty?.should be(false)

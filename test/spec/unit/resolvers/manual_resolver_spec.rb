@@ -1,7 +1,10 @@
 require File.join(%w(. lib resolvers manual_resolver))
 
 describe WarningShot::ManualResolver do
-
+  before :all do
+    WarningShot::ManualResolver.logger = $logger
+  end
+  
   it 'should have tests registered' do
     WarningShot::ManualResolver.tests.empty?.should be(false)
   end

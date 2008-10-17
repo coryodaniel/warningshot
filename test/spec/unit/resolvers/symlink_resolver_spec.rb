@@ -2,6 +2,8 @@ require File.join(%w(. lib resolvers symlink_resolver))
 
 describe WarningShot::SymlinkResolver do
   before :all do
+    WarningShot::SymlinkResolver.logger = $logger 
+    
     @@data_path = File.expand_path(File.join(%w(. test data)))
     @@base_path = File.expand_path(File.join(%w(. test data resolvers symlink)))
   end

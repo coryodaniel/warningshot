@@ -1,14 +1,9 @@
 require File.join(%w(. lib resolvers file_resolver))
 
-# VALID YAML (mode,user,group, source are all optional)
-# '~/some.file'
-# '/path/to/a.file'
-# 'PROTOCOL://path/to/a.file'
-# { dest: "/path/to/data.txt", source: "PROTOCOL://example.com/index.html"}
-# { dest: "/path/to/data.txt", source: "/example.com/index.html"}
-
 describe WarningShot::FileResolver do
   before :all do
+    WarningShot::FileResolver.logger = $logger
+
     @@base_path = File.expand_path(File.join(%w(. test data resolvers file)))
     @@source_path  = File.join(@@base_path,'src')
     @@dest_path = File.join(@@base_path,'dest')

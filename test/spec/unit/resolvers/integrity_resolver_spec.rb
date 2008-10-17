@@ -2,6 +2,8 @@ require File.join(%w(. lib resolvers integrity_resolver))
 
 describe WarningShot::IntegrityResolver do
   before :all do
+    WarningShot::IntegrityResolver.logger = $logger
+
     @@base_path = File.expand_path(File.join(%w(. test data resolvers file)))
     @@source_path  = File.join(@@base_path,'src')
   end

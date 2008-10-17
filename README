@@ -1,5 +1,11 @@
 WarningShot Dependency Resolution Framework
 
+==== How it works
+  * WarningShot - Factory class that creates and runs DependencyResolver
+  * DependencyResolver - Locates Resolver classes, creates a dependency tree, and matches resolvers to resolution branches
+  * Resolver - Class that can be included to create plugins.  Composed of tests and resolutions that can determine if a dependency was met, and if not, how to fix it
+  
+  
 ==== Command Line Usage
   -e, --environment=STRING         Environment to test in
                                    Default: development
@@ -68,6 +74,12 @@ WarningShot Dependency Resolution Framework
  * Coming Soon (see bin/warningshot for simple example)
 
 
+==== Components
+ * Ruby API
+ * Resolvers
+ * Config Files
+ 
+ 
 ==== Using Config Files
  * Coming Soon
 

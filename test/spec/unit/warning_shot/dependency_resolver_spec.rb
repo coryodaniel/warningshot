@@ -7,7 +7,8 @@ describe WarningShot::DependencyResolver do
   it 'should create a dependency tree from a set of config files' do
     config = {
       :config_paths => [$test_data],
-      :environment => 'rspec'
+      :environment => 'rspec',
+      :log_path => $log_file
     }
     
     dr = WarningShot::DependencyResolver.new(config)
@@ -20,9 +21,4 @@ describe WarningShot::DependencyResolver do
     dr.dependency_tree[:faux].empty?.should be(true)        
   end
   
-  it 'should have some sort of neat way to deal with conflicts between files & environments.' do
-    # if fileA has two conflicting settings between global & running env, running env wins
-    # if fileA and fileB have to conflicting settings, WHO WINS?!
-    pending
-  end
 end

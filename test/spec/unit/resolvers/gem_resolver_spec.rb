@@ -5,6 +5,8 @@ require File.join(%w(. lib resolvers gem_resolver))
 require 'fileutils'
 describe WarningShot::GemResolver do
   before :all do
+    WarningShot::GemResolver.logger = $logger
+    
     FileUtils.rm_rf "./test/output/gems"
   end
   

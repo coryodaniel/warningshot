@@ -1,6 +1,10 @@
 require File.join(%w(. lib resolvers permission_resolver))
 
 describe WarningShot::PermissionResolver do
+  before :all do
+    WarningShot::PermissionResolver.logger = $logger
+  end
+
 
   it 'should have tests registered' do
     WarningShot::PermissionResolver.tests.empty?.should be(false)
