@@ -30,25 +30,21 @@ class WarningShot::GemResolver
   )
          
   GemResource = Struct.new(:name,:version) do
-    # TODO replace this with Gem::Requirement
     def installed?
       self.version ||= DEFAULT_VERSION
       installed_versions = Gem::cache.search self.name
       installed = false
 
-      conditionals      = self.version.match(CONDITIONAL_RGX)[0]          
-      required_version  = Gem::Version.create self.version.match(VERSION_RGX)[0] 
+      required_version = Gem::Requirement.new self.version
 
       installed_versions.each do |i_gem|
-        installed = case (required_version <=> i_gem.version)
-        when 0
-          (conditionals =~ /=/ || conditionals.empty?)
-        when 1
-          (conditionals =~ /</)
-        when -1
-          (conditionals =~ />/)
+        installed = case(required_version <=> Gem::Requirement.new(i_gem.version))
+        when 1,0
+          true
+        else
+          false
         end
-
+        
         break if installed
       end
       installed
