@@ -27,14 +27,20 @@ WarningShot Dependency Resolution Framework
   
   
 ==== Ruby API
- * In progress (see bin/warningshot for simple example)
+ * Coming Soon (see bin/warningshot for simple example)
+
 
 ==== Using Config Files
- * How the dependency tree works
+ * Coming Soon
+
+ 
+==== How the dependency tree works
+ * Coming Soon
+
 
 ==== Extending WarningShot
- * Writing a Resolver
- * Modifying Resolvers at run-time
+ * Writing a Resolver (Coming Soon)
+ * Modifying Resolvers at run-time (Coming Soon)
 
 
 ==== Contributing

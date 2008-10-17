@@ -10,6 +10,15 @@ class WarningShot::GemResolver
   order  100
   branch :gem
   description 'Installs ruby gems and their dependencies'
+
+  # Matches >, <, >=, <=
+  CONDITIONAL_RGX = /[^\d]*/.freeze
+  
+  # Matches digits in version
+  VERSION_RGX     = /[\d\.]+/.freeze
+  
+  # Default version to install
+  DEFAULT_VERSION = ">=0.0.0".freeze
      
   cli(
     :long         => "--gempath",
@@ -24,28 +33,7 @@ class WarningShot::GemResolver
     :name         => "minigems",
     :default      => false
   )
-  
-  @@loaded_paths = false
-  class << self
-    # loads the paths from WarningShot::Config.configuration[:gem_path]
-    #   will only load them once
-    def load_paths
-      if !@@loaded_paths && WarningShot::Config.configuration.key?(:gem_path)
-        WarningShot::Config.configuration[:gem_path].split(":").reverse.each do |path|
-          Gem.path.unshift path
-        end
-        
-        Gem::cache.class.from_gems_in WarningShot::Config.configuration[:gem_path].split(":")
-        Gem::cache.refresh!
-        @@loaded_paths = true
-      end
-    end
-  end
-     
-  CONDITIONAL_RGX = /[^\d]*/.freeze
-  VERSION_RGX     = /[\d\.]+/.freeze
-  DEFAULT_VERSION = ">=0.0.0".freeze
-  
+         
   GemResource = Struct.new(:name,:version) do
     # TODO replace this with Gem::Requirement
     def installed?
@@ -68,28 +56,19 @@ class WarningShot::GemResolver
 
         break if installed
       end
-
       installed
     end
-  end
+  end #End GemResource
   
-  cast String do |yaml|
-    GemResource.new(yaml,DEFAULT_VERSION)
-  end
-  
-  cast Hash do |yaml|
-    GemResource.new yaml[:name], yaml[:version]
-  end
-  
-  register :test do |dep|
-    WarningShot::GemResolver.load_paths
+  cast(String){ |yaml| GemResource.new(yaml,DEFAULT_VERSION) }
+  cast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version] }
     
+  register :test do |dep|    
     if gem_found = dep.installed?
       logger.debug " ~ [PASSED] gem: #{dep.name}:#{dep.version}"
     else
       logger.warn " ~ [FAILED] gem: #{dep.name}:#{dep.version}"
     end
-
     gem_found
   end
   
@@ -100,7 +79,25 @@ class WarningShot::GemResolver
     rescue Exception => ex
       logger.error " ~ Could not install gem: #{dep.name}:#{dep.version}"
     end
-    
     dep.installed?
+  end
+  
+  class << self
+    # loads gem paths from WarningShot::Config
+    def load_paths
+      if WarningShot::Config.configuration.key?(:gem_path)
+        WarningShot::Config.configuration[:gem_path].split(":").reverse.each do |path|
+          Gem.path.unshift path
+        end
+        
+        Gem::cache.class.from_gems_in WarningShot::Config.configuration[:gem_path].split(":")
+        Gem::cache.refresh!
+      end
+    end
+  end
+  
+  def initialize(*params)
+    super
+    WarningShot::GemResolver.load_paths
   end
 end
