@@ -14,7 +14,7 @@
 #     :production: []
 
 ---
-:branch: directories
+:branch: directory
 :environments: 
   :development: []
   :global: []
