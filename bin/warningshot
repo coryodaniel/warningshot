@@ -1,6 +1,19 @@
 #! /usr/bin/env ruby
-
 require 'warningshot'
 
+# Parse ARGV
 WarningShot::Config.parse_args
-WarningShot.fire!
+
+# Initialize and run a new dependency resolver
+dep_resolver = WarningShot.fire!
+
+# Get the stats from the resolver
+stats = dep_resolver.stats
+
+# Growl the results if growl is on
+if WarningShot::Config[:growl]
+  WarningShot::Growl.say stats.to_a.join('/')
+end
+
+#Return an exit status based on number of unresolved dependencies
+exit(stats[:unresolved])

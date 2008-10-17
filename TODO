@@ -7,6 +7,8 @@ DependencResolver Class should run/report back to caller status
 WarningShot logger needs serious love, ie, my output sucks.
 
 ========
+WarningShot should have its own set of config files so it can test its self (for WS Developers)
+
 Cyclical healing (loop resolution call until unresolved == 0 or unresolved == last_unresolved)
 
 Gems 

@@ -65,6 +65,9 @@ BANNER
         WarningShot.parser.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{defaults[:config_paths].join(':')}") do |config|
           options[:config_paths] = config.split(':')
         end
+        WarningShot.parser.on("-c","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Not supported yet.") do |config|
+          options[:resolvers] = config.split(':')
+        end
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
           template_path = options[:config_paths].first if template_path.nil? || template_path.empty?
           WarningShot::TemplateGenerator.create(template_path)

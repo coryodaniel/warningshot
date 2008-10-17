@@ -1,7 +1,3 @@
-# NOTE:
-# This is a hard spec to write, if it fails, it may be because you are missing the gem used to
-# test, this may also install software, sorry.
-
 require File.join(%w(. lib resolvers gem_resolver))
 require 'fileutils'
 describe WarningShot::GemResolver do

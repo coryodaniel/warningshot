@@ -8,50 +8,92 @@ Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
 module WarningShot
   class DependencyResolver
     
-    attr_reader :environment, :dependency_tree
-    def initialize(config={},&block)
-      @config = config
-      @environment = @config[:environment].to_sym
+    attr_reader :environment, :dependency_tree, :resolvers
+    def initialize(config={})
+      @config           = config
+      @environment      = @config[:environment].to_sym
+      @dependency_tree  = {}
+      @resolvers        = []
         
+      init_logger
+            
       # Parsed yml files
-      @dependency_tree = {}
       self.load_configs
       @dependency_tree.symbolize_keys!
-      
-      @resolvers = []
     end
     
-    def run
-      WarningShot::BeforeCallbacks.each {|b| b.call(self)}
+    # gets stats of all resolvers
+    # @return [Hash] 
+    #   :passed, :failed, :resolved, :unresolved
+    #
+    # @api public
+    def stats
+      _stats = {
+        :passed => 0, :failed => 0, :resolved => 0, :unresolved => 0
+      }
+      
+      resolvers.each do |resolver|
+        _stats[:passed]     += resolver.passed.size
+        _stats[:failed]     += resolver.failed.size
+        _stats[:resolved]   += resolver.resolved.size
+        _stats[:unresolved] += resolver.unresolved.size
+      end
+      
+      _stats
+    end
+    
+    # initializes the logger
+    # 
+    # @api private
+    def init_logger
+      @logger = Logger.new(
+        @config[:verbose] ? STDOUT : @config[:log_path], 10, 1024000
+      )
+      _log_level = (@config[:log_level] || :debug).to_s.upcase
 
+      @logger.formatter = WarningShot::LoggerFormatter.new
+      @logger.level     = Object.class_eval("Logger::#{_log_level}")
+    end
+    
+    # runs all loaded resolvers
+    #
+    # @api private
+    def run
+      @logger.info "WarningShot v. #{WarningShot::VERSION}"
+      @logger.info "Environment: #{@environment}; Application: #{WarningShot.framework}"
+      
       WarningShot::Resolver.descendents.each do |klass|
         branch = @dependency_tree[klass.branch.to_sym]
 
         if branch.nil?
-          WarningShot.logger.info "No config file was found for branch #{klass.branch}"
+          @logger.info "No config file was found for branch #{klass.branch}"
           next
         end
-
+        
+        klass.logger = @logger
         resolver = klass.new(*branch)
+
         @resolvers << resolver
-        WarningShot.logger.info "Testing branch #{klass.branch} w/ #{resolver.class}"
+        
+        @logger.info "Testing branch #{klass.branch} w/ #{resolver.class}"
                 
         # Start test
         resolver.test!
-        WarningShot.logger.info "Passed: #{resolver.passed.size}"
-        WarningShot.logger.info "Failed: #{resolver.failed.size}"
+        
+        @logger.info "Passed: #{resolver.passed.size}"
+        @logger.info "Failed: #{resolver.failed.size}"
 
         if WarningShot::Config.configuration[:resolve] && !klass.resolutions.empty?
-          WarningShot.logger.info "Resolving branch #{klass.branch} w/ #{resolver.class}"
+          @logger.info "Resolving branch #{klass.branch} w/ #{resolver.class}"
           resolver.resolve! 
-          WarningShot.logger.info "Resolved: #{resolver.resolved.size}"
-          WarningShot.logger.info "Unresolved: #{resolver.unresolved.size}"
+          
+          @logger.info "Resolved: #{resolver.resolved.size}"
+          @logger.info "Unresolved: #{resolver.unresolved.size}"
         end
         
-        WarningShot.logger.info "*" * 60
+        @logger.info "*" * 60
+        @logger.info "\n"
       end
-
-      WarningShot::AfterCallbacks.each {|b| b.call(self)}
     end
     
     protected

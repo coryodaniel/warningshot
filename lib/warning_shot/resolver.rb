@@ -10,7 +10,6 @@
 module WarningShot
   module Resolver
     module ClassMethods
-      DefaultRescues = {:test => true, :resolve => true}
       attr_reader :raw_cli_ext
       
       # extends command line interface
@@ -139,48 +138,21 @@ module WarningShot
         @disabled ||=false
       end
       
-      # Provides resolver access to warningshots logger
+      # Provides resolver access to logger
       #
       # @return [~Logger]
       #   WarningShots logger
       #
       # @api public
       def logger
-        WarningShot.logger
+        @logger || Logger.new(STDOUT)
       end
       
-      # Sets if the test/resolve blocks should be wrapped in resuce statements
-      #   This will allow WarningShot to output a nice error message and continue
-      #   testing other dependencies rather than exit
-      #
-      # @param r [Boolean|Hash]
-      #   Does it need to be rescued
-      #
-      # @example
-      #   MyMockResolver.rescue_me!   
-      #     #=> sets @needs_rescue => {:resolve => true, :test=> true}
-      #   MockResolver.rescue_me! :resolve => true 
-      #     #=> sets @needs_rescue => {:resolve => true, :test=> false}
-      #
-      # @api public
-      #def rescue_me!(r=nil)
-      #  @needs_rescue = (r.is_a? Hash) ? r.merge(DefaultRescues) : DefaultRescues
-      #end
-      
-      # Determines if method needs rescue
-      #
-      # @param method [Symbol] (:test | :resolve)
-      #   method to check if it needs rescue
-      #
-      # @return [Boolean]
-      #   Does it need rescue block 
-      #
-      # @api private
-      #def needs_rescue?(meth)
-      #  @needs_rescue ||= DefaultRescues
-      #  !!(@needs_rescue[meth])
-      #end
-      
+      # Sets
+      def logger=(log)
+        @logger = log
+      end
+            
       # Defines how to cast YAML parsed data to an object
       #   the resolver can work with
       #
@@ -351,6 +323,7 @@ module WarningShot
       # @param block [lambda]
       #   block to run before tests or resolutions
       #
+      # @api public
       def before(type,&block)
         @before_filters ||= {:test=>[],:resolution=>[]}
         @before_filters[type] << block
@@ -362,7 +335,7 @@ module WarningShot
       #   Type of filters to get
       # @return [Array[Proc]] 
       #   Before filters
-      # @api
+      # @api private
       def before_filters(type)
         @before_filters[type]
       end
@@ -373,7 +346,7 @@ module WarningShot
       #   Type of filters to get
       # @return [Array[Proc]] 
       #   after filters
-      # @api
+      # @api private
       def after_filters(type)
         @after_filters[type]
       end
@@ -385,6 +358,7 @@ module WarningShot
       # @param block [lambda]
       #   block to run after tests or resolutions
       #      
+      # @api public
       def after(type,&block)
         @after_filters ||= {:test=>[],:resolution=>[]}
         @after_filters[type] << block
@@ -508,7 +482,8 @@ module WarningShot
           @dependencies.add dep
         end
       end
-          
+   
+      attr_accessor :logger
       attr_accessor :dependencies
       
       protected

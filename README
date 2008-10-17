@@ -24,7 +24,45 @@ WarningShot Dependency Resolution Framework
       --version                    Show version
   -h, --help                       Show this help message
       --debugger                   Enable debugging
-  
+
+==== See whats installed w/ warningshot --version
+  WarningShot v. 0.9.4
+  Installed resolvers:
+
+  WarningShot::CoreLibResolver
+    Tests: 1, Resolutions: 0 [unresolvable]
+    Checks that core ruby lib packages are available
+
+  WarningShot::SymlinkResolver
+    Tests: 1, Resolutions: 1 [resolvable]
+    Validates symlinks exist
+
+  WarningShot::DirectoryResolver
+    Tests: 1, Resolutions: 1 [resolvable]
+    Validates presence of directories
+
+  WarningShot::GemResolver
+    Tests: 1, Resolutions: 1 [resolvable]
+    Installs ruby gems and their dependencies
+    Command Line Options: --gempath,--minigems
+
+  WarningShot::FileResolver
+    Tests: 1, Resolutions: 2 [resolvable]
+    Validates presence of files
+
+  WarningShot::IntegrityResolver
+    Tests: 3, Resolutions: 0 [unresolvable]
+    Check file integrity via md5 or sha1 digest
+
+  WarningShot::UrlResolver
+    Tests: 1, Resolutions: 0 [unresolvable]
+    Validates that URLs are reachable.
+    Command Line Options: --strict,--rootcert,--vdepth
+
+  WarningShot::ManualResolver
+    Tests: 1, Resolutions: 0 [unresolvable]
+    A glorified todo list of things that need to be resolved manually
+
   
 ==== Ruby API
  * Coming Soon (see bin/warningshot for simple example)

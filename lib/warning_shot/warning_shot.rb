@@ -21,6 +21,7 @@ module WarningShot
     #
     # @param dir [Symbol]
     #   directory to look up
+    #
     # @return [String]
     #   absolute path to resource
     #
@@ -30,36 +31,66 @@ module WarningShot
       File.join(WarningShot.root,dir)
     end
     
-    def platform;end;
+    # the application/framework warningshot is running in
+    #   uses constants to determine
+    #
+    # @return [String] Name of framework/application
+    # @api public
+    def framework
+      if defined?(RAILS_ROOT)
+        return "RAILS"
+      elsif defined?(Merb)
+        return "MERB"
+      else
+        return "CONSOLE"
+      end
+    end
     
+    # shortcut to current environment
+    #
+    # @return [String] name of the environment
+    # @api public
     def environment
       WarningShot::Config.configuration[:environment]
     end
     
+    # Parser used to parse Config hash
+    #
+    # @api private
     def parser
       @opt_parser ||= OptionParser.new
     end
     
-    def before_run(&block)
+    # register a callback to be run before starting 
+    #   the dependency resolver
+    # @param block [Proc]
+    #   the before filter
+    # @api public
+    def before(&block)
       BeforeCallbacks << block if block_given?
     end
     
-    def after_run(&block)
+    # register a callback to be run after starting 
+    #   the dependency resolver
+    # @param block [Proc]
+    #   the after filter
+    # @api public
+    def after(&block)
       AfterCallbacks << block if block_given?      
     end
-    
-    def logger
-      if @logger.nil?
-        @logger = Logger.new STDOUT
-        @logger.level = Logger::DEBUG
-        @logger.formatter = WarningShot::LoggerFormatter.new
-      end
-      @logger
-    end
-    
+        
+    # creates and runs a new dependency resolver
+    #
+    # @return WarningShot::DependencyResolver
+    #   a processed dependency resolver   
+    #
+    # @api public
     def fire!
       ws_dr = DependencyResolver.new WarningShot::Config.configuration
+      BeforeCallbacks.each {|p| p.call }
       ws_dr.run
+      AfterCallbacks.each {|p| p.call }
+      
       ws_dr
     end
     alias :run :fire!

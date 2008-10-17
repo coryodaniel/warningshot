@@ -1,4 +1,3 @@
-=begin
 require File.join(%w(. lib resolvers permission_resolver))
 
 describe WarningShot::PermissionResolver do
@@ -39,4 +38,3 @@ describe WarningShot::PermissionResolver do
     end # End healing disabled, instructions not provided
   end # End healing disabled
 end
-=end
