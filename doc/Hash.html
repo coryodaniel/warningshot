@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Hash</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Hash">
+  <h1 class="title">Class: Hash</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href='Object.html' title='Object'>Object</a></li><ul><li>Hash</li>
+  </ul></ul>
+</div><div class="section constants">
+  
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <div class="inherited">
+  
+  <div>
+    <h1>Public Class Methods Inherited from <a href='Object.html' title='Object'>Object</a></h1>
+    <p><span class='name'><a href='Object.html#is_const_defined%3F-class_method' title='is_const_defined?'>is_const_defined?</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#symbolize_keys%21-instance_method' title='#symbolize_keys!'>#symbolize_keys!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>symbolize_keys!</h3>
+</div><div id="symbolize_keys%21-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>symbolize_keys!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/core_ext/hash.rb', line 2</span>
+
+<span class='def def kw'>def</span> <span class='symbolize_keys! fid id'>symbolize_keys!</span>
+  <span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='k identifier id'>k</span><span class='comma token'>,</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> 
+    <span class='sym identifier id'>sym</span> <span class='assign token'>=</span> <span class='k identifier id'>k</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:to_sym</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='k identifier id'>k</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span> <span class='colon op'>:</span> <span class='k identifier id'>k</span> 
+    <span class='self self kw'>self</span><span class='lbrack token'>[</span><span class='sym identifier id'>sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Hash constant id'>Hash</span> <span class='eqq op'>===</span> <span class='v identifier id'>v</span> <span class='integer val'>? </span><span class='v identifier id'>v</span><span class='dot token'>.</span><span class='symbolize_keys! fid id'>symbolize_keys!</span> <span class='colon op'>:</span> <span class='v identifier id'>v</span> 
+    <span class='self self kw'>self</span><span class='lbrack token'>[</span><span class='sym identifier id'>sym</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Array constant id'>Array</span> <span class='eqq op'>===</span> <span class='v identifier id'>v</span> <span class='integer val'>? </span><span class='v identifier id'>v</span><span class='dot token'>.</span><span class='each identifier id'>each</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='i identifier id'>i</span><span class='bitor op'>|</span> 
+      <span class='i identifier id'>i</span><span class='dot token'>.</span><span class='symbolize_keys! fid id'>symbolize_keys!</span> <span class='if if_mod kw'>if</span> <span class='i identifier id'>i</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='Hash constant id'>Hash</span>
+    <span class='rbrace token'>}</span><span class='colon op'>:</span> <span class='v identifier id'>v</span>
+
+    <span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='k identifier id'>k</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='k identifier id'>k</span> <span class='eq op'>==</span> <span class='sym identifier id'>sym</span>
+  <span class='end end kw'>end</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

@@ -21,7 +21,7 @@ module WarningShot
     #
     # @param dir [Symbol]
     #   directory to look up
-    # @returns [String]
+    # @return [String]
     #   absolute path to resource
     #
     # @api public

@@ -1,0 +1,48 @@
+class Whatever
+  
+  # This method adds two things together
+  #
+  # @param p1 [Fixnum]
+  #   The first number
+  #
+  # @param p2 [Fixnum]
+  #   The second number
+  #
+  # @return [Fixnum]
+  #   The sum
+  #
+  # @example
+  #   some_method(3,5) => 8
+  #
+  # @notes
+  #   This method is rediculous
+  # 
+  # @api public
+  def some_method(p1,p2)
+    return p1 + p2
+  end
+  
+  # This method reverses an array
+  #
+  # @param *list [~to_s]
+  #   A list of things that quack like a string
+  #
+  # @return [Array(~to_s)]
+  #   The list in an array, how useful.
+  #
+  # @example
+  #   old_dangerous_method("this","that","the other") => ["this","that","the other"]
+  #
+  # @raise HolyCrap
+  #
+  # @deprecated
+  # @api public
+  def old_dangerous_method(*list)
+    if list.empty?
+      raise "HolyCrap"
+    end
+    
+    return list.reverse
+  end
+  
+end

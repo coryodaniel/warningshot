@@ -1,0 +1,639 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: WarningShot</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module WarningShot">
+  <h1 class="title">Module: WarningShot</h1>
+  <div class="section docstring">
+  <p>
+API access for resolvers
+</p>
+
+</div><div class="section constants">
+  <div class="thisclass">
+  <h1>Constants</h1>
+  <dl>
+    
+      <dt id="AfterCallbacks-constant">AfterCallbacks</dt>
+      <dd>[]</dd>
+    
+      <dt id="BeforeCallbacks-constant">BeforeCallbacks</dt>
+      <dd>[]</dd>
+    
+      <dt id="ConfigExt-constant">ConfigExt</dt>
+      <dd>&quot;*.{yml,yaml}&quot;.freeze</dd>
+    
+      <dt id="MAJOR-constant">MAJOR</dt>
+      <dd>0</dd>
+    
+      <dt id="MINOR-constant">MINOR</dt>
+      <dd>9</dd>
+    
+      <dt id="PATHS-constant">PATHS</dt>
+      <dd>{    :templates  =&gt; 'templates',    :images     =&gt; 'images',    :resolvers =&gt; File.join('lib','warning_shot','resolvers')  }</dd>
+    
+      <dt id="REVISION-constant">REVISION</dt>
+      <dd>4</dd>
+    
+      <dt id="VERSION-constant">VERSION</dt>
+      <dd>[MAJOR,MINOR,REVISION].join('.')</dd>
+    
+  </dl>
+</div>
+
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#after_run-class_method' title='after_run'>after_run</a></span><span class='args'>(&amp;block)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#before_run-class_method' title='before_run'>before_run</a></span><span class='args'>(&amp;block)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#dir_for-class_method' title='dir_for'>dir_for</a></span><span class='args'>(dir)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Gets the absolute path for a resource.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>String</tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#environment-class_method' title='environment'>environment</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#fire%21-class_method' title='fire!'>fire!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+          <span class='alias'>run</span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#logger-class_method' title='logger'>logger</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#parser-class_method' title='parser'>parser</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#platform-class_method' title='platform'>platform</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#root-class_method' title='root'>root</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>after_run</h3>
+</div><div id="after_run-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>after_run</span><span class='args'>(&amp;block)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+47
+48
+49</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 47</span>
+
+<span class='def def kw'>def</span> <span class='after_run identifier id'>after_run</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='AfterCallbacks constant id'>AfterCallbacks</span> <span class='lshft op'>&lt;&lt;</span> <span class='block identifier id'>block</span> <span class='if if_mod kw'>if</span> <span class='block_given? fid id'>block_given?</span>      
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>before_run</h3>
+</div><div id="before_run-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>before_run</span><span class='args'>(&amp;block)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+43
+44
+45</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 43</span>
+
+<span class='def def kw'>def</span> <span class='before_run identifier id'>before_run</span><span class='lparen token'>(</span><span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='BeforeCallbacks constant id'>BeforeCallbacks</span> <span class='lshft op'>&lt;&lt;</span> <span class='block identifier id'>block</span> <span class='if if_mod kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>dir_for</h3>
+</div><div id="dir_for-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'><tt>String</tt></span>
+    <span class='name'>dir_for</span><span class='args'>(dir)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Gets the absolute path for a resource. if it is not listed in PATHS then
+the string is appended to WarningShot.root
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'>dir</span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><dl>
+<dt>Symbol</dt><dd>directory to look up
+
+</dd>
+</dl>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+<div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>String</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+absolute path to resource
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+28
+29
+30
+31</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='dir_for identifier id'>dir_for</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='rparen token'>)</span>
+  <span class='dir identifier id'>dir</span> <span class='assign token'>=</span> <span class='PATHS constant id'>PATHS</span><span class='lbrack token'>[</span><span class='dir identifier id'>dir</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='dir identifier id'>dir</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='WarningShot constant id'>WarningShot</span><span class='dot token'>.</span><span class='root identifier id'>root</span><span class='comma token'>,</span><span class='dir identifier id'>dir</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>environment</h3>
+</div><div id="environment-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>environment</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+35
+36
+37</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 35</span>
+
+<span class='def def kw'>def</span> <span class='environment identifier id'>environment</span>
+  <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='configuration identifier id'>configuration</span><span class='lbrack token'>[</span><span class='symbol val'>:environment</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>fire!</h3>
+</div><div id="fire%21-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>fire!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="run-class_method">run</tt>
+  
+</p>
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+60
+61
+62
+63
+64</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 60</span>
+
+<span class='def def kw'>def</span> <span class='fire! fid id'>fire!</span>
+  <span class='ws_dr identifier id'>ws_dr</span> <span class='assign token'>=</span> <span class='DependencyResolver constant id'>DependencyResolver</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='configuration identifier id'>configuration</span>
+  <span class='ws_dr identifier id'>ws_dr</span><span class='dot token'>.</span><span class='run identifier id'>run</span>
+  <span class='ws_dr identifier id'>ws_dr</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>logger</h3>
+</div><div id="logger-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>logger</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+51
+52
+53
+54
+55
+56
+57
+58</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 51</span>
+
+<span class='def def kw'>def</span> <span class='logger identifier id'>logger</span>
+  <span class='if if kw'>if</span> <span class='@logger ivar id'>@logger</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='@logger ivar id'>@logger</span> <span class='assign token'>=</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='STDOUT constant id'>STDOUT</span>
+    <span class='@logger ivar id'>@logger</span><span class='dot token'>.</span><span class='level identifier id'>level</span> <span class='assign token'>=</span> <span class='Logger constant id'>Logger</span><span class='colon2 op'>::</span><span class='DEBUG constant id'>DEBUG</span>
+    <span class='@logger ivar id'>@logger</span><span class='dot token'>.</span><span class='formatter identifier id'>formatter</span> <span class='assign token'>=</span> <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='LoggerFormatter constant id'>LoggerFormatter</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='end end kw'>end</span>
+  <span class='@logger ivar id'>@logger</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>parser</h3>
+</div><div id="parser-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>parser</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+39
+40
+41</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 39</span>
+
+<span class='def def kw'>def</span> <span class='parser identifier id'>parser</span>
+  <span class='@opt_parser ivar id'>@opt_parser</span> <span class='opasgn op'>||=</span> <span class='OptionParser constant id'>OptionParser</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>platform</h3>
+</div><div id="platform-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>platform</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+33</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='platform identifier id'>platform</span><span class='semicolon token'>;</span><span class='end end kw'>end</span><span class='semicolon token'>;</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>root</h3>
+</div><div id="root-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>root</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+14
+15
+16</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/warning_shot.rb', line 14</span>
+
+<span class='def def kw'>def</span> <span class='root identifier id'>root</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='comma token'>,</span><span class='string val'>&quot;..&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;..&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

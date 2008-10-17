@@ -1,16 +1,40 @@
 WarningShot Dependency Resolution Framework
 
-
-
-==== Usage
-  ---- Command Line
+==== Command Line Usage
+  -e, --environment=STRING         Environment to test in
+                                   Default: development
+      --resolve                    Resolve missing dependencies (run as sudo)
+  -a, --app=PATH                   Path to application
+                                   Default: .
+  -c, --configs=PATH               Path to config directories (':' seperated)
+                                   Default: ./config/warningshot:~/.warningshot
+  -t, --templates=PATH             Generate template files
+                                   Default: False
+  -l, --log LOG                    Path to log file
+                                   Default: ./log/warningshot.log
+      --loglevel [LEVEL]           Default: info
+  -g, --growl                      Output results via growl (Requires growlnotify)
+  -v, --[no-]verbose               Output verbose information
+  -p, --[no-]prettycolors          Colorize output
+      --gempath                    Alternate gem path ':' separated to check.  First in path is where gems will be installed
+      --minigems                   Not supported yet.
+      --strict                     Success is only for 200 instead of 2xx|3xx
+      --rootcert                   Path to root ca certificate
+      --vdepth                     SSL Verify Peer Depth
+      --version                    Show version
+  -h, --help                       Show this help message
+      --debugger                   Enable debugging
   
-  ---- Ruby API
+  
+==== Ruby API
+ * In progress (see bin/warningshot for simple example)
 
 ==== Using Config Files
  * How the dependency tree works
 
 ==== Extending WarningShot
+ * Writing a Resolver
+ * Modifying Resolvers at run-time
 
 
 ==== Contributing
@@ -26,37 +50,9 @@ WarningShot Dependency Resolution Framework
     http://rubyforge.org/projects/warning-shot/
  
  * All modifications should also have applicable rpsecs
+    http://rspec.info/
  
  * All code should be documented using YARD
-  
-  
-==== Credit
-  Based on the archaic warning-shot script I released at Ripple Networks
-  Available @ https://rubyforge.org/frs/?group_id=5651
-  
-  
-==== WarningShot's Dependencies...
-  Ive cheap-o implemented some dependencies just so WarningShot wouldn't have to install a bunch of gems.
-  If you feel the need to buff them up (things like FileSystemResource, Growl) feel free.  If you think
-  we should include the full gem, lets talk.
-
-
-==== Yard Example
-# This is a super awesome method
-#
-# @param name [~to_s]
-#   The name of the list
-#
-# @param *list [~to_s]
-#   A list of things
-#
-# @return [Array(String)]
-#   The list in an array, how useful.
-#
-# @example
-#   Any examples
-#
-# @notes
-#   Any notes
-#
-# @api public
+    http://yard.rubyforge.org/
+    A template is available file://./yardoc_template.txt
+    Generate Yardoc with: yardoc --output-dir ./doc/yard --private --protected --readme README

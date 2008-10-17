@@ -131,7 +131,7 @@ module WarningShot
       
       # Determines if resolver is disabled
       #
-      # @returns [Boolean]
+      # @return [Boolean]
       #   is it disabled
       #
       # @api public
@@ -141,7 +141,7 @@ module WarningShot
       
       # Provides resolver access to warningshots logger
       #
-      # @returns [~Logger]
+      # @return [~Logger]
       #   WarningShots logger
       #
       # @api public
@@ -156,7 +156,7 @@ module WarningShot
       # @param r [Boolean|Hash]
       #   Does it need to be rescued
       #
-      # @examples
+      # @example
       #   MyMockResolver.rescue_me!   
       #     #=> sets @needs_rescue => {:resolve => true, :test=> true}
       #   MockResolver.rescue_me! :resolve => true 
@@ -172,7 +172,7 @@ module WarningShot
       # @param method [Symbol] (:test | :resolve)
       #   method to check if it needs rescue
       #
-      # @returns [Boolean]
+      # @return [Boolean]
       #   Does it need rescue block 
       #
       # @api private
@@ -249,7 +249,7 @@ module WarningShot
       #   block should return ~boolean result of resolution attempt
       #   The block will be passed the current item from config file
       #
-      # @examples
+      # @example
       #   register :test, :name => :awesome_test, :desc => "this is my awesome test" do |dependency|
       #     your_logic_that_tests dependency
       #   end
@@ -299,7 +299,7 @@ module WarningShot
       # @param test_name [Symbol]
       #   find a test by name (if a name was given)
       #
-      # @returns [Hash|Array]
+      # @return [Hash|Array]
       #   When name given, returns test Hash
       #   When name not give, returns all test Hashes in an array
       #
@@ -360,7 +360,7 @@ module WarningShot
       #
       # @param type [Symbol]
       #   Type of filters to get
-      # @returns [Array[Proc]] 
+      # @return [Array[Proc]] 
       #   Before filters
       # @api
       def before_filters(type)
@@ -371,7 +371,7 @@ module WarningShot
       #
       # @param type [Symbol]
       #   Type of filters to get
-      # @returns [Array[Proc]] 
+      # @return [Array[Proc]] 
       #   after filters
       # @api
       def after_filters(type)
@@ -427,7 +427,7 @@ module WarningShot
       
       # list of unresolved dependencies
       #
-      # @returns [Array<Objects>]
+      # @return [Array<Objects>]
       #   dependencies that weren't resolved
       #
       # @api private
@@ -443,7 +443,7 @@ module WarningShot
       
       # list of failed dependencies
       #
-      # @returns [Array<Objects>]
+      # @return [Array<Objects>]
       #   failed dependencies
       # 
       # @api private
@@ -459,7 +459,7 @@ module WarningShot
       
       # list of successful dependencies
       #
-      # @returns [Array<Objects>]
+      # @return [Array<Objects>]
       # @api private
       def passed
         dependencies.inject([]){ |list,dep| 
@@ -473,7 +473,7 @@ module WarningShot
       
       # list of resolved dependencies
       #
-      # @returns [Array<Objects>]
+      # @return [Array<Objects>]
       #   resolved dependencies
       #
       # @api private
@@ -524,7 +524,7 @@ module WarningShot
        # @param block_info <Hash>
        #   The block details and proc
        #
-       # @returns <Boolean>
+       # @return <Boolean>
        #   Was the block successful; meaning conditions passed and block returned true
        #
        # @api private

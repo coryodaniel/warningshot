@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: WarningShot::GemResolver</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class WarningShot_GemResolver">
+  <h1 class="title">Class: WarningShot::GemResolver</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href='../Object.html' title='Object'>Object</a></li><ul><li>WarningShot::GemResolver</li>
+  </ul></ul>
+</div><div class="section mixins">
+  <h1>Included Modules</h1>
+  <p><a href='Resolver.html' title='WarningShot::Resolver'>WarningShot::Resolver</a></p>
+</div><div class="section constants">
+  <div class="thisclass">
+  <h1>Constants</h1>
+  <dl>
+    
+      <dt id="CONDITIONAL_RGX-constant">CONDITIONAL_RGX</dt>
+      <dd>/[^\d]*/.freeze</dd>
+    
+      <dt id="DEFAULT_VERSION-constant">DEFAULT_VERSION</dt>
+      <dd>&quot;&gt;=0.0.0&quot;.freeze</dd>
+    
+      <dt id="GemResource-constant">GemResource</dt>
+      <dd>Struct.new(:name,:version) do        def installed?
+    self.version ||= DEFAULT_VERSION
+    installed_versions = Gem::cache.search self.name
+    installed = false
+
+    conditionals      = self.version.match(CONDITIONAL_RGX)[0]          
+    required_version  = Gem::Version.create self.version.match(VERSION_RGX)[0] 
+
+    installed_versions.each do |i_gem|
+      installed = case (required_version &lt;=&gt; i_gem.version)
+      when 0
+        (conditionals =~ /=/ || conditionals.empty?)
+      when 1
+        (conditionals =~ /&lt;/)
+      when -1
+        (conditionals =~ /&gt;/)
+      end
+
+      break if installed
+    end
+
+    installed
+  end
+end</dd>
+    
+      <dt id="VERSION_RGX-constant">VERSION_RGX</dt>
+      <dd>/[\d\.]+/.freeze</dd>
+    
+  </dl>
+</div>
+
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#load_paths-class_method' title='load_paths'>load_paths</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+loads the paths from WarningShot::Config.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table><div class="inherited">
+  
+  <div>
+    <h1>Public Class Methods Inherited from <a href='../Object.html' title='Object'>Object</a></h1>
+    <p><span class='name'><a href='../Object.html#is_const_defined%3F-class_method' title='is_const_defined?'>is_const_defined?</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div><div class="included">
+  
+  <div>
+    <h1>Public Class Methods Included from <a href='Resolver.html' title='WarningShot::Resolver'>WarningShot::Resolver</a></h1>
+    <p><span class='name'><a href='Resolver.html#descendents-class_method' title='descendents'>descendents</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>load_paths</h3>
+</div><div id="load_paths-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>load_paths</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+loads the paths from WarningShot::Config.configuration[:gem_path]
+</p>
+<pre class="code">
+  <span class='will identifier id'>will</span> <span class='only identifier id'>only</span> <span class='load identifier id'>load</span> <span class='them identifier id'>them</span> <span class='once identifier id'>once</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/resolvers/gem_resolver.rb', line 32</span>
+
+<span class='def def kw'>def</span> <span class='load_paths identifier id'>load_paths</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='@@loaded_paths ivar id'>@@loaded_paths</span> <span class='andop op'>&amp;&amp;</span> <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='configuration identifier id'>configuration</span><span class='dot token'>.</span><span class='key? fid id'>key?</span><span class='lparen token'>(</span><span class='colon op'>:</span><span class='gem_path identifier id'>gem_path</span><span class='rparen token'>)</span>
+    <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='configuration identifier id'>configuration</span><span class='lbrack token'>[</span><span class='symbol val'>:gem_path</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;:&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='reverse identifier id'>reverse</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
+      <span class='Gem constant id'>Gem</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='dot token'>.</span><span class='unshift identifier id'>unshift</span> <span class='path identifier id'>path</span>
+    <span class='end end kw'>end</span>
+    
+    <span class='Gem constant id'>Gem</span><span class='colon2 op'>::</span><span class='cache identifier id'>cache</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='from_gems_in identifier id'>from_gems_in</span> <span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='configuration identifier id'>configuration</span><span class='lbrack token'>[</span><span class='symbol val'>:gem_path</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;:&quot;</span><span class='rparen token'>)</span>
+    <span class='Gem constant id'>Gem</span><span class='colon2 op'>::</span><span class='cache identifier id'>cache</span><span class='dot token'>.</span><span class='refresh! fid id'>refresh!</span>
+    <span class='@@loaded_paths ivar id'>@@loaded_paths</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+  <div class="section visibilitygroup private">
+    <h1>Private Visibility</h1>
+      <div class="section methodsummary class private">
+    <div class="included">
+  
+  <div>
+    <h1>Private Class Methods Included from <a href='Resolver.html' title='WarningShot::Resolver'>WarningShot::Resolver</a></h1>
+    <p><span class='name'><a href='Resolver.html#included-class_method' title='included'>included</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

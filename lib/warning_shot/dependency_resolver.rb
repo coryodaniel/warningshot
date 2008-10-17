@@ -3,7 +3,7 @@ require "ruby-debug"
 Debugger.start
 Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
 
-#@@ TODO callbacks, casting, conditional test, test, resolve, etc        
+# TODO callbacks, casting, conditional test, test, resolve, etc        
 
 module WarningShot
   class DependencyResolver

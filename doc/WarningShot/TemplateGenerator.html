@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: WarningShot::TemplateGenerator</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module WarningShot_TemplateGenerator">
+  <h1 class="title">Module: WarningShot::TemplateGenerator</h1>
+  <div class="section constants">
+  
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#create-class_method' title='create'>create</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#generate_configs-class_method' title='generate_configs'>generate_configs</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>create</h3>
+</div><div id="create-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>create</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+4
+5
+6
+7
+8</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/template_generator.rb', line 4</span>
+
+<span class='def def kw'>def</span> <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='generate_configs identifier id'>generate_configs</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='comment val'>#generate_scripts(path,'bash')</span>
+  <span class='comment val'>#generate_scripts(path,'ruby')</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>generate_configs</h3>
+</div><div id="generate_configs-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>generate_configs</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+10
+11
+12
+13</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/template_generator.rb', line 10</span>
+
+<span class='def def kw'>def</span> <span class='generate_configs identifier id'>generate_configs</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='from identifier id'>from</span>  <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='WarningShot constant id'>WarningShot</span><span class='dot token'>.</span><span class='dir_for identifier id'>dir_for</span><span class='lparen token'>(</span><span class='symbol val'>:templates</span><span class='rparen token'>)</span><span class='comma token'>,</span><span class='WarningShot constant id'>WarningShot</span><span class='colon2 op'>::</span><span class='ConfigExt constant id'>ConfigExt</span><span class='rparen token'>)</span>
+  <span class='copy_templates identifier id'>copy_templates</span> <span class='from identifier id'>from</span><span class='comma token'>,</span> <span class='path identifier id'>path</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+  <div class="section visibilitygroup private">
+    <h1>Private Visibility</h1>
+      <div class="section methodsummary class private">
+    <h1>Private Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#copy_templates-class_method' title='copy_templates'>copy_templates</a></span><span class='args'>(from,to)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class private">
+  <h1>Private Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>copy_templates</h3>
+</div><div id="copy_templates-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>private</span>
+    <span class='return_types'></span>
+    <span class='name'>copy_templates</span><span class='args'>(from,to)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/template_generator.rb', line 24</span>
+
+<span class='def def kw'>def</span> <span class='copy_templates identifier id'>copy_templates</span><span class='lparen token'>(</span><span class='from identifier id'>from</span><span class='comma token'>,</span><span class='to identifier id'>to</span><span class='rparen token'>)</span>
+  <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='mkdir_p identifier id'>mkdir_p</span> <span class='to identifier id'>to</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='to identifier id'>to</span>
+
+  <span class='Dir constant id'>Dir</span><span class='lbrack token'>[</span><span class='from identifier id'>from</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='file identifier id'>file</span><span class='bitor op'>|</span>
+    <span class='file_dest_path identifier id'>file_dest_path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='to identifier id'>to</span><span class='comma token'>,</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='file identifier id'>file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+    <span class='comment val'># Add .sample if config is already present</span>
+    <span class='file_dest_path identifier id'>file_dest_path</span> <span class='opasgn op'>+=</span> <span class='string val'>'.sample'</span> <span class='if if_mod kw'>if</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='file_dest_path identifier id'>file_dest_path</span>
+    <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='cp identifier id'>cp</span> <span class='file identifier id'>file</span><span class='comma token'>,</span> <span class='file_dest_path identifier id'>file_dest_path</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

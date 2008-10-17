@@ -1,0 +1,813 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: WarningShot::Resolver::InstanceMethods</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module WarningShot_Resolver_InstanceMethods">
+  <h1 class="title">Module: WarningShot::Resolver::InstanceMethods</h1>
+  <div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        <tr>
+          <th class="name">dependencies</td>
+          <td class="readwrite">
+            [<span id='dependencies-instance_method'>R</span><span id='dependencies%3D-instance_method'>W</span>] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Sets the attribute <tt>dependencies</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  
+</div><div class="section constants">
+  
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#failed-instance_method' title='#failed'>#failed</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+list of failed dependencies.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Array&lt;Objects></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#passed-instance_method' title='#passed'>#passed</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+list of successful dependencies.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Array&lt;Objects></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#resolve%21-instance_method' title='#resolve!'>#resolve!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Loops through dependencies and runs applicable resolutions until one
+passes.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#resolved-instance_method' title='#resolved'>#resolved</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+list of resolved dependencies.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Array&lt;Objects></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#test%21-instance_method' title='#test!'>#test!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Loops through each dependency and runs applicable tests until one passes.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#unresolved-instance_method' title='#unresolved'>#unresolved</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+list of unresolved dependencies.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 <tt>Array&lt;Objects></tt>
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>failed</h3>
+</div><div id="failed-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'><tt>Array&lt;Objects></tt></span>
+    <span class='name'>failed</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+list of failed dependencies
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Array&lt;Objects></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+failed dependencies
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+450
+451
+452
+453
+454
+455
+456
+457
+458</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 450</span>
+
+<span class='def def kw'>def</span> <span class='failed identifier id'>failed</span>
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='list identifier id'>list</span><span class='comma token'>,</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span>
+    <span class='unless unless kw'>unless</span> <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span>
+      <span class='list identifier id'>list</span> <span class='lshft op'>&lt;&lt;</span> <span class='dep identifier id'>dep</span>
+    <span class='else else kw'>else</span>
+      <span class='list identifier id'>list</span>
+    <span class='end end kw'>end</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>passed</h3>
+</div><div id="passed-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'><tt>Array&lt;Objects></tt></span>
+    <span class='name'>passed</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+list of successful dependencies
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Array&lt;Objects></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+464
+465
+466
+467
+468
+469
+470
+471
+472</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 464</span>
+
+<span class='def def kw'>def</span> <span class='passed identifier id'>passed</span>
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='list identifier id'>list</span><span class='comma token'>,</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span> 
+    <span class='if if kw'>if</span> <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span>
+      <span class='list identifier id'>list</span> <span class='lshft op'>&lt;&lt;</span> <span class='dep identifier id'>dep</span>
+    <span class='else else kw'>else</span>
+      <span class='list identifier id'>list</span>
+    <span class='end end kw'>end</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>resolve!</h3>
+</div><div id="resolve%21-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>resolve!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Loops through dependencies and runs applicable resolutions until one passes
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+419
+420
+421
+422
+423
+424
+425
+426</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 419</span>
+
+<span class='def def kw'>def</span> <span class='resolve! fid id'>resolve!</span>
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='resolutions identifier id'>resolutions</span><span class='dot token'>.</span><span class='each identifier id'>each</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='resolution_meta identifier id'>resolution_meta</span><span class='bitor op'>|</span>     
+      <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='resolved identifier id'>resolved</span> <span class='assign token'>=</span> <span class='process_block identifier id'>process_block</span> <span class='symbol val'>:resolution</span><span class='comma token'>,</span> <span class='dep identifier id'>dep</span><span class='comma token'>,</span> <span class='resolution_meta identifier id'>resolution_meta</span>
+      <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='resolved identifier id'>resolved</span>
+    <span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>resolved</h3>
+</div><div id="resolved-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'><tt>Array&lt;Objects></tt></span>
+    <span class='name'>resolved</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+list of resolved dependencies
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Array&lt;Objects></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+resolved dependencies
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+480
+481
+482
+483
+484
+485
+486
+487
+488</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 480</span>
+
+<span class='def def kw'>def</span> <span class='resolved identifier id'>resolved</span>        
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='list identifier id'>list</span><span class='comma token'>,</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span> 
+    <span class='if if kw'>if</span><span class='lparen token'>(</span><span class='notop op'>!</span><span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span> <span class='andop op'>&amp;&amp;</span> <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='resolved identifier id'>resolved</span><span class='rparen token'>)</span>
+      <span class='list identifier id'>list</span> <span class='lshft op'>&lt;&lt;</span> <span class='dep identifier id'>dep</span> 
+    <span class='else else kw'>else</span>
+      <span class='list identifier id'>list</span>
+    <span class='end end kw'>end</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>test!</h3>
+</div><div id="test%21-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>test!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Loops through each dependency and runs applicable tests until one passes
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+407
+408
+409
+410
+411
+412
+413
+414</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 407</span>
+
+<span class='def def kw'>def</span> <span class='test! fid id'>test!</span>
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span>   
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='tests identifier id'>tests</span><span class='dot token'>.</span><span class='each identifier id'>each</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='test_meta identifier id'>test_meta</span><span class='bitor op'>|</span>  
+      <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span> <span class='assign token'>=</span> <span class='process_block identifier id'>process_block</span> <span class='symbol val'>:test</span><span class='comma token'>,</span> <span class='dep identifier id'>dep</span><span class='comma token'>,</span> <span class='test_meta identifier id'>test_meta</span>
+      <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span>
+    <span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>unresolved</h3>
+</div><div id="unresolved-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'><tt>Array&lt;Objects></tt></span>
+    <span class='name'>unresolved</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+list of unresolved dependencies
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>Array&lt;Objects></tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+dependencies that weren&#8217;t resolved
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+434
+435
+436
+437
+438
+439
+440
+441
+442</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 434</span>
+
+<span class='def def kw'>def</span> <span class='unresolved identifier id'>unresolved</span>
+  <span class='dependencies identifier id'>dependencies</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='list identifier id'>list</span><span class='comma token'>,</span><span class='dep identifier id'>dep</span><span class='bitor op'>|</span> 
+    <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='met identifier id'>met</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='dep identifier id'>dep</span><span class='dot token'>.</span><span class='resolved identifier id'>resolved</span>
+      <span class='list identifier id'>list</span> <span class='lshft op'>&lt;&lt;</span> <span class='dep identifier id'>dep</span> 
+    <span class='else else kw'>else</span>
+      <span class='list identifier id'>list</span>
+    <span class='end end kw'>end</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+  <div class="section visibilitygroup protected">
+    <h1>Protected Visibility</h1>
+      <div class="section methodsummary instance protected">
+    <h1>Protected Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#process_block-instance_method' title='#process_block'>#process_block</a></span><span class='args'>(type, dep, block_info)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+processes a test or resolution block.
+</p>
+
+        
+          <p class='returns'>
+            Returns: 
+              <span class='return_types'>
+                 
+              </span>
+          </p>
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance protected">
+  <h1>Protected Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>process_block</h3>
+</div><div id="process_block-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>protected</span>
+    <span class='return_types'></span>
+    <span class='name'>process_block</span><span class='args'>(type, dep, block_info)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+processes a test or resolution block
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="param">
+  <h3>Parameters:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'>type</span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+&lt;Symbol&gt; The type of block being processed :test | :resolution
+</p>
+</span>
+    </dd>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'>dep</span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+&lt;Hash&gt; Dependency parsed from yaml configs (Currently Hash) TODO;
+once Dependencies are an object besides Hash, this may need to be changed
+</p>
+</span>
+    </dd>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'>block_info</span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+&lt;Hash&gt; The block details and proc
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+<div class="return">
+  <h3>Returns:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'></span>
+      
+      
+        <span class='name'></span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+&lt;Boolean&gt; Was the block successful; meaning conditions passed and
+block returned true
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/warning_shot/resolver.rb', line 531</span>
+
+<span class='def def kw'>def</span> <span class='process_block identifier id'>process_block</span><span class='lparen token'>(</span><span class='type identifier id'>type</span><span class='comma token'>,</span> <span class='dep identifier id'>dep</span><span class='comma token'>,</span> <span class='block_info identifier id'>block_info</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='colon op'>:</span><span class='if if kw'>if</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='colon op'>:</span><span class='unless unless kw'>unless</span><span class='rbrack token'>]</span>
+    <span class='comment val'># no condition, run block</span>
+    <span class='return return kw'>return</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='type identifier id'>type</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='dep identifier id'>dep</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='symbol val'>:if</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='symbol val'>:if</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='dep identifier id'>dep</span><span class='rparen token'>)</span>
+    <span class='comment val'>#if Condition given and it applies, run block          </span>
+    <span class='return return kw'>return</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='type identifier id'>type</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='dep identifier id'>dep</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='symbol val'>:unless</span><span class='rbrack token'>]</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='symbol val'>:unless</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='dep identifier id'>dep</span><span class='rparen token'>)</span>
+    <span class='comment val'>#unless Condition given and it applies, run block</span>
+    <span class='return return kw'>return</span> <span class='block_info identifier id'>block_info</span><span class='lbrack token'>[</span><span class='type identifier id'>type</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='dep identifier id'>dep</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>
