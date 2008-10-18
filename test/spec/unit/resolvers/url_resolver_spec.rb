@@ -1,4 +1,4 @@
-require File.join(%w(. lib resolvers url_resolver))
+require '.' / 'lib' / 'resolvers' / 'url_resolver'
 
 describe WarningShot::UrlResolver do
   before :all do    

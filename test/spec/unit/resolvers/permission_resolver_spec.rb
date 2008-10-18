@@ -1,10 +1,9 @@
-require File.join(%w(. lib resolvers permission_resolver))
+require "." / "lib" / "resolvers" / "permission_resolver"
 
 describe WarningShot::PermissionResolver do
   before :all do
     WarningShot::PermissionResolver.logger = $logger
   end
-
 
   it 'should have tests registered' do
     WarningShot::PermissionResolver.tests.empty?.should be(false)
@@ -13,32 +12,30 @@ describe WarningShot::PermissionResolver do
   it 'should have resolutions registered' do
     WarningShot::PermissionResolver.resolutions.empty?.should be(false)
   end
-     
-  describe 'with healing enabled' do
-    describe 'with heal instructions' do
-      it 'should' do
-        pending
-      end
-    end # End healing enabled, instructions provided
-    
-    describe 'without heal instructions' do
-      it 'should' do
-        pending
-      end
-    end # End healing enabled, instructions not provided
-  end # End healing enabled
   
-  describe 'with healing disabled' do
-    describe 'with heal instructions' do
-      it 'should' do
-        pending
-      end
-    end #End healing disabled, instructions provided
+  it 'should be able to determine if the user permission is correct' do
+    pending
+  end
+  
+  it 'should be able to determine if the group permission is correct' do
+    pending
+  end
+  
+  it 'should be able to determine if the mode is correct' do
+    pending
+  end
+  
+  describe 'with healing enabled and with healing instructions' do
+    it 'should be able to correct the user' do
+      pending
+    end
     
-    describe 'without heal instructions' do
-      it 'should' do
-        pending
-      end
-    end # End healing disabled, instructions not provided
-  end # End healing disabled
+    it 'should be able to correct the group' do
+      pending
+    end
+    
+    it 'should be able to correct the mode' do
+      pending
+    end
+  end
 end

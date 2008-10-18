@@ -1,4 +1,4 @@
-require File.join(%w(. lib resolvers manual_resolver))
+require "." / "lib" / "resolvers" / "manual_resolver"
 
 describe WarningShot::ManualResolver do
   before :all do

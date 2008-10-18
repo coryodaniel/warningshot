@@ -1,10 +1,10 @@
-require File.join(%w(. lib resolvers directory_resolver))
+require "." / "lib" / "resolvers" / "directory_resolver"
 
 describe WarningShot::DirectoryResolver do
   before :all do
     WarningShot::DirectoryResolver.logger = $logger
     
-    @@base_path = File.expand_path(File.join(%w(. test data resolvers directory)))
+    @@base_path = File.expand_path("." / "test" / "data" / "resolvers" / "directory")
   end
   
   after :each do
@@ -23,8 +23,8 @@ describe WarningShot::DirectoryResolver do
 
     it 'should create the directory if it does not exist' do      
       control_dir = File.expand_path('.')
-      test_dir1 = File.join(@@base_path,'test1')
-      test_dir2 = File.join(@@base_path,'test2')
+      test_dir1 = @@base_path / 'test1'
+      test_dir2 = @@base_path / 'test2'
       resolver = WarningShot::DirectoryResolver.new control_dir,test_dir1, test_dir2
       resolver.test!
       resolver.passed.length.should be(1)

@@ -1,4 +1,4 @@
-require File.join(%w(. lib resolvers RESOLVER_NAME))
+require "." / "lib" / "resolvers" RESOLVER_NAME
 
 describe WarningShot::RESOLVER_NAME do
 

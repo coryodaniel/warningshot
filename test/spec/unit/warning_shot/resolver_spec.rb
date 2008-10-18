@@ -1,4 +1,4 @@
-require File.join($test_data, 'mock_resolver')
+require $test_data / 'mock_resolver'
 
 describe WarningShot::Resolver do
   it 'should provide a base set of resolvers' do

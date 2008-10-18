@@ -2,10 +2,19 @@
 # the 'global' environment are always checked
 
 # Each environt takes an array hashes
-# path REQUIRED
-# recursive, mode, user, group OPTIONAL (one required)
+# @param path [String] REQUIRED
+#     the path to check permissions
+# @param mode [String] OPTIONAL
+#     MOde of file 0777, 0755, etc
+# @param user [String]
+#     User that should own resource
+# @param group [STring]
+#     Group that should own resource
+# @param recursive [String]
+#     What methods should be recursvie: 'chmod','chown','both','none'
+# @example
 #      - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
-#      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data' }
+#      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data', recursive: "both"}
 #      - { path: '/tmp/app_cache/', mode: '0777', user: 'nobody', group: 'nobody' }
 ---
 - :branch: permission

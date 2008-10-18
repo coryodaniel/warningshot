@@ -5,14 +5,14 @@ module WarningShot
   PATHS       = {
     :templates  => 'templates',
     :images     => 'images',
-    :resolvers => File.join('lib','warning_shot','resolvers')
+    :resolvers  => 'lib' / 'warning_shot' / 'resolvers'
   }
   
   ConfigExt = "*.{yml,yaml}".freeze
   
   class << self
     def root
-      File.join(File.expand_path(File.dirname(__FILE__)),"..","..")
+      File.expand_path(File.dirname(__FILE__)) / ".." / ".."
     end
     
     # Gets the absolute path for a resource.
@@ -28,7 +28,18 @@ module WarningShot
     # @api public
     def dir_for(dir)
       dir = PATHS[dir.to_sym] || dir.to_s
-      File.join(WarningShot.root,dir)
+      WarningShot.root / dir
+    end
+    
+    def platform
+      case ::Config::CONFIG['host_os']
+      when /darwin/i: :mac
+      when /mswin|windows/i: :windows
+      when /linux/i: :linux
+      when /sunos|solaris/i: :solaris
+      else
+        :unknown
+      end
     end
     
     # the application/framework warningshot is running in

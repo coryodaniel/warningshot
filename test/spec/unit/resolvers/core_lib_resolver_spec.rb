@@ -1,4 +1,4 @@
-require File.join(%w(. lib resolvers core_lib_resolver))
+require "." / "lib" / "resolvers" / "core_lib_resolver"
 
 describe WarningShot::CoreLibResolver do
   before :all do

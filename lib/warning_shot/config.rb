@@ -9,9 +9,9 @@ module WarningShot
         @defaults ||= {
           :environment  => 'development',
           :resolve      => false,
-          :config_paths => [File.join('.','config','warningshot'),File.join('~','.warningshot')],
+          :config_paths => ['.'  / 'config' / 'warningshot', '~' / 'warningshot'],
           :application  => '.',
-          :log_path     => File.join('.','log','warningshot.log'),
+          :log_path     => '.' / 'log' / 'warningshot.log',
           :log_level    => :info,
           :growl        => false,
           :verbose      => false,

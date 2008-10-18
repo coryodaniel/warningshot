@@ -1,9 +1,8 @@
 require 'lib/warningshot'
 
-$test_data  = File.join(%w(. test data))
-
-$log_root = File.join(%w(. test log))
-$log_file = File.join($log_root, 'warningshot.log')
+$test_data  = "." / "test" / "data"
+$log_root   = "." / "test" / "log"
+$log_file   = $log_root / 'warningshot.log'
 
 FileUtils.mkdir_p $log_root
 

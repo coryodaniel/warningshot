@@ -1,11 +1,11 @@
-require File.join(%w(. lib resolvers integrity_resolver))
+require "." / "lib" / "resolvers" / "integrity_resolver"
 
 describe WarningShot::IntegrityResolver do
   before :all do
     WarningShot::IntegrityResolver.logger = $logger
 
-    @@base_path = File.expand_path(File.join(%w(. test data resolvers file)))
-    @@source_path  = File.join(@@base_path,'src')
+    @@base_path   = File.expand_path("." / "test" / "data" / "resolvers" / "file")
+    @@source_path = @@base_path / 'src'
   end
   
   it 'should have tests registered' do
@@ -18,7 +18,7 @@ describe WarningShot::IntegrityResolver do
   
   it 'should be able to verify a sha1 digest' do
 
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({
@@ -32,7 +32,7 @@ describe WarningShot::IntegrityResolver do
   end
   
   it 'should be able to determine if a sha1 digest is wrong' do
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({
@@ -46,7 +46,7 @@ describe WarningShot::IntegrityResolver do
   end
   
   it 'should be able to determine if an md5 digest is wrong' do
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({
@@ -60,7 +60,7 @@ describe WarningShot::IntegrityResolver do
   end
   
   it 'should be able to verify a md5 digest' do
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({
@@ -74,7 +74,7 @@ describe WarningShot::IntegrityResolver do
   end
   
   it 'should use sha1 if md5 and sha1 are given' do
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({
@@ -89,7 +89,7 @@ describe WarningShot::IntegrityResolver do
   end
   
   it 'should be silent if a digest isnt given' do
-    that_file = File.join @@source_path, 'that.txt'
+    that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
     resolver = WarningShot::IntegrityResolver.new({

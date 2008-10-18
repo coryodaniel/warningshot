@@ -18,7 +18,7 @@ ROOT = Pathname(__FILE__).dirname.expand_path
 
 require 'lib/warning_shot/version'
 
-CLEAN.include ["**/.*.sw?", "pkg", "lib/*.bundle", "*.gem", "doc/rdoc","doc/yard", "test/output/*", "coverage", "cache"]
+CLEAN.include ["**/.*.sw?", "pkg", "lib/*.bundle", "*.gem", "doc/","doc/", "test/output/*", "coverage", "cache"]
 Dir['tasks/*.rb'].each {|r| require r}
 
 

@@ -1,11 +1,11 @@
-require File.join(%w(. lib resolvers symlink_resolver))
+require "." / "lib" / "resolvers" / "symlink_resolver"
 
 describe WarningShot::SymlinkResolver do
   before :all do
     WarningShot::SymlinkResolver.logger = $logger 
     
-    @@data_path = File.expand_path(File.join(%w(. test data)))
-    @@base_path = File.expand_path(File.join(%w(. test data resolvers symlink)))
+    @@data_path = File.expand_path("." / "test" / "data")
+    @@base_path = File.expand_path("." / "test" / "data" / "resolvers" / "symlink")
   end
   
   before :each do
@@ -28,8 +28,8 @@ describe WarningShot::SymlinkResolver do
     it 'should create a symlink' do
 
       symlink_dep = {
-        :source => File.join(@@data_path,'mock_resolver.rb'),
-        :target => File.join(@@base_path,'linked_mock_resolver.rb')
+        :source => @@data_path / 'mock_resolver.rb',
+        :target => @@base_path / 'linked_mock_resolver.rb'
       }
       resolver = WarningShot::SymlinkResolver.new symlink_dep
       

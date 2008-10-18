@@ -105,7 +105,7 @@ module WarningShot
     def load_configs
       @config[:config_paths].each do |config_path|
         #Parse the global/running env configs out of the YAML files.
-        Dir[File.join(config_path,WarningShot::ConfigExt)].each do |config_file|
+        Dir[config_path / WarningShot::ConfigExt].each do |config_file|
           # Use WarningShot::ConfigExt & regexp on extension to make supporting add'l
           # file types easier in the future
           case File.extname(config_file)

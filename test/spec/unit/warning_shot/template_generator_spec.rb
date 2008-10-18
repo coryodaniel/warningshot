@@ -1,7 +1,7 @@
 describe WarningShot::TemplateGenerator do
 
   before :all do
-    @test_path = File.join($test_data,'yaml_configs')
+    @test_path = $test_data / 'yaml_configs'
   end
 
   after :all do
@@ -14,7 +14,7 @@ describe WarningShot::TemplateGenerator do
   end
   
   it "should have generate YAML config files" do
-    yaml_files = Dir[File.join(@test_path, WarningShot::ConfigExt)]
+    yaml_files = Dir[@test_path / WarningShot::ConfigExt]
     yaml_files.empty?.should be(false)
   end
   
