@@ -6,7 +6,6 @@ require 'logger'
 require 'set'
 require 'rbconfig'
 
-
 # Load core extensions
 Dir.glob(File.join(File.dirname(__FILE__), "core_ext", "**", "*.rb")).each {|f| require f}
 

@@ -4,14 +4,19 @@
 # Each environt takes an array hashes
 # @param path [String] REQUIRED
 #     the path to check permissions
-# @param mode [String] OPTIONAL
+#
+# @param mode [String] OPTIONAL; Default 0755
 #     MOde of file 0777, 0755, etc
-# @param user [String]
+#
+# @param user [String] OPTIONAL; Default nobody
 #     User that should own resource
-# @param group [STring]
+#
+# @param group [STring] OPTIONAL; Default nobody
 #     Group that should own resource
-# @param recursive [String]
+#
+# @param recursive [String] OPTIONAL; Default none
 #     What methods should be recursvie: 'chmod','chown','both','none'
+#
 # @example
 #      - { path: './public/images', mode: '0777', user: 'www-data', group: 'www-data'}
 #      - { path: '.', mode: '0755', user: 'www-data', group: 'www-data', recursive: "both"}

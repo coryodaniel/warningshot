@@ -1,4 +1,9 @@
-require "." / "lib" / "resolvers" / "permission_resolver"
+# Auto-generated ruby debug require       
+require "ruby-debug"
+Debugger.start
+Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+
+require '.' / 'lib' / 'resolvers' / 'permission_resolver'
 
 describe WarningShot::PermissionResolver do
   before :all do
@@ -14,6 +19,21 @@ describe WarningShot::PermissionResolver do
   end
   
   it 'should be able to determine if the user permission is correct' do
+    _file   = $test_data / 'permission_test.txt'
+    _file2  = $test_data / 'permission_test.fake'
+    
+    resolver = WarningShot::PermissionResolver.new({
+      :path => _file,       :mode   => '0755', 
+      :user => 'www-data',  :group  => 'www-data', 
+      :recursive => "none"
+    })
+    
+    resolver2 = WarningShot::PermissionResolver.new({
+      :path => _file2,      :mode   => '0755', 
+      :user => 'www-data',  :group  => 'www-data', 
+      :recursive => "none"
+    })
+      
     pending
   end
   

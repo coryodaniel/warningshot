@@ -9,7 +9,7 @@ class WarningShot::CoreLibResolver
   
   order 10
   #disable!
-  description "Checks that core ruby lib packages are available"
+  description 'Checks that core ruby lib packages are available'
   branch :core_lib
   @@do_purge = false
   
