@@ -101,6 +101,8 @@ module WarningShot
     #
     # @api public
     def fire!
+      WarningShot.load_app
+      WarningShot.load_addl_resolvers
       ws_dr = DependencyResolver.new WarningShot::Config.configuration
       BeforeCallbacks.each {|p| p.call }
       ws_dr.run
@@ -109,6 +111,20 @@ module WarningShot
       ws_dr
     end
     alias :run :fire!
+    
+    # Changes the working directory to that of the application
+    #   Default application is '.'
+    def load_app
+      Dir.chdir(WarningShot::Config[:application])
+    end
+    
+    # Loads any additional resolvers specified by --resolvers= or WarningShot::Config[:resolvers]
+    #   defaults to ~/.warningshot/*.rb
+    def load_addl_resolvers
+      WarningShot::Config[:resolvers].each do |resolver_path|
+        Dir[File.expand_path(resolver_path)].each {|r| load r}
+      end
+    end
     
   end
 end

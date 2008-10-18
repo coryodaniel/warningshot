@@ -1,8 +1,3 @@
-# Auto-generated ruby debug require       
-require "ruby-debug"
-Debugger.start
-Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-
 require '.' / 'lib' / 'resolvers' / 'permission_resolver'
 
 describe WarningShot::PermissionResolver do

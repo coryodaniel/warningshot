@@ -112,7 +112,7 @@ module WarningShot
       # @api public
       def order(p=nil)
         @order = p unless p.nil?
-        @order
+        @order || 100
       end
       
       # Sets a resolver to disabled mode, won't be processed

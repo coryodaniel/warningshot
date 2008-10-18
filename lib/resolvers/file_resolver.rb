@@ -15,8 +15,6 @@ class WarningShot::FileResolver
   branch :file
   description 'Validates presence of files'
   
-  class WarningShot::FileResolver::UnsupportedProtocolException < Exception;end;
-
   # Define FileResource struct
   FileResource = Struct.new(:source,:target) do
     def exists?;File.exists?(target.path);end;
@@ -79,11 +77,11 @@ class WarningShot::FileResolver
   register(:resolution, {:name => :scp_protocol,
     :desc => "Resolves files over SSH",
     :if => lambda {|file| }
-  }){raise UnsupportedProtocolException, ' ~ SCP is not supported yet.'}
+  }){raise Exception, ' ~ SCP is not supported yet.'}
   
   register(:resolution, {:name => :ftp_protocol,
     :desc => "Resolves files over FTP",
     :if => lambda {|file| }
-  }){raise UnsupportedProtocolException, ' ~ FTP is not supported yet.'}
+  }){raise Exception, ' ~ FTP is not supported yet.'}
 =end
 end

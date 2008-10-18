@@ -9,13 +9,14 @@ module WarningShot
         @defaults ||= {
           :environment  => 'development',
           :resolve      => false,
-          :config_paths => ['.'  / 'config' / 'warningshot', '~' / 'warningshot'],
+          :config_paths => ['.'  / 'config' / 'warningshot', '~' / '.warningshot'],
           :application  => '.',
           :log_path     => '.' / 'log' / 'warningshot.log',
           :log_level    => :info,
           :growl        => false,
           :verbose      => false,
-          :colorize     => true
+          :colorize     => true,
+          :resolvers    => ['~' / '.warningshot' / '*.rb']
         }
       end
     
@@ -65,7 +66,7 @@ BANNER
         WarningShot.parser.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{defaults[:config_paths].join(':')}") do |config|
           options[:config_paths] = config.split(':')
         end
-        WarningShot.parser.on("-c","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Not supported yet.") do |config|
+        WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{defaults[:resolvers].join(':')}") do |config|
           options[:resolvers] = config.split(':')
         end
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
@@ -89,6 +90,12 @@ BANNER
           options[:colorize] = colorize
         end
         WarningShot.parser.on_tail("--version", "Show version"){ 
+          WarningShot.parser.parse!(argv)
+          WarningShot::Config.setup(options)
+          
+          WarningShot.load_app
+          WarningShot.load_addl_resolvers
+          
           puts "WarningShot v. #{WarningShot::VERSION}"
           puts "Installed resolvers:"
             Resolver.descendents.each { |klass| 

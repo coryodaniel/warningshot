@@ -2,8 +2,6 @@ Additional TODOS are at:
 http://warningshot.lighthouseapp.com
 
 ====
-Resolvers flag (should default to looking in ~/.warningshot/*.rb)
-
 WarningShot should have its own set of config files so it can test its self (for WS Developers)
 
 Gems 
