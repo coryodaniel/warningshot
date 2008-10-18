@@ -76,7 +76,7 @@ class WarningShot::GemResolver
   class << self
     # loads gem paths from WarningShot::Config
     def load_paths
-      if WarningShot::Config.configuration.key?(:gem_path)
+      if WarningShot::Config.configuration.key?(:gem_path) && !WarningShot::Config.configuration[:gem_path].nil?
         WarningShot::Config.configuration[:gem_path].split(":").reverse.each do |path|
           Gem.path.unshift path
         end
