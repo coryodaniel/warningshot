@@ -58,7 +58,8 @@ module WarningShot
     # @api private
     def run
       @logger.info "WarningShot v. #{WarningShot::VERSION}"
-      @logger.info "Environment: #{@environment}; Application: #{WarningShot.framework}"
+      @logger.info "Environment: #{WarningShot.environment}; Application: #{WarningShot.framework}"
+      @logger.info "On host: #{WarningShot.hostname}"
       
       WarningShot::Resolver.descendents.each do |klass|
         @logger.info "\n#{'*'*60}"

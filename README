@@ -1,4 +1,5 @@
 WarningShot Dependency Resolution Framework
+ * Additional documentation @ http://github.com/coryodaniel/warningshot/wikis/
 
 ==== How it works
   * WarningShot - Factory class that creates and runs DependencyResolver
@@ -6,74 +7,60 @@ WarningShot Dependency Resolution Framework
   * Resolver - Class that can be included to create plugins.  Composed of tests and resolutions that can determine if a dependency was met, and if not, how to fix it
   
   
-==== Command Line Usage
-  -e, --environment=STRING         Environment to test in
-                                   Default: development
-      --resolve                    Resolve missing dependencies (run as sudo)
-  -a, --app=PATH                   Path to application
-                                   Default: .
-  -c, --configs=PATH               Path to config directories (':' seperated)
-                                   Default: ./config/warningshot:~/.warningshot
-  -t, --templates=PATH             Generate template files
-                                   Default: False
-  -l, --log LOG                    Path to log file
-                                   Default: ./log/warningshot.log
-      --loglevel [LEVEL]           Default: info
-  -g, --growl                      Output results via growl (Requires growlnotify)
-  -v, --[no-]verbose               Output verbose information
-  -p, --[no-]prettycolors          Colorize output
-      --gempath                    Alternate gem path ':' separated to check.  First in path is where gems will be installed
-      --minigems                   Not supported yet.
-      --strict                     Success is only for 200 instead of 2xx|3xx
-      --rootcert                   Path to root ca certificate
-      --vdepth                     SSL Verify Peer Depth
-      --version                    Show version
-  -h, --help                       Show this help message
-      --debugger                   Enable debugging
-
-==== See whats installed w/ warningshot --version
-  WarningShot v. 0.9.4
-  Installed resolvers:
-
-  WarningShot::CoreLibResolver
-    Tests: 1, Resolutions: 0 [unresolvable]
-    Checks that core ruby lib packages are available
-
-  WarningShot::SymlinkResolver
-    Tests: 1, Resolutions: 1 [resolvable]
-    Validates symlinks exist
-
-  WarningShot::DirectoryResolver
-    Tests: 1, Resolutions: 1 [resolvable]
-    Validates presence of directories
-
-  WarningShot::GemResolver
-    Tests: 1, Resolutions: 1 [resolvable]
-    Installs ruby gems and their dependencies
-    Command Line Options: --gempath,--minigems
-
-  WarningShot::FileResolver
-    Tests: 1, Resolutions: 2 [resolvable]
-    Validates presence of files
-
-  WarningShot::IntegrityResolver
-    Tests: 3, Resolutions: 0 [unresolvable]
-    Check file integrity via md5 or sha1 digest
-
-  WarningShot::UrlResolver
-    Tests: 1, Resolutions: 0 [unresolvable]
-    Validates that URLs are reachable.
-    Command Line Options: --strict,--rootcert,--vdepth
-
-  WarningShot::ManualResolver
-    Tests: 1, Resolutions: 0 [unresolvable]
-    A glorified todo list of things that need to be resolved manually
-
-  
 ==== Ruby API
- * Coming Soon (see bin/warningshot for simple example)
 
-
+  - Configuring WarningShot
+  WarningShot::Config.use do |c|
+    c[:environment]  = 'development'
+    c[:resolve]      = false
+    c[:config_paths] = ['.'  / 'config' / 'warningshot']
+    c[:application]  = '.'
+    c[:log_path]     = '.' / 'log' / 'warningshot.log'
+    c[:log_level]    = :debug
+    c[:growl]        = false
+    c[:verbose]      = true
+    c[:colorize]     = true
+    c[:]
+  end
+  
+  - Interfacing with a DependencyResolver
+  dependency_resolver = WarningShot.fire!
+  dependency_resolver.stats                       # => Hash of statistics
+  
+  dependency_resolver.resolvers                   # => Array of all executed resolvers
+  
+  dependency_resolver.resolvers.first.dependencies #=> Set of all loaded dependencies
+  
+  dependency_resolver.resolver.first.passed     # => Array of passed dependencies
+  dependency_resolver.resolver.first.failed     # => Array of failed dependencies
+  dependency_resolver.resolver.first.unresolved # => Array of unresolved dependencies
+  dependency_resolver.resolver.first.resolved   # => Array of resolved dependencies
+  
+  - Callbacks
+  WarningShot.before do 
+    puts 'this would run before the DepenencyResolver was created in #fire!'
+  end
+  
+  WarningShot.after do
+    puts 'this would run after the DepenencyResolver was processed in #fire!'
+  end
+  
+  WarningShot::AnyResolverYouWant.before :test do
+    puts 'this would run before the #test! method on the chosen resolver'
+  end
+  
+  WarningShot::AnotherFunResolver.after :test do
+    puts 'this would run after the #test! method'
+  end
+  
+  WarningShot::AnotherResolver.before :resolution do
+    puts 'this would run before the #resolve! method'
+  end
+  
+  WarningShot::AnotherResolver.after :resolution do
+    puts 'this would run after the #resolve! method'
+  end
+  
 ==== Components
  * Ruby API
  * Resolvers

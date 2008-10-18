@@ -15,6 +15,10 @@ module WarningShot
       File.expand_path(File.dirname(__FILE__)) / ".." / ".."
     end
     
+    def hostname
+      `hostname`.strip
+    end
+    
     # Gets the absolute path for a resource.
     # if it is not listed in PATHS then the string is appended to
     # WarningShot.root

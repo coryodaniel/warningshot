@@ -1,7 +1,7 @@
 
 # Check to see if core lib packages are available
 #   Created due to issues with some Apt installs not installing all
-#   ruby core classes.  This is unresolvable, but at least gives you
+#   ruby core classes.  This is irresolvable, but at least gives you
 #   a heads up.
 
 class WarningShot::CoreLibResolver

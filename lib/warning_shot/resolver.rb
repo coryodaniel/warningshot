@@ -536,7 +536,6 @@ module WarningShot
     def self.included(subclass)
       subclass.extend ClassMethods
       subclass.send :include, InstanceMethods
-      subclass.send :include, WarningShot::Utilities
       @@descendents.push subclass
     end
   end

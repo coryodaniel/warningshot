@@ -94,7 +94,7 @@ BANNER
             Resolver.descendents.each { |klass| 
               puts "\n"
               puts klass
-              puts "  Tests: #{klass.tests.length}, Resolutions: #{klass.resolutions.length} [#{klass.resolutions.empty? ? 'unresolvable' : 'resolvable'}]"
+              puts "  Tests: #{klass.tests.length}, Resolutions: #{klass.resolutions.length} [#{klass.resolutions.empty? ? 'irresolvable' : 'resolvable'}]"
               puts "  #{klass.description}" 
               puts "  Command Line Options: #{klass.raw_cli_ext.inject([]){|m,c| m << c[:long]}.join(',')}" if klass.raw_cli_ext
             }
