@@ -62,7 +62,7 @@ module WarningShot
       @logger.info "On host: #{WarningShot.hostname}"
       
       WarningShot::Resolver.descendents.each do |klass|
-        @logger.info "\n#{'*'*60}"
+        @logger.info "\n#{'-'*60}"
 
         branch = @dependency_tree[klass.branch.to_sym]
 
@@ -76,27 +76,28 @@ module WarningShot
 
         @resolvers << resolver
         
-        @logger.info "Testing branch #{klass.branch} w/ #{resolver.class}"
+        @logger.info "#{resolver.class}; branch: #{klass.branch} [TESTING]"
                 
         # Start test
         klass.before_filters(:test).each{|p| p.call}
         resolver.test!
         klass.after_filters(:test).each{|p| p.call}
         
-        @logger.info "Passed: #{resolver.passed.size}"
-        @logger.info "Failed: #{resolver.failed.size}"
+        @logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
 
         if WarningShot::Config.configuration[:resolve] && !klass.resolutions.empty?
-          @logger.info "Resolving branch #{klass.branch} w/ #{resolver.class}"
+          @logger.info "#{resolver.class}; branch: #{klass.branch} [RESOLVING]"
 
           klass.before_filters(:resolution).each{|p| p.call}
           resolver.resolve! 
           klass.after_filters(:resolution).each{|p| p.call}
           
-          @logger.info "Resolved: #{resolver.resolved.size}"
-          @logger.info "Unresolved: #{resolver.unresolved.size}"
+          @logger.info "Resolved: #{resolver.resolved.size} / Unresolved: #{resolver.unresolved.size}"
         end
       end
+      
+      @logger.info "\nResults:"
+      stats.each {|k,v| @logger.info(" ~ #{k}: \t#{v}")}
     end
     
     protected
