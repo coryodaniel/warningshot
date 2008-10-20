@@ -14,12 +14,14 @@ class WarningShot::SymlinkResolver
   end
 
   cast String do |yaml|
-    SymlinkResource.new yaml, nil, false
+    SymlinkResource.new File.expand_path(yaml), nil, false
   end
 
   cast Hash do |yaml|
     use_force = yaml[:force].nil? ? true : yaml[:force]
-    SymlinkResource.new yaml[:source],yaml[:target], use_force
+    _src = File.expand_path yaml[:source]
+    _trg = File.expand_path yaml[:target]
+    SymlinkResource.new _src, _trg, use_force
   end
   
   # If the target wasn't specified, it doesn't exist

@@ -12,7 +12,7 @@ class WarningShot::IntegrityResolver
   
   # Define FileResource struct
   FileResource = Struct.new(:source,:target,:digest,:digest_method) do
-    def exists?;File.exists?(target.path);end;
+    def exists?;File.exists?(File.expand_path(target.path));end;
   end
     
   cast String do |file|
@@ -36,7 +36,7 @@ class WarningShot::IntegrityResolver
   register(:test,{:name=>:sha1_digest,
     :if => lambda{|dep| dep.digest_method == :sha1}
   })do |dep|
-    dep_ok = (dep.exists? ? Digest::SHA1.hexdigest(File.read(dep.target.path)) == dep.digest : false)
+    dep_ok = (dep.exists? ? Digest::SHA1.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
     
     if dep_ok
       logger.debug " ~ [PASSED] checksum #{dep.target}"
@@ -50,7 +50,7 @@ class WarningShot::IntegrityResolver
   register(:test,{:name=>:md5_digest,
     :if => lambda{|dep| dep.digest_method == :md5}  
   })do |dep|
-    dep_ok = (dep.exists? ? Digest::MD5.hexdigest(File.read(dep.target.path)) == dep.digest : false)
+    dep_ok = (dep.exists? ? Digest::MD5.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
 
     if dep_ok
       logger.debug " ~ [PASSED] checksum #{dep.target}"

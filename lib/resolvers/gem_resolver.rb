@@ -78,7 +78,7 @@ class WarningShot::GemResolver
     def load_paths
       if WarningShot::Config.configuration.key?(:gem_path) && !WarningShot::Config.configuration[:gem_path].nil?
         WarningShot::Config.configuration[:gem_path].split(":").reverse.each do |path|
-          Gem.path.unshift path
+          Gem.path.unshift File.expand_path(path)
         end
         
         Gem::cache.class.from_gems_in WarningShot::Config.configuration[:gem_path].split(":")

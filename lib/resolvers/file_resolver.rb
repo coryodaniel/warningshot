@@ -17,8 +17,8 @@ class WarningShot::FileResolver
   
   # Define FileResource struct
   FileResource = Struct.new(:source,:target) do
-    def exists?;File.exists?(target.path);end;
-    def remove;File.unlink(target.path);end;
+    def exists?;File.exists?(File.expand_path(target.path));end;
+    def remove;File.unlink(File.expand_path(target.path));end;
   end
     
   cast String do |file|
@@ -46,11 +46,11 @@ class WarningShot::FileResolver
   register(:resolution, { :name => :file_protocol,
     :desc => "Resolves files from target sources",
     :if => lambda { |file| 
-      !!(file.source.scheme =~ /file/i || file.source.scheme == nil)
+      !!(file.source.scheme =~ /file/i || file.source.scheme == nil && !file.source.path.empty?)
     }
   }) do |file|    
     begin
-      FileUtils.cp file.source.path, file.target.path
+      FileUtils.cp File.expand_path(file.source.path), File.expand_path(file.target.path)
     rescue Exception => ex
       logger.error " ~ Could not restore file (#{file.target.path}) from #{file.source.path}"
     end
