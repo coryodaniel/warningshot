@@ -1,5 +1,4 @@
-#Note, this fails if the gem yard is already installed, which sucks.  Waiting on rubyforge to
-# approve ws-dummy gem
+# NOTE: All tests should use the 'ws-dummy' gem.
 
 require "." / "lib" / "resolvers" / "gem_resolver"
 require 'fileutils'
@@ -41,7 +40,7 @@ describe WarningShot::GemResolver do
   end
   
   it 'should be able to determine if a gem is installed' do
-    resolver = WarningShot::GemResolver.new({:name => "rake"},{:name => "rspec",:version => ">=1.1.4"})
+    resolver = WarningShot::GemResolver.new({:name => "ws-dummy"})
     resolver.test!
     
     resolver.passed.size.should be(2)
@@ -50,7 +49,7 @@ describe WarningShot::GemResolver do
   # The gem name is the healing instructions, so if its provide, there
   #   are instructions 
   it 'should install the gems when healing is enabled' do
-    resolver = WarningShot::GemResolver.new({:name => "yard"})
+    resolver = WarningShot::GemResolver.new({:name => "ws-dummy"})
     resolver.test!
     
     resolver.failed.size.should be(1)
@@ -58,9 +57,20 @@ describe WarningShot::GemResolver do
     resolver.resolve!
     resolver.resolved.size.should be(1)
   end
-    
-  it 'should use warningshot_dummy instead of the gems listed above' do
-    #it should also uninstall it before :all and after :all
+  
+  it 'should be able to determine if a specific version is installed' do
+    pending
+  end
+  
+  it 'should be able to install a specific version' do
+    pending
+  end
+  
+  it 'should check for gems in --gempath when specified' do
+    pending
+  end
+  
+  it 'should install gems in --gempath when specified and resolving' do
     pending
   end
 end
