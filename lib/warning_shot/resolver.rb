@@ -395,7 +395,7 @@ module WarningShot
           self.class.resolutions.each{ |resolution_meta|     
             dep.resolved = process_block :resolution, dep, resolution_meta
             break if dep.resolved
-          }
+          } unless dep.met
         end
       end
       
