@@ -11,6 +11,12 @@ class WarningShot::SymlinkResolver
     def exists?
       self.target ? File.symlink?(self.target) : false
     end
+    
+    # Determines if link points at correct file
+    def correct?
+      File.identical? self.source, self.target
+    end
+      
   end
 
   cast String do |yaml|
@@ -26,12 +32,12 @@ class WarningShot::SymlinkResolver
   
   # If the target wasn't specified, it doesn't exist
   register :test do |dep| 
-    if symlink_found = dep.exists?
+    if symlink_correct = dep.exists? && dep.correct?
       logger.debug " ~ [PASSED] symlink #{dep.target}"
     else
       logger.warn " ~ [FAILED] symlink #{dep.target}"
     end
-    symlink_found
+    symlink_correct
   end
 
   register :resolution do |dep|
