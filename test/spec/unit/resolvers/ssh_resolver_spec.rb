@@ -12,7 +12,8 @@ describe WarningShot::SshResolver do
      
   describe 'with healing enabled' do
     describe 'with heal instructions' do
-      it 'should install the public key on the local user (rm your own pubkey from ~/.ssh/authorized_keys2 to pass)' do
+      it 'should install the public key on the local user' do
+        pending "rm your own pubkey from ~/.ssh/authorized_keys2 to run"
         fd = WarningShot::SshResolver.new({:hostname => 'localhost', :username => ENV['USER']})
         fd.test!
         fd.failed.length.should be(1)
