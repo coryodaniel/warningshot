@@ -1,8 +1,6 @@
 #! /usr/bin/env ruby
-require 'warningshot'
-require 'warningshot/suite'
 
-# Parse ARGV
+require 'warningshot/suite'
 WarningShot::Config.parse_args
 
 # Initialize and run a new dependency resolver

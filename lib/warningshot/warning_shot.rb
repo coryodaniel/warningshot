@@ -1,3 +1,7 @@
+require File.dirname(__FILE__) / 'config' 
+require File.dirname(__FILE__) / 'resolver' 
+require File.dirname(__FILE__) / 'dependency_resolver' 
+
 module WarningShot
   BeforeCallbacks= []
   AfterCallbacks   = []

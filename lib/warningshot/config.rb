@@ -1,12 +1,17 @@
 # I pretty much goinked this from merb, you love merb, merb loves you.
 # http://merbivore.com
 
+require File.dirname(__FILE__) / 'warning_shot' 
+require File.dirname(__FILE__) / 'template_generator'
+ 
 module WarningShot
   class Config
   
     class << self
       def defaults
         @defaults ||= {
+          :pload        => [],
+          :oload        => [],
           :environment  => 'development',
           :resolve      => false,
           :config_paths => ['.'  / 'config' / 'warningshot', '~' / '.warningshot'],
@@ -69,12 +74,6 @@ BANNER
         WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{defaults[:resolvers].join(':')}") do |config|
           options[:resolvers] = config.split(':')
         end
-        WarningShot.parser.on("--oload=LIST", String, "Only load specified resolvers") do
-          
-        end
-        WarningShot.parser.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority") do
-          
-        end
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
           template_path = options[:config_paths].first if template_path.nil? || template_path.empty?
           WarningShot::TemplateGenerator.create(template_path)
@@ -95,6 +94,17 @@ BANNER
         WarningShot.parser.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
           options[:colorize] = colorize
         end
+        # NOTE stubs for taking WarningShot.only_load && WarningShot.priority_load from command line, ran into a catch22
+        #   with this so its removed for now. Cory ODaniel (11/8/2008)
+        #
+        #WarningShot.parser.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
+        #  options[:oload] = oload.split(',')
+        #  WarningShot.only_load *options[:oload]
+        #end
+        #WarningShot.parser.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority (Command seperated)") do |pload|
+        #  options[:pload] = pload.split(',')
+        #  WarningShot.only_load *options[:pload]
+        #end
         WarningShot.parser.on_tail("--version", "Show version"){ 
           WarningShot.parser.parse!(argv)
           WarningShot::Config.setup(options)

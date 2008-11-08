@@ -1,3 +1,6 @@
+require File.dirname(__FILE__) / 'warning_shot' 
+require File.dirname(__FILE__) / 'config' 
+
 module WarningShot
   module TemplateGenerator
     class << self

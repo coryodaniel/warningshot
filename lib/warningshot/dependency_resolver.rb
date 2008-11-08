@@ -1,3 +1,8 @@
+require File.dirname(__FILE__) / 'warning_shot' 
+require File.dirname(__FILE__) / 'resolver' 
+require File.dirname(__FILE__) / 'config'
+require File.dirname(__FILE__) / 'logger'  
+
 module WarningShot
   class DependencyResolver
     

@@ -1,3 +1,5 @@
+require File.dirname(__FILE__) / 'warning_shot' 
+
 module WarningShot
   class LoggerFormatter < Logger::Formatter
 

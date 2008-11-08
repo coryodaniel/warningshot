@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) / 'warning_shot' 
 # API access for resolvers
 #
 # @example
