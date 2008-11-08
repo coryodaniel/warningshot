@@ -87,13 +87,19 @@ WarningShot Dependency Resolution Framework
  * Bug reports / feature requests @:
     http://warningshot.lighthouseapp.com/projects/17241-warningshot/overview
  
- * Online Documentation available @: (eventually)
-
+ * Online Documentation available @:
+    http://github.com/coryodaniel/warningshot/wikis
+    
  * RubyForge Project @:
     http://rubyforge.org/projects/warning-shot/
  
  * All modifications should also have applicable rpsecs
     http://rspec.info/
+    
+ * A dummy gem has been created for testing the GemResolver
+    https://rubyforge.org/projects/ws-dummy/
+    http://github.com/coryodaniel/ws-dummy/tree/master
+    gem install ws-dummy
  
  * All code should be documented using YARD
     http://yard.rubyforge.org/

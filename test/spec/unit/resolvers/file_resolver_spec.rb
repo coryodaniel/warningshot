@@ -25,10 +25,6 @@ describe WarningShot::FileResolver do
   it 'should have resolutions regsitered' do
     WarningShot::FileResolver.resolutions.empty?.should be(false)
   end
-    
-  it 'should treate relative paths as from directory specified by WarningShot::Config[:application]' do
-    pending
-  end
    
   describe 'with healing enabled' do
     describe 'with heal instructions' do

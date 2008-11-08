@@ -2,10 +2,11 @@ module WarningShot
   BeforeCallbacks= []
   AfterCallbacks   = []
   
+  # Relative paths from WarningShot.root
   PATHS       = {
     :templates  => 'templates',
     :images     => 'images',
-    :resolvers  => 'lib' / 'warning_shot' / 'resolvers'
+    :resolvers  => 'lib' / 'resolvers'
   }
   
   ConfigExt = "*.{yml,yaml}".freeze
@@ -112,6 +113,47 @@ module WarningShot
     end
     alias :run :fire!
     
+    # loads only specified resolvers
+    # 
+    # @param *params [Array[~to_s]]
+    #   list of resolvers to load
+    #
+    # @note
+    # this is equivalent to:
+    #   require 'warningshot'
+    #   require 'warningshot/../resolvers/each_resolver_listed'
+    # 
+    # all add'l resolvers will be loaded still (not sure if this is good or bad)
+    # @see WarningShot.load_addl_resolvers
+    # 
+    def only_load(*params)
+      params.each{ |f| require WarningShot.dir_for(:resolvers) / "#{f}_resolver" }
+    end
+    
+    # loads only specified resolvers
+    # 
+    # @param *params [Array[~to_s]]
+    #   list of resolvers to load
+    #
+    # @note
+    # this is equivalent to:
+    #   require 'warningshot'
+    #   require 'warningshot/../resolvers/each_resolver_listed'
+    #   WarningShot::EachResolverListed.order(sequential_number)
+    # 
+    # all add'l resolvers will be loaded still (not sure if this is good or bad)
+    #
+    # @see WarningShot.load_addl_resolvers
+    #
+    def priority_load(*params)
+      params.each_with_index do |f,idx|
+        _resolver_name = "#{f}_resolver"
+        require WarningShot.dir_for(:resolvers) / _resolver_name
+        klass_name = _resolver_name.downcase.split('_').inject([]){|memo,part| memo << part.capitalize}.join('')
+        const_get(klass_name).order(idx)
+      end
+    end
+    
     # Changes the working directory to that of the application
     #   Default application is '.'
     def load_app
@@ -126,5 +168,15 @@ module WarningShot
       end
     end
     
+    # returns names of all loaded resolvers in priority order
+    #
+    # @see WarningShot::Resolver.descendents
+    #
+    # @return [Array[String]]
+    #   Name of loaded resolvers
+    #
+    def resolvers
+      WarningShot::Resolver.descendents.sort_by{|d|d.order}.inject([]){|a,klass| a << klass.name}
+    end
   end
 end

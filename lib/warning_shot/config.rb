@@ -69,6 +69,12 @@ BANNER
         WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{defaults[:resolvers].join(':')}") do |config|
           options[:resolvers] = config.split(':')
         end
+        WarningShot.parser.on("--oload=LIST", String, "Only load specified resolvers") do
+          
+        end
+        WarningShot.parser.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority") do
+          
+        end
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
           template_path = options[:config_paths].first if template_path.nil? || template_path.empty?
           WarningShot::TemplateGenerator.create(template_path)

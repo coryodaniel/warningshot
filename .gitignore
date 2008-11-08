@@ -1,4 +1,5 @@
 .DS_Store
+CORYSTODOS
 log/*
 tmp/*
 gems/cache/*
