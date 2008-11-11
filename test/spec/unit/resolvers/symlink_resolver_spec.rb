@@ -31,7 +31,7 @@ describe WarningShot::SymlinkResolver do
         :source => @@data_path / 'mock_resolver.rb',
         :target => @@base_path / 'linked_mock_resolver.rb'
       }
-      resolver = WarningShot::SymlinkResolver.new symlink_dep
+      resolver = WarningShot::SymlinkResolver.new WarningShot::Config.new,symlink_dep
       
       resolver.test!
       resolver.failed.length.should be(1)

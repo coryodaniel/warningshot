@@ -15,11 +15,11 @@ class WarningShot::IntegrityResolver
     def exists?;File.exists?(File.expand_path(target.path));end;
   end
     
-  cast String do |file|
+  typecast String do |file|
     FileResource.new URI.parse(''), URI.parse(file), nil, nil
   end
   
-  cast Hash do |file|
+  typecast Hash do |file|
     file[:source].sub!(/file:\/\//i,'') unless file[:source].nil?
     
     if file[:sha1] && file[:md5]

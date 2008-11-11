@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) / 'warning_shot' 
+
 # API access for resolvers
 #
 # @example
@@ -24,6 +25,10 @@ module WarningShot
       #       :name => "keyname", #required
       #       :type => String #[:list, :of, :available, :values]
       #       :default_desc => "Default: my_value"
+      #       :callback => lambda 
+      #           a callback fired after the config value has been set, this wont be called if :action is specified, receives
+      #           value from command line
+      #       :action => lambda #Replace default action that sets the config value, receives value from command line
       # @api public
       def cli(opts)
         @raw_cli_ext ||= []
@@ -35,20 +40,25 @@ module WarningShot
         @raw_cli_ext << opts
         
         clean_opts = [
-          opts[:short],
-          opts[:long],
-          opts[:type],
-          opts[:description],
-          opts[:default_desc]
+          opts[:short],       # sort flag
+          opts[:long],        # long flag
+          opts[:type],        #Data type
+          opts[:description], #Description of what the option does
+          opts[:default_desc] #description of the default value
         ]
         clean_opts.delete(nil)
         
         #Set the default value if it was given
         opt_name = opts[:name].intern
-        WarningShot::Config[opt_name] = opts[:default]
+        WarningShot::Config::DEFAULTS[opt_name] = opts[:default]
         
-        WarningShot.parser.on_tail(*clean_opts) do |val|
-          WarningShot::Config[opt_name] = val
+        if opts[:action].nil?
+          WarningShot.parser.on_tail(*clean_opts) do |val|
+            options[opt_name] = val
+            opts[:callback].call(val) if opts[:callback]
+          end
+        else
+          WarningShot.parser.on_tail(*clean_opts,&opts[:action])
         end
 
       end
@@ -129,6 +139,23 @@ module WarningShot
         @disabled = true
       end
       
+      # enables a resolver (enabled by default)
+      #
+      # @example
+      #   class MyResolver
+      #     include WarningShot::Resolver
+      #     disable!
+      #   end
+      #
+      #   # Maybe you only want to enable it under some conditions
+      #   MyResolver.enabled! if my_merb_or_rails_env == 'production'
+      #   MyResolver.enabled! if @pickles.count == @chickens.count
+      #
+      # @api public
+      def enable!
+        @disabled = false
+      end
+      
       # Determines if resolver is disabled
       #
       # @return [Boolean]
@@ -165,13 +192,18 @@ module WarningShot
       #   How to cast the data to an object
       # 
       # @api public
-      def cast(klass=nil,&block)
+      def typecast(klass=nil,&block)
         if klass.nil?
           klass = :default
         else
           klass = klass.name.to_sym
         end
         (@yaml_to_object_methods||={})[klass] = block
+      end
+      
+      def cast(klass=nil,&block)
+        logger.warn "Resolver.cast is deprecated, use Resolver.typecast"
+        typecast(klass,&block)
       end
       
       # calls the block defined by Resolver#cast to convert
@@ -241,8 +273,7 @@ module WarningShot
       #
       #   register :resolution, :if => lambda{|dependency| 
       #     #This will determin if resolution should be attempted
-      #     # this would only resolve in production
-      #     WarningShot.environment == 'production'
+      #     my_special_instance == true
       #   } do |dependency|
       #       my_method_that_would_resolve dependency
       #   end
@@ -301,6 +332,14 @@ module WarningShot
             registered_resolution[:name] == resolution_name
           end
         end
+      end
+      
+      # removes all test/resolutions from a resolver
+      #
+      # @api public
+      def flush!
+        flush_tests!
+        flush_resolutions!
       end
       
       # Removes all tests from a resolver
@@ -380,7 +419,7 @@ module WarningShot
       # 
       # @api private
       def test!
-        dependencies.each do |dep|   
+        dependencies.each do |dep|  
           self.class.tests.each{ |test_meta|  
             dep.met = process_block :test, dep, test_meta
             break if dep.met
@@ -393,10 +432,12 @@ module WarningShot
       # @api private
       def resolve!
         dependencies.each do |dep|
-          self.class.resolutions.each{ |resolution_meta|     
-            dep.resolved = process_block :resolution, dep, resolution_meta
-            break if dep.resolved
-          } unless dep.met
+          unless dep.met
+            self.class.resolutions.each{ |resolution_meta|     
+              dep.resolved = process_block :resolution, dep, resolution_meta
+              break if dep.resolved
+            }
+          end
         end
       end
       
@@ -408,11 +449,7 @@ module WarningShot
       # @api private
       def unresolved
         dependencies.inject([]){ |list,dep| 
-          if !dep.met && !dep.resolved
-            list << dep 
-          else
-            list
-          end
+          (!dep.met && !dep.resolved) ? (list << dep) : (list)
         }
       end
       
@@ -424,25 +461,18 @@ module WarningShot
       # @api private
       def failed
         dependencies.inject([]){ |list,dep|
-          unless dep.met
-            list << dep
-          else
-            list
-          end
+          dep.met ? (list) : (list << dep)
         }
       end
       
       # list of successful dependencies
       #
       # @return [Array<Objects>]
+      #
       # @api private
       def passed
         dependencies.inject([]){ |list,dep| 
-          if dep.met
-            list << dep
-          else
-            list
-          end
+          dep.met ? (list << dep) : (list)
         }
       end
       
@@ -454,15 +484,15 @@ module WarningShot
       # @api private
       def resolved        
         dependencies.inject([]){ |list,dep| 
-          if(!dep.met && dep.resolved)
-            list << dep 
-          else
-            list
-          end
+          (!dep.met && dep.resolved) ? (list << dep) : (list)
         }
       end
       
-      # loads up instance variables for new test
+      # setups up a resolver with config and dependencies
+      #
+      # @param config [WarningShot::Config]
+      #   Configuration to use
+      #
       # @param *deps [Array]
       #   Dependencies from YAML file
       #
@@ -473,8 +503,10 @@ module WarningShot
       #       resolved [Boolean] Was teh dependency resolved
       #
       # @api semi-public
-      def initialize(*deps)
+      def initialize(config,*deps)
+        @config = config
         @dependencies = Set.new
+        
         deps.each do |dep|
           # Cast YAML data as described in resolver.
           dep = self.class.yaml_to_object(dep)
@@ -483,10 +515,7 @@ module WarningShot
           @dependencies.add dep
         end
       end
-   
-      attr_accessor :logger
-      attr_accessor :dependencies
-      
+         
       protected
        # processes a test or resolution block
        # 
@@ -506,13 +535,13 @@ module WarningShot
        # @api private
        def process_block(type, dep, block_info)
          if !block_info[:if] && !block_info[:unless]
-           # no condition, run block
+           #if no conditions, run block
            return block_info[type].call(dep)
          elsif block_info[:if] && block_info[:if].call(dep)
-           #if Condition given and it applies, run block          
+           #elsif 'if' Condition given and it applies, run block          
            return block_info[type].call(dep)
          elsif block_info[:unless] && !block_info[:unless].call(dep)
-           #unless Condition given and it applies, run block
+           #elsif 'unless' Condition given and it applies, run block
            return block_info[type].call(dep)
          end
 
@@ -520,16 +549,16 @@ module WarningShot
        end
     end
     
-    @@descendents = []
-    def self.descendents
-      #Filter out descendents that are disabled
-      temp_descendents = []
-      @@descendents.each do |klass|
-        temp_descendents.push(klass) unless klass.disabled?
+    @@descendants = []
+    def self.descendants
+      #Filter out descendants that are disabled
+      temp_descendants = []
+      @@descendants.each do |klass|
+        temp_descendants.push(klass) unless klass.disabled?
       end
 
       #Sort by order
-      temp_descendents.sort_by{|desc| desc.order}
+      temp_descendants.sort_by{|desc| desc.order}
     end
 
     
@@ -537,7 +566,9 @@ module WarningShot
     def self.included(subclass)
       subclass.extend ClassMethods
       subclass.send :include, InstanceMethods
-      @@descendents.push subclass
+      subclass.send :attr_reader, :config
+      subclass.send :attr_accessor, :dependencies
+      @@descendants.push subclass
     end
   end
 end

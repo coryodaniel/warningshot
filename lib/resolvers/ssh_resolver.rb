@@ -19,7 +19,7 @@ class WarningShot::SshResolver
   # Define ServerResource struct
   ServerResource = Struct.new(:hostname, :username, :ssh_options)
        
-  cast Hash do |server|
+  typecast Hash do |server|
     ServerResource.new server[:hostname], server[:username], (server[:ssh_options] || {})
   end
   

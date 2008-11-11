@@ -39,14 +39,12 @@ class WarningShot::PermissionResolver
     end
   end
   
-  cast Hash do |yaml|
-    _path       = yaml.delete(:path)
-    _mode       = yaml.delete(:mode)      || '0755'
-    _user       = yaml.delete(:user)      || 'nobody'
-    _group      = yaml.delete(:group)     || 'nobody'
-    _recursive  = yaml.delete(:recursive) || 'none'
-    
-    PermissionResource.new _path, _mode, _user, _group, _recursive
+  typecast Hash do |yaml|
+    PermissionResource.new  yaml.delete(:path), 
+                            yaml.delete(:mode)      || '0755',
+                            yaml.delete(:user)      || 'nobody',
+                            yaml.delete(:group)     || 'nobody',
+                            yaml.delete(:recursive) || 'none'
   end
   
   register :test do |resource|

@@ -1,16 +1,16 @@
 #! /usr/bin/env ruby
 
 require 'warningshot/suite'
-WarningShot::Config.parse_args
+config = WarningShot::Config.parse_args
 
 # Initialize and run a new dependency resolver
-dep_resolver = WarningShot.fire!
+dep_resolver = WarningShot.fire!(config)
 
 # Get the stats from the resolver
 stats = dep_resolver.stats
 
 # Growl the results if growl is on
-if WarningShot::Config[:growl]
+if config[:growl]
   WarningShot::Growl.say stats.to_a.join('/')
 end
 

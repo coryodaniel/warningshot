@@ -14,7 +14,7 @@ describe WarningShot::TemplateGenerator do
   end
   
   it "should have generate YAML config files" do
-    yaml_files = Dir[@test_path / WarningShot::ConfigExt]
+    yaml_files = Dir[@test_path / WarningShot::RecipeExt]
     yaml_files.empty?.should be(false)
   end
   

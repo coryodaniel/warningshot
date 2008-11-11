@@ -21,11 +21,11 @@ class WarningShot::FileResolver
     def remove;File.unlink(File.expand_path(target.path));end;
   end
     
-  cast String do |file|
+  typecast String do |file|
     FileResource.new URI.parse(''), URI.parse(file)
   end
   
-  cast Hash do |file|
+  typecast Hash do |file|
     file[:source].sub!(/file:\/\//i,'') unless file[:source].nil?
     FileResource.new URI.parse(file[:source] || ''), URI.parse(file[:target])
   end

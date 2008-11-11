@@ -14,7 +14,7 @@ class WarningShot::CoreLibResolver
   @@do_purge = false
   
   CoreLibResource = Struct.new(:lib)
-  cast do |dep|
+  typecast do |dep|
     CoreLibResource.new(dep)
   end
   

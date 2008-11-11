@@ -10,7 +10,7 @@ WarningShot Dependency Resolution Framework
 ==== Ruby API
 
   - Configuring WarningShot
-  WarningShot::Config.use do |c|
+  config = WarningShot::Config.new do |c|
     c[:environment]  = 'development'
     c[:resolve]      = false
     c[:config_paths] = ['.'  / 'config' / 'warningshot']
@@ -24,7 +24,7 @@ WarningShot Dependency Resolution Framework
   end
   
   - Interfacing with a DependencyResolver
-  dependency_resolver = WarningShot.fire!
+  dependency_resolver = WarningShot.fire!(config)
   dependency_resolver.stats                       # => Hash of statistics
   
   dependency_resolver.resolvers                   # => Array of all executed resolvers

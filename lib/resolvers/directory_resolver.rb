@@ -6,7 +6,7 @@ class WarningShot::DirectoryResolver
   description 'Validates presence of directories'
       
   DirectoryResource = Struct.new(:path)  
-  cast do |path|
+  typecast do |path|
     DirectoryResource.new File.expand_path(path)
   end
   

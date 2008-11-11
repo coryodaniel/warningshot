@@ -7,10 +7,16 @@ class MockResolver
   ######### Attributes
   order 1
   branch :mock
-  description 'A mock resolver'
+  description 'A mock resolver for testing'
 
-  def initialize;end;
+  def initialize(c,*d)
+    super
+    MockResolver.logger.debug 'A mock resolver was initialized'
+  end
+  
+  MockStruct = Struct.new(:value)
+  typecast String do |dep|
+    MockStruct.new(dep)
+  end
   
 end
-
-# TODO RENAME order to order

@@ -1,10 +1,10 @@
 describe WarningShot::DependencyResolver do
   before :all do
-    @config = {
+    @config = WarningShot::Config.new({
       :config_paths => [$test_data],
       :environment => 'rspec',
       :log_path => $log_file
-    }
+    })
     
   end
   
@@ -13,13 +13,7 @@ describe WarningShot::DependencyResolver do
     pending
   end
   
-  it 'should create a dependency tree from a set of config files' do
-    @config = {
-      :config_paths => [$test_data],
-      :environment => 'rspec',
-      :log_path => $log_file
-    }
-    
+  it 'should create a dependency tree from a set of config files' do    
     dr = WarningShot::DependencyResolver.new(@config)
     
     dr.dependency_tree[:mock].empty?.should be(false)

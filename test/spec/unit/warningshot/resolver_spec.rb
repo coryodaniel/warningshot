@@ -1,9 +1,10 @@
+require WarningShot.root / 'lib' / 'warningshot' / 'suite'
 require $test_data / 'mock_resolver'
 
 describe WarningShot::Resolver do
   it 'should provide a base set of resolvers' do
-    WarningShot::Resolver.descendents.class.should be(Array)
-    WarningShot::Resolver.descendents.empty?.should be(false)
+    WarningShot::Resolver.descendants.class.should be(Array)
+    WarningShot::Resolver.descendants.empty?.should be(false)
   end
   
   it 'should allow a resolver to set a order' do
@@ -44,7 +45,7 @@ describe WarningShot::Resolver do
   it 'should be able to cast YAML data to an Object the resolver can work with' do
     MockDependency = Struct.new :more, :less
 
-    MockResolver.cast do |dep|
+    MockResolver.typecast do |dep|
       MockDependency.new dep[:more], dep[:less]
     end
 
@@ -81,7 +82,7 @@ describe WarningShot::Resolver do
 
   it 'should be able to register a conditional test' do
     is_test_env = lambda{ |dependency| 
-      WarningShot.environment == 'test'
+      WarningShot::Config.new()[:environment] == 'test'
     }
     MockResolver.flush_tests!
     MockResolver.register :test, :if => is_test_env do |dependency|
@@ -162,7 +163,7 @@ describe WarningShot::Resolver do
   
   it 'should be able to register a conditional resolution' do
     is_test_env = lambda{ |dependency| 
-      WarningShot.environment == 'production'
+      WarningShot::Config.new()[:environment] == 'production'
     }
     MockResolver.flush_resolutions!
     MockResolver.register :resolution, :if => is_test_env do |dependency|
@@ -263,85 +264,53 @@ describe WarningShot::Resolver do
     MockResolver.resolutions(:number_resolution1)[:unless].call.should be(true)
   end
   
-  it 'should increment #passed if the test passed' do
-    pending
-  end
-  
-  it 'should increment #failed if the test failed' do
-    pending
-  end
-  
-  it 'should increment #resolved if the resolution passed' do
-    pending
-  end
-  
-  it 'should increment #unresolved if the resolution was unresolved' do
-    pending
-  end
-
   it 'should be able to determine if a test passed' do
-    MockResolver.flush_tests!
-    MockResolver.flush_resolutions!
+    MockResolver.flush!
+    MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    test_meta = {
-      :name => :process_block_test,
-      :test => lambda {|dep| dep[:fav_color] == :blue}
-    }
-    
-    dep = {:fav_color => :blue}
-
-    MockResolver.new.send(:process_block, :test, dep, test_meta).should be(true)
+    mock_resolver = MockResolver.new(WarningShot::Config.new,'blue')
+    mock_resolver.test!
+    mock_resolver.passed.length.should be(1)
   end
   
   it 'should be able to determine if a test failed' do
-    MockResolver.flush_tests!
-    MockResolver.flush_resolutions!
+    MockResolver.flush!
+    MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    test_meta = {
-      :name => :process_block_test,
-      :test => lambda {|dep| dep[:fav_color] == :blue}
-    }
-    
-    dep = {:fav_color => :red}
-
-    MockResolver.new.send(:process_block, :test, dep, test_meta).should be(false)
+    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver.test!
+    mock_resolver.failed.length.should be(1)
   end
 
   it 'should be able to determine if a resolution passed' do
-    MockResolver.flush_tests!
-    MockResolver.flush_resolutions!
-
-    resolution_meta = {
-      :name => :process_block_test,
-      :resolution => lambda {|dep| 
-        dep[:fav_color] = :blue
-        dep[:fav_color] == :blue
-      }
+    MockResolver.flush!
+    
+    MockResolver.register(:resolution,:name => :det_res_passed){ |dep| 
+      dep.value = :blue
+      dep.value == :blue
     }
     
-    dep = {:fav_color => :red}
-
-    MockResolver.new.send(:process_block, :resolution, dep, resolution_meta).should be(true)
+    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver.test!
+    mock_resolver.resolve!
+    mock_resolver.resolved.length.should be(1)
   end
 
   it 'should be able to determine if a resolution failed' do
-    MockResolver.flush_tests!
-    MockResolver.flush_resolutions!
-
-    resolution_meta = {
-      :name => :process_block_test,
-      :resolution => lambda {|dep| 
-        begin
-          dep[:fav_color] = :blue
-        rescue Exception
-          # nada
-        end
-        dep[:fav_color] == :blue
-      }
+    MockResolver.flush!
+    
+    
+    MockResolver.register(:resolution,:name => :det_res_failed){ |dep| 
+      dep.value == :blue
     }
     
-    dep = {:fav_color => :red}.freeze
-
-    MockResolver.new.send(:process_block, :resolution, dep, resolution_meta).should be(false)
+    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver.test!
+    mock_resolver.resolve!
+    mock_resolver.unresolved.length.should be(1)
+  end
+  
+  it 'should not try to resolve a dependency if it has passed' do
+    pending
   end
 end

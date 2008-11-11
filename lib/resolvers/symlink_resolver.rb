@@ -19,11 +19,11 @@ class WarningShot::SymlinkResolver
       
   end
 
-  cast String do |yaml|
+  typecast String do |yaml|
     SymlinkResource.new File.expand_path(yaml), nil, false
   end
 
-  cast Hash do |yaml|
+  typecast Hash do |yaml|
     use_force = yaml[:force].nil? ? true : yaml[:force]
     _src = File.expand_path yaml[:source]
     _trg = File.expand_path yaml[:target]

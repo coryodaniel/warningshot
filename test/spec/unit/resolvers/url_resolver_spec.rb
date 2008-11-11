@@ -20,38 +20,38 @@ describe WarningShot::UrlResolver do
   end
 
   it 'should be able to determine if an http address is reachable' do
-    resolver = WarningShot::UrlResolver.new "http://example.com"
+    resolver = WarningShot::UrlResolver.new WarningShot::Config.new,"http://example.com"
     resolver.test!
     resolver.failed.length.should be(0)
   end
   
   it 'should be able to determine if an https address is reachable' do
     #Yeah, what https page to use, huh?
-    resolver = WarningShot::UrlResolver.new "https://www.google.com/analytics/home/"
+    resolver = WarningShot::UrlResolver.new WarningShot::Config.new,"https://www.google.com/analytics/home/"
     resolver.test!
     resolver.failed.length.should be(0)
   end
   
   it 'should be able to determine if an http address is unreachable' do
-    resolver = WarningShot::UrlResolver.new "http://example.com", "http://127.0.0.1:31337"
+    resolver = WarningShot::UrlResolver.new WarningShot::Config.new, "http://example.com", "http://127.0.0.1:31337"
     resolver.test!
     resolver.failed.length.should be(1)
     resolver.passed.length.should be(1)
   end
   
   it 'should be able to determine if an https address is unreachable' do
-    resolver = WarningShot::UrlResolver.new "https://www.google.com/analytics/home/", "https://127.0.0.1:31337"
+    resolver = WarningShot::UrlResolver.new WarningShot::Config.new,"https://www.google.com/analytics/home/", "https://127.0.0.1:31337"
     resolver.test!
     resolver.failed.length.should be(1)
     resolver.passed.length.should be(1)
   end
     
   it 'should be able to receive --strict from the command line' do
-    WarningShot::Config.configuration[:url_strict] = true
-    WarningShot::Config.configuration[:url_strict].should be(true)
+    config = WarningShot::Config.new({:url_strict=>true})
+    config[:url_strict].should be(true)
     
     #google redirects, ever heard of no-www.org?
-    resolver = WarningShot::UrlResolver.new "http://example.com","http://google.com"
+    resolver = WarningShot::UrlResolver.new config, "http://example.com","http://google.com"
 
     resolver.test!
     resolver.failed.length.should be(1)

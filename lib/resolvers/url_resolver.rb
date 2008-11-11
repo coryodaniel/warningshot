@@ -1,3 +1,8 @@
+# Auto-generated ruby debug require       
+require "ruby-debug"
+Debugger.start
+Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+
 require 'uri'
 require 'net/http'
 require 'net/https'
@@ -32,43 +37,43 @@ module WarningShot
       :default      => 5
     )
     
-    UrlResource = Struct.new(:uri)
-    cast do |dep|
-      UrlResource.new URI.parse(dep)
+    typecast do |dep|
+      URI.parse(dep)
     end
     
-    register :test do |dep|
+    register :test do |uri,config|
       begin
-        http = Net::HTTP.new(dep.uri.host,dep.uri.port)
+        http = Net::HTTP.new(uri.host,uri.port)
         
-        if dep.uri.scheme == 'https'
+        if uri.scheme == 'https'
           http.use_ssl = true
 
-          if WarningShot::Config.configuration[:root_ca] && File.exist?(WarningShot::Config.configuration[:root_ca])
-            http.ca_file = WarningShot::Config.configuration[:root_ca]
+          if self.config[:root_ca] && File.exist?(self.config[:root_ca])
+            http.ca_file = self.config[:root_ca]
             http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-            http.verify_depth = WarningShot::Config.configuration[:ssl_verify_depth]
+            http.verify_depth = self.config[:ssl_verify_depth]
           else
             http.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
         end
         
-        dep.uri.path = '/' if dep.uri.path.empty?
-        resp = http.head(dep.uri.path)
+        uri.path = '/' if uri.path.empty?
+        resp = http.head(uri.path)
 
-        valid_codes = WarningShot::Config.configuration[:url_strict] ? /200/ : /^[23][0-9][0-9]$/
+        valid_codes = self.config[:url_strict] ? /200/ : /^[23][0-9][0-9]$/
         
         page_found = (resp.code =~ valid_codes)
-        
+
         if page_found
-          logger.debug " ~ [PASSED] url #{dep.uri.to_s}"
+          logger.debug " ~ [PASSED] url #{uri.to_s}"
         else
-          logger.warn " ~ [FAILED] url #{dep.uri.to_s}"
+          logger.warn " ~ [FAILED] url #{uri.to_s}"
         end
         
         page_found
-      rescue Exception
-        logger.error "Could not reach #{dep.uri.to_s}"
+      rescue Exception => ex
+        
+        logger.error "Could not reach #{uri.to_s}"
         false
       end
     end

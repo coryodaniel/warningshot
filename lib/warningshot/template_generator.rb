@@ -9,7 +9,7 @@ module WarningShot
       end
     
       def generate_configs(path)
-        from  = WarningShot.dir_for(:templates) / WarningShot::ConfigExt
+        from  = WarningShot.dir_for(:templates) / WarningShot::RecipeExt
         copy_templates from, path
       end
       

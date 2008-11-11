@@ -51,8 +51,8 @@ class WarningShot::GemResolver
     end
   end #End GemResource
   
-  cast(String){ |yaml| GemResource.new(yaml,DEFAULT_VERSION) }
-  cast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version] }
+  typecast(String){ |yaml| GemResource.new(yaml,DEFAULT_VERSION) }
+  typecast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version] }
     
   register :test do |dep|    
     if gem_found = dep.installed?
@@ -73,22 +73,21 @@ class WarningShot::GemResolver
     dep.installed?
   end
   
-  class << self
-    # loads gem paths from WarningShot::Config
-    def load_paths
-      if WarningShot::Config.configuration.key?(:gem_path) && !WarningShot::Config.configuration[:gem_path].nil?
-        WarningShot::Config.configuration[:gem_path].split(":").reverse.each do |path|
-          Gem.path.unshift File.expand_path(path)
-        end
-        
-        Gem::cache.class.from_gems_in WarningShot::Config.configuration[:gem_path].split(":")
-        Gem::cache.refresh!
+
+  # loads gem paths from self.config
+  def load_paths
+    if self.config.configuration.key?(:gem_path) && !self.config[:gem_path].nil?
+      self.config[:gem_path].split(":").reverse.each do |path|
+        Gem.path.unshift File.expand_path(path)
       end
+      
+      Gem::cache.class.from_gems_in self.config[:gem_path].split(":")
+      Gem::cache.refresh!
     end
   end
   
-  def initialize(*params)
+  def initialize(config,*params)
     super
-    WarningShot::GemResolver.load_paths
+    self.load_paths
   end
 end

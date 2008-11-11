@@ -6,48 +6,64 @@ require File.dirname(__FILE__) / 'template_generator'
  
 module WarningShot
   class Config
+    attr_reader :configuration
+    DEFAULTS = {
+      :pload        => [],
+      :oload        => [],
+      :environment  => 'development',
+      :resolve      => false,
+      :config_paths => ['.'  / 'config' / 'warningshot', '~' / '.warningshot'],
+      :application  => '.',
+      :log_path     => '.' / 'log' / 'warningshot.log',
+      :log_level    => :info,
+      :growl        => false,
+      :verbose      => false,
+      :colorize     => true,
+      :resolvers    => ['~' / '.warningshot' / '*.rb']
+    }    
+    
+    #
+    # Initialize a new WarningShot config
+    # 
+    # @example
+    #   Setting config with a hash
+    #   conf = WarningShot::Config.new({:environment=>"staging",:chickens=>true})
+    #
+    #   Setting config with a block
+    #   conf = WarningShot::Config.new do |c|
+    #     c[:environment] = "production"
+    #     c[:cool_feature] = true
+    #   end
+    #
+    #   Just using default config
+    #   conf = WarningShot::Config.new
+    #
+    #   Using a hash and a block, block wins
+    #   conf = WarningShot::Config.new({:environment=>"hash",:something=>true}) do |c|
+    #     c[:environment] = "blk"
+    #     c[:else] = true
+    #   end
+    #
+    def initialize(config={})
+      opt_config = config
+      if block_given?
+        blk_config = {}
+        yield(blk_config)
+        opt_config = opt_config.merge(blk_config)
+      end
+      @configuration = WarningShot::Config::DEFAULTS.clone.merge(opt_config)
+    end
   
-    class << self
-      def defaults
-        @defaults ||= {
-          :pload        => [],
-          :oload        => [],
-          :environment  => 'development',
-          :resolve      => false,
-          :config_paths => ['.'  / 'config' / 'warningshot', '~' / '.warningshot'],
-          :application  => '.',
-          :log_path     => '.' / 'log' / 'warningshot.log',
-          :log_level    => :info,
-          :growl        => false,
-          :verbose      => false,
-          :colorize     => true,
-          :resolvers    => ['~' / '.warningshot' / '*.rb']
-        }
-      end
-    
-      def use
-        @configuration ||= {}
-        yield @configuration
-        @configuration = defaults.merge(@configuration)
-      end
-    
-      def [](key)
-        (@configuration||={})[key]
-      end
+    def [](key)
+      configuration[key]
+    end
 
-      def []=(key,val)
-        (@configuration||={})[key] = val
-        #@configuration[key] = val
-      end
-    
-      def setup(settings = {})
-        @configuration = defaults.merge(settings)
-      end
-    
-      attr_accessor :configuration
-    
+    def []=(key,val)
+      configuration[key] = val
+    end  
+
+    class << self      
       def parse_args(argv = ARGV)
-        @configuration ||= {}
         options = {}
         options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
       
@@ -59,19 +75,19 @@ Usage: warningshot [options]
 BANNER
         WarningShot.parser.separator '*'*80
         
-        WarningShot.parser.on("-e", "--environment=STRING", String, "Environment to test in","Default: #{defaults[:environment]}") do |env|
+        WarningShot.parser.on("-e", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
           options[:environment] = env
         end
         WarningShot.parser.on("--resolve","Resolve missing dependencies (run as sudo)") do |resolve|
           options[:resolve] = resolve
         end
-        WarningShot.parser.on("-a","--app=PATH", String, "Path to application", "Default: #{defaults[:application]}") do |app|
+        WarningShot.parser.on("-a","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
           options[:application] = app
         end
-        WarningShot.parser.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{defaults[:config_paths].join(':')}") do |config|
+        WarningShot.parser.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
           options[:config_paths] = config.split(':')
         end
-        WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{defaults[:resolvers].join(':')}") do |config|
+        WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
           options[:resolvers] = config.split(':')
         end
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
@@ -79,10 +95,10 @@ BANNER
           WarningShot::TemplateGenerator.create(template_path)
           exit
         end
-        WarningShot.parser.on("-l","--log LOG", String, "Path to log file", "Default: #{defaults[:log_path]}") do |log_path|        
+        WarningShot.parser.on("-l","--log LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
           options[:log_path] = log_path
         end
-        WarningShot.parser.on("--loglevel [LEVEL]",[:debug, :info, :warn, :error, :fatal], "Default: #{defaults[:log_level]}") do |log_level|
+        WarningShot.parser.on("--loglevel [LEVEL]",[:debug, :info, :warn, :error, :fatal], "Default: #{DEFAULTS[:log_level]}") do |log_level|
           options[:log_level] = log_level
         end
         WarningShot.parser.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
@@ -114,7 +130,7 @@ BANNER
           
           puts "WarningShot v. #{WarningShot::VERSION}"
           puts "Installed resolvers:"
-            Resolver.descendents.each { |klass| 
+            Resolver.descendants.each { |klass| 
               puts "\n"
               puts klass
               puts "  Tests: #{klass.tests.length}, Resolutions: #{klass.resolutions.length} [#{klass.resolutions.empty? ? 'irresolvable' : 'resolvable'}]"
@@ -137,10 +153,11 @@ BANNER
         end
         
         WarningShot.parser.parse!(argv)
-        WarningShot::Config.setup(options)
+        return WarningShot::Config.new(options)
       rescue OptionParser::InvalidOption, OptionParser::InvalidArgument => op
         puts op
-        puts WarningShot.parser #; exit;
+        puts WarningShot.parser; 
+        exit;
       end
       
     end #End self

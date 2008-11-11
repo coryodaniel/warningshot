@@ -13,13 +13,19 @@ module WarningShot
       @dependency_tree  = {}
       @resolvers        = []
         
-      init_logger
+      self.init_logger
+      self.load_app
+      self.load_addl_resolvers
             
       # Parsed yml files
       self.load_configs
       @dependency_tree.symbolize_keys!
     end
-    
+        
+    def [](k)
+      @config[k]  
+    end
+        
     # gets stats of all resolvers
     # @return [Hash] 
     #   :passed, :failed, :resolved, :unresolved
@@ -44,15 +50,15 @@ module WarningShot
     # 
     # @api private
     def init_logger
-      FileUtils.mkdir_p(File.dirname(File.expand_path(@config[:log_path]))) unless @config[:verbose]
+      FileUtils.mkdir_p(File.dirname(File.expand_path(self[:log_path]))) unless self[:verbose]
       
       @logger = Logger.new(
-        @config[:verbose] ? STDOUT : @config[:log_path], 10, 1024000
+        self[:verbose] ? STDOUT : self[:log_path], 10, 1024000
       )
-      _log_level = (@config[:log_level] || :debug).to_s.upcase
+      _log_level = (self[:log_level] || :debug).to_s.upcase
 
       _formatter = WarningShot::LoggerFormatter.new
-      _formatter.colorize = @config[:colorize]
+      _formatter.colorize = self[:colorize]
 
       @logger.formatter = _formatter
       @logger.level     = Object.class_eval("Logger::#{_log_level}")
@@ -63,10 +69,10 @@ module WarningShot
     # @api private
     def run
       @logger.info "WarningShot v. #{WarningShot::VERSION}"
-      @logger.info "Environment: #{WarningShot.environment}; Application: #{WarningShot.framework}"
+      @logger.info "Environment: #{self.environment}; Application: #{WarningShot.framework}"
       @logger.info "On host: #{WarningShot.hostname}"
       
-      WarningShot::Resolver.descendents.each do |klass|
+      WarningShot::Resolver.descendants.each do |klass|
         @logger.info "\n#{'-'*60}"
 
         branch = @dependency_tree[klass.branch.to_sym]
@@ -77,7 +83,7 @@ module WarningShot
         end
         
         klass.logger = @logger
-        resolver = klass.new(*branch)
+        resolver = klass.new(@config,*branch)
 
         @resolvers << resolver
         
@@ -90,7 +96,7 @@ module WarningShot
         
         @logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
 
-        if WarningShot::Config.configuration[:resolve] && !klass.resolutions.empty?
+        if self[:resolve] && !klass.resolutions.empty?
           @logger.info "#{resolver.class}; branch: #{klass.branch} [RESOLVING]"
 
           klass.before_filters(:resolution).each{|p| p.call}
@@ -110,10 +116,10 @@ module WarningShot
     #
     # @api protected
     def load_configs
-      @config[:config_paths].each do |config_path|
+      self[:config_paths].each do |config_path|
         #Parse the global/running env configs out of the YAML files.
-        Dir[config_path / WarningShot::ConfigExt].each do |config_file|
-          # Use WarningShot::ConfigExt & regexp on extension to make supporting add'l
+        Dir[config_path / WarningShot::RecipeExt].each do |config_file|
+          # Use WarningShot::RecipeExt & regexp on extension to make supporting add'l
           # file types easier in the future
           case File.extname(config_file)
           when /.y(a)?ml/
@@ -153,6 +159,20 @@ module WarningShot
         
         #remove nil's if they made it into branch somehow (bad yaml probably)
         @dependency_tree[branch_name].delete(nil)
+      end
+    end
+   
+    # Changes the working directory to that of the application
+    #   Default application is '.'
+    def load_app
+      Dir.chdir(self[:application])
+    end
+    
+    # Loads any additional resolvers specified by --resolvers= or self[:resolvers]
+    #   defaults to ~/.warningshot/*.rb
+    def load_addl_resolvers
+      self[:resolvers].each do |resolver_path|
+        Dir[File.expand_path(resolver_path)].each {|r| load r}
       end
     end
     

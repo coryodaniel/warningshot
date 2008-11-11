@@ -1,20 +1,35 @@
+# attr_accessors: dependencies
+# attr_readers: config
+
+
 class WarningShot::RESOLVER_NAME
   include WarningShot::Resolver
   order  100
   #disable! 
 
-  branch :BRANCH_NAME
+  branch :BRANCH_NAME #or :branch_name, :branch_name2, :branch_name3
   description 'DESCRIPTION'
        
-  cast do |yaml|
-    #HOW TO CAST YAML DATA
+  typecast do |yaml|
+    #Default way tot typecast yaml to an object
   end
+  
+  #This will be how strings are typecast
+  #typecast(String){|yaml| }
+  
+  #This will be how hashes are typecase, etc
+  #typecast(Hash){|yaml| }
   
   register :test do |dep|
     
   end
   
   register :resolution do |dep|
+    
+  end
+  
+  def initialize(config,*params)
+    super
     
   end
 end
