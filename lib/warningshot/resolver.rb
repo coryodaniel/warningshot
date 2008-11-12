@@ -1,3 +1,8 @@
+# Auto-generated ruby debug require       
+require "ruby-debug"
+Debugger.start
+Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+
 require File.dirname(__FILE__) / 'warning_shot' 
 
 # API access for resolvers
@@ -524,7 +529,6 @@ module WarningShot
        # 
        # @param dep <Hash>
        #    Dependency parsed from yaml configs (Currently Hash)
-       #    TODO; once Dependencies are an object besides Hash, this may need to be changed
        #
        # @param block_info <Hash>
        #   The block details and proc
@@ -532,17 +536,54 @@ module WarningShot
        # @return <Boolean>
        #   Was the block successful; meaning conditions passed and block returned true
        #
+       # @note
+       #    If anyone knows a better way then doing the arity check go for it.  I'd
+       #      like the register api to 'just work' and not have the writer worry about
+       #      a dependency or a configuration unless they need it.  I know that a Proc 
+       #      works no matter how many arguments are passed to it, but a lambda checks
+       #      to make sure its the correct number, and apparently "do;end;" and "{ }"
+       #      check for the number of arguments.
+       # 
+       #      Also note for this, :unless, :if and the block all need a different set of
+       #        params because someone may have registered a :if condition that has a different
+       #        signature than the test/resolution block
+       #
+       #        register(:test,:if=>lambda{WarningShot.hostname=="boogertron"}) do |dep,config|
+       #          puts "A test that needs dep & config"
+       #        end
+       #
        # @api private
        def process_block(type, dep, block_info)
+         block_params = case block_info[type].arity
+         when 1
+           dep
+         when 2
+           [dep,self.config.configuration]
+         end
+         
+         if_params = case
+         when 1
+           dep
+         when 2
+           [dep,self.config.configuration]
+         end if block_info[:if]
+         
+         unless_params = case
+         when 1
+           dep
+         when 2
+           [dep,self.config.configuration]
+         end if block_info[:unless]
+    
          if !block_info[:if] && !block_info[:unless]
            #if no conditions, run block
-           return block_info[type].call(dep)
-         elsif block_info[:if] && block_info[:if].call(dep)
+           return block_info[type].call(block_params)
+         elsif block_info[:if] && block_info[:if].call(if_params)
            #elsif 'if' Condition given and it applies, run block          
-           return block_info[type].call(dep)
-         elsif block_info[:unless] && !block_info[:unless].call(dep)
+           return block_info[type].call(block_params)
+         elsif block_info[:unless] && !block_info[:unless].call(unless_params)
            #elsif 'unless' Condition given and it applies, run block
-           return block_info[type].call(dep)
+           return block_info[type].call(block_params)
          end
 
          return false

@@ -1,8 +1,3 @@
-# Auto-generated ruby debug require       
-require "ruby-debug"
-Debugger.start
-Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-
 require 'uri'
 require 'net/http'
 require 'net/https'
@@ -37,9 +32,7 @@ module WarningShot
       :default      => 5
     )
     
-    typecast do |dep|
-      URI.parse(dep)
-    end
+    typecast{ |dep| URI.parse(dep) }
     
     register :test do |uri,config|
       begin
@@ -48,10 +41,10 @@ module WarningShot
         if uri.scheme == 'https'
           http.use_ssl = true
 
-          if self.config[:root_ca] && File.exist?(self.config[:root_ca])
-            http.ca_file = self.config[:root_ca]
+          if config[:root_ca] && File.exist?(config[:root_ca])
+            http.ca_file = config[:root_ca]
             http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-            http.verify_depth = self.config[:ssl_verify_depth]
+            http.verify_depth = config[:ssl_verify_depth]
           else
             http.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
@@ -60,7 +53,7 @@ module WarningShot
         uri.path = '/' if uri.path.empty?
         resp = http.head(uri.path)
 
-        valid_codes = self.config[:url_strict] ? /200/ : /^[23][0-9][0-9]$/
+        valid_codes = config[:url_strict] ? /200/ : /^[23][0-9][0-9]$/
         
         page_found = (resp.code =~ valid_codes)
 
@@ -72,7 +65,6 @@ module WarningShot
         
         page_found
       rescue Exception => ex
-        
         logger.error "Could not reach #{uri.to_s}"
         false
       end
