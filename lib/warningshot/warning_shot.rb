@@ -152,7 +152,7 @@ module WarningShot
         const_get(klass_name).order(idx)
       end
     end
-        
+
     # returns names of all loaded resolvers in priority order
     #
     # @see WarningShot::Resolver.descendants

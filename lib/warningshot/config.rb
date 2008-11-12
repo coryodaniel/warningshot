@@ -90,6 +90,11 @@ BANNER
         WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
           options[:resolvers] = config.split(':')
         end
+
+        WarningShot.parser.on("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |config|
+          options[:resolver_gems] = config.split(':')
+        end
+
         WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
           template_path = options[:config_paths].first if template_path.nil? || template_path.empty?
           WarningShot::TemplateGenerator.create(template_path)

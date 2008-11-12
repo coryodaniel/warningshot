@@ -29,7 +29,7 @@ class WarningShot::GemResolver
     :default      => false
   )
          
-  GemResource = Struct.new(:name,:version) do
+  GemResource = Struct.new(:name,:version,:source) do
     def installed?
       self.version ||= DEFAULT_VERSION
       installed_versions = Gem::cache.search self.name
@@ -52,7 +52,7 @@ class WarningShot::GemResolver
   end #End GemResource
   
   typecast(String){ |yaml| GemResource.new(yaml,DEFAULT_VERSION) }
-  typecast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version] }
+  typecast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version], yaml[:source] }
     
   register :test do |dep|    
     if gem_found = dep.installed?
@@ -64,11 +64,15 @@ class WarningShot::GemResolver
   end
   
   register :resolution do |dep|
+    old_gem_sources = Gem.sources
     begin
+      Gem.sources.replace(dep.source.kind_of?(Array) ? dep.source : [dep.source]) if dep.source 
       dep_inst = Gem::DependencyInstaller.new({:install_dir => Gem.path.first})
       dep_inst.install(dep.name,Gem::Requirement.new(dep.version))
     rescue Exception => ex
-      logger.error " ~ Could not install gem: #{dep.name}:#{dep.version}"
+      logger.error " ~ Could not install gem: #{dep.name}:#{dep.version}%s" % [dep.source ? " from #{dep.source}" : ""]
+    ensure
+      Gem.sources.replace old_gem_sources # replace our gem sources
     end
     dep.installed?
   end
