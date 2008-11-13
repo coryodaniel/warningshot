@@ -1,8 +1,3 @@
-# Auto-generated ruby debug require       
-require "ruby-debug"
-Debugger.start
-Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-
 require File.dirname(__FILE__) / 'warning_shot' 
 
 # API access for resolvers

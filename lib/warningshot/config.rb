@@ -128,10 +128,10 @@ BANNER
         #end
         WarningShot.parser.on_tail("--version", "Show version"){ 
           WarningShot.parser.parse!(argv)
-          WarningShot::Config.setup(options)
+          conf = WarningShot::Config.new(options)
           
-          WarningShot.load_app
-          WarningShot.load_addl_resolvers
+          WarningShot.load_app(conf[:application])
+          WarningShot.load_addl_resolvers(conf[:resolvers])
           
           puts "WarningShot v. #{WarningShot::VERSION}"
           puts "Installed resolvers:"

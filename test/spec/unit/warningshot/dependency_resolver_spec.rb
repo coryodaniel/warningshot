@@ -31,6 +31,13 @@ describe WarningShot::DependencyResolver do
   end
   
   it 'should be able to run a set of resolvers' do
+    config = WarningShot::Config.new({
+      :config_paths => [$test_data],
+      :environment => 'rspec',
+      :log_path => $log_file,
+      :oload => :faux_test
+    })
+    
     pending
   end
   

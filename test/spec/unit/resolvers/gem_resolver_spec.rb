@@ -77,7 +77,9 @@ describe WarningShot::GemResolver do
     pending
   end
   
-
+  it 'should be able to install gems from an alternate source' do
+    pending
+  end
   
   it 'should check for gems in --gempath when specified' do
     pending

@@ -28,10 +28,4 @@ class WarningShot::ManualResolver
   register :test do |dep|
     logger.info " ~ #{dep.msg}"
   end
-  
-  class << self
-    def notes
-      puts "FREEAKING WEKE"
-    end
-  end
 end

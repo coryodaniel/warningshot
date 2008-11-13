@@ -14,8 +14,8 @@ module WarningShot
       @resolvers        = []
         
       self.init_logger
-      self.load_app
-      self.load_addl_resolvers
+      WarningShot.load_app(self[:application])
+      WarningShot.load_addl_resolvers(self[:resolvers])
             
       # Parsed yml files
       self.load_configs
@@ -99,7 +99,7 @@ module WarningShot
         if self[:resolve] && !klass.resolutions.empty?
           @logger.info "#{resolver.class}; branch: #{klass.branch} [RESOLVING]"
 
-          klass.before_filters(:resolution).each{|p| p.call}
+          klass.before_filters(:resolution).each{|p| p.call}        
           resolver.resolve! 
           klass.after_filters(:resolution).each{|p| p.call}
           
@@ -161,20 +161,6 @@ module WarningShot
         @dependency_tree[branch_name].delete(nil)
       end
     end
-   
-    # Changes the working directory to that of the application
-    #   Default application is '.'
-    def load_app
-      Dir.chdir(self[:application])
-    end
-    
-    # Loads any additional resolvers specified by --resolvers= or self[:resolvers]
-    #   defaults to ~/.warningshot/*.rb
-    def load_addl_resolvers
-      self[:resolvers].each do |resolver_path|
-        Dir[File.expand_path(resolver_path)].each {|r| load r}
-      end
-    end
-    
+      
   end
 end

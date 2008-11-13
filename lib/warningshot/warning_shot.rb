@@ -163,5 +163,20 @@ module WarningShot
     def resolvers
       WarningShot::Resolver.descendants.sort_by{|d|d.order}.inject([]){|a,klass| a << klass.name}
     end
+    
+
+    # Changes the working directory to that of the application
+    #   Default application is '.'
+    def load_app(app)
+      Dir.chdir app
+    end
+    
+    # Loads any additional resolvers specified by --resolvers= or self[:resolvers]
+    #   defaults to ~/.warningshot/*.rb
+    def load_addl_resolvers(resolver_paths)
+      resolver_paths.each do |resolver_path|
+        Dir[File.expand_path(resolver_path)].each {|r| load r}
+      end
+    end
   end
 end
