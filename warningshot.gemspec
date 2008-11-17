@@ -1,4 +1,4 @@
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name = NAME
   s.version = WarningShot::VERSION
 
@@ -18,18 +18,4 @@ spec = Gem::Specification.new do |s|
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6")
   s.rubygems_version = %q{1.2.0}
   s.summary = s.description
-end
-
-Rake::GemPackageTask.new(spec) do |package|
-  package.gem_spec = spec
-end
-
-desc "Run :package and install the resulting .gem"
-task :install => :package do
-  sh %{sudo gem install --local pkg/#{NAME}-#{WarningShot::VERSION}.gem --no-rdoc --no-ri}
-end
-
-desc "Run :clean and uninstall the .gem"
-task :uninstall => :clean do
-  sh %{sudo gem uninstall #{NAME}}
 end

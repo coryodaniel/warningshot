@@ -21,7 +21,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => "",
       :sha1 => "e87c9091b6f6d30d1a05d66de1acbac6e1998121"
@@ -35,7 +35,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => "",
       :sha1 => "WRONG"
@@ -49,7 +49,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => "",
       :md5 => "WRONG"
@@ -63,7 +63,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => "",
       :md5 => "db59da6066bab8885569c012b1f6b173"
@@ -77,7 +77,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => "",
       :md5 => "WRONG",
@@ -92,7 +92,7 @@ describe WarningShot::IntegrityResolver do
     that_file = @@source_path / 'that.txt'
     #These values are flipped from FileResolverRspec so that we dont
     # have to resolve the file dependency to check the integrity
-    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.new,{
+    resolver = WarningShot::IntegrityResolver.new(WarningShot::Config.create,{
       :target => "file://#{that_file}",
       :source => ""
     })

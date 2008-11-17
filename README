@@ -10,7 +10,7 @@ WarningShot Dependency Resolution Framework
 ==== Ruby API
 
   - Configuring WarningShot
-  config = WarningShot::Config.new do |c|
+  config = WarningShot::Config.create do |c|
     c[:environment]  = 'development'
     c[:resolve]      = false
     c[:config_paths] = ['.'  / 'config' / 'warningshot']

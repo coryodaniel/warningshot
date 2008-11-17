@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'fileutils'
 require 'yaml'
-require 'optparse'
 require 'logger'
 require 'set'
 require 'rbconfig'
+require 'optparse'
 
 # Load core extensions
 Dir.glob(File.join(File.dirname(__FILE__), 'core_ext', '**', '*.rb')).each {|f| require f}

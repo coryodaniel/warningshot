@@ -23,17 +23,17 @@ describe WarningShot::GemResolver do
   end
   
   it 'should provide the command line option gem_path' do
-    WarningShot.parser.to_s.include?("Alternate gem path ':' separated to check.  First in path is where gems will be installed").should be(true)
-    WarningShot::Config.new.configuration.key?(:gem_path).should be(true)
+    WarningShot::Config::PARSER.to_s.include?("Alternate gem path ':' separated to check.  First in path is where gems will be installed").should be(true)
+    WarningShot::Config.parse_args(['--gempath',"./test/output/gems"]).key?(:gem_path).should be(true)
   end
   
   it 'should provide the command line option minigems' do
-    WarningShot.parser.to_s.include?("Not supported yet.").should be(true)
-    WarningShot::Config.new.configuration.key?(:minigems).should be(true)
+    WarningShot::Config::PARSER.to_s.include?("Not supported yet.").should be(true)
+    WarningShot::Config.parse_args(['--minigems']).key?(:minigems).should be(true)
   end
   
   it 'should override Gem.path if gem_path is given' do
-    config = WarningShot::Config.new({:gem_path => "./test/output/gems:./test/outputs/gems2"})
+    config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
     WarningShot::GemResolver.new config
     
     Gem.path[0].should == File.expand_path("./test/output/gems")
@@ -42,7 +42,7 @@ describe WarningShot::GemResolver do
       
   # The gem name is the healing instructions, so if its provide it is the instructions 
   it 'should install the gems when healing is enabled' do
-    resolver = WarningShot::GemResolver.new(WarningShot::Config.new,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new(WarningShot::Config.create,{:name => "ws-dummy"})
     resolver.test!
     
     resolver.failed.size.should be(1)
@@ -56,14 +56,14 @@ describe WarningShot::GemResolver do
   end
   
   it 'should be able to determine if a gem is installed' do
-    resolver = WarningShot::GemResolver.new( WarningShot::Config.new,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new( WarningShot::Config.create,{:name => "ws-dummy"})
     resolver.test!
     
     resolver.passed.size.should be(1)
   end
   
   it 'should be able to install a specific version' do
-    resolver = WarningShot::GemResolver.new(WarningShot::Config.new,{:name => "ws-dummy", :version=>"0.2.0"})
+    resolver = WarningShot::GemResolver.new(WarningShot::Config.create,{:name => "ws-dummy", :version=>"0.2.0"})
     resolver.test!
     resolver.failed.size.should be(1)
     #resolver.resolve!

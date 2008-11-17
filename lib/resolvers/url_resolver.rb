@@ -11,27 +11,18 @@ module WarningShot
     branch :url
     description 'Validates that URLs are reachable.'
     
-    cli(
-      :long         => "--strict",
-      :description  => "Success is only for 200 instead of 2xx|3xx",
-      :name         => "url_strict",
-      :default      => false
-    )
+    cli("--strict", "Success is only for 200 instead of 2xx|3xx") do |val|
+      options[:url_strict] = val
+    end
     
-    cli(
-      :long         => "--rootcert",
-      :description  => "Path to root ca certificate",
-      :name         => "root_ca",
-      :default      => nil
-    )
+    cli("--rootcert", "Path to root ca certificate") do |val|
+      options[:root_ca] = val
+    end
     
-    cli(
-      :long         => "--vdepth",
-      :description  => "SSL Verify Peer Depth",
-      :name         => "ssl_verify_depth",
-      :default      => 5
-    )
-    
+    cli("--vdepth", "SSL Verify Peer Depth") do |val|
+      options[:ssl_verify_depth] = val
+    end
+            
     typecast{ |dep| URI.parse(dep) }
     
     register :test do |uri,config|

@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
-
 require 'warningshot/suite'
+
+# Create a config hash
 config = WarningShot::Config.parse_args
 
 # Initialize and run a new dependency resolver
@@ -10,9 +11,7 @@ dep_resolver = WarningShot.fire!(config)
 stats = dep_resolver.stats
 
 # Growl the results if growl is on
-if config[:growl]
-  WarningShot::Growl.say stats.to_a.join('/')
-end
+WarningShot::Growl.say stats.to_a.join('/') if config[:growl]
 
 #Return an exit status based on number of unresolved dependencies
 exit(stats[:unresolved])

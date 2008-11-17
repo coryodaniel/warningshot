@@ -1,13 +1,30 @@
-# I pretty much goinked this from merb, you love merb, merb loves you.
-# http://merbivore.com
-
 require File.dirname(__FILE__) / 'warning_shot' 
 require File.dirname(__FILE__) / 'template_generator'
  
+# This is a factory class for creating WarningShot hash configurations.
+#   Configurations can be created by passing a hash or block to
+#     WarningShot::Config.create
+#   OR
+#     By calling WarningShot::Config.parse_args (for command line, uses ARGV)
+#
+#   It also provies an interface for plugins to extend the CLI
+#     Config.cli => Provides access to add stuff to command line
+#     Config.cli_options => Provides a hash to store values into from within the OptionParser block
+#
+#   The resolver class also provides functions of the same name that shortcut to WarningShot::Config
+#
+# @example
+#   class WarningShot::MyResolver
+#     cli("-s", "--someflag=VALUE", String, "Add some feature") do |value|
+#       options[:some_value] = value
+#     end
+#
 module WarningShot
   class Config
     attr_reader :configuration
-    DEFAULTS = {
+    PARSER    = OptionParser.new
+
+    DEFAULTS  = {
       :pload        => [],
       :oload        => [],
       :environment  => 'development',
@@ -20,115 +37,122 @@ module WarningShot
       :verbose      => false,
       :colorize     => true,
       :resolvers    => ['~' / '.warningshot' / '*.rb']
-    }    
-    
-    #
-    # Initialize a new WarningShot config
-    # 
-    # @example
-    #   Setting config with a hash
-    #   conf = WarningShot::Config.new({:environment=>"staging",:chickens=>true})
-    #
-    #   Setting config with a block
-    #   conf = WarningShot::Config.new do |c|
-    #     c[:environment] = "production"
-    #     c[:cool_feature] = true
-    #   end
-    #
-    #   Just using default config
-    #   conf = WarningShot::Config.new
-    #
-    #   Using a hash and a block, block wins
-    #   conf = WarningShot::Config.new({:environment=>"hash",:something=>true}) do |c|
-    #     c[:environment] = "blk"
-    #     c[:else] = true
-    #   end
-    #
-    def initialize(config={})
-      opt_config = config
-      if block_given?
-        blk_config = {}
-        yield(blk_config)
-        opt_config = opt_config.merge(blk_config)
-      end
-      @configuration = WarningShot::Config::DEFAULTS.clone.merge(opt_config)
-    end
+    }.freeze
   
-    def [](key)
-      configuration[key]
-    end
-
-    def []=(key,val)
-      configuration[key] = val
-    end  
-
     class << self      
-      def parse_args(argv = ARGV)
-        options = {}
-        options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
       
-        WarningShot.parser.banner = <<-BANNER
-WarningShot v. #{WarningShot::VERSION}
-Dependency Resolution Framework
+      # Add command line flags to tail of CLI
+      # shortcut to WarningSHot::Config::PARSER.on_tail
+      #
+      # @see OptionParser
+      # 
+      # @param *opts [Array]
+      #
+      # @param &block [Proc]
+      #
+      # @api public
+      def cli(*opts,&block)
+        PARSER.on_tail(*opts,&block)
+      end
+      
+      # access to a hash for command line options use for Plugin to extend interface
+      #
+      # @return [Hash]
+      def cli_options
+        @@cli_options ||={}
+        @@cli_options
+      end
 
-Usage: warningshot [options]
-BANNER
-        WarningShot.parser.separator '*'*80
-        
-        WarningShot.parser.on("-e", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
-          options[:environment] = env
+      #
+      # Initialize a new WarningShot config
+      # 
+      # @example
+      #   Setting config with a hash
+      #   conf = WarningShot::Config.create({:environment=>"staging",:chickens=>true})
+      #
+      #   Setting config with a block
+      #   conf = WarningShot::Config.create do |c|
+      #     c[:environment] = "production"
+      #     c[:cool_feature] = true
+      #   end
+      #
+      #   Just using default config
+      #   conf = WarningShot::Config.create
+      #
+      #   Using a hash and a block, block wins
+      #   conf = WarningShot::Config.create({:environment=>"hash",:something=>true}) do |c|
+      #     c[:environment] = "blk"
+      #     c[:else] = true
+      #   end
+      #
+      def create(config={})
+        opt_config = config
+        if block_given?
+          blk_config = {}
+          yield(blk_config)
+          opt_config = opt_config.merge(blk_config)
         end
-        WarningShot.parser.on("--resolve","Resolve missing dependencies (run as sudo)") do |resolve|
-          options[:resolve] = resolve
-        end
-        WarningShot.parser.on("-a","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
-          options[:application] = app
-        end
-        WarningShot.parser.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
-          options[:config_paths] = config.split(':')
-        end
-        WarningShot.parser.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
-          options[:resolvers] = config.split(':')
-        end
+        WarningShot::Config::DEFAULTS.clone.merge(opt_config)
+      end
+      
+      def parse_args(argv = ARGV)
+        @@cli_options = {}
+        @@cli_options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
+      
+        WarningShot::Config::PARSER.banner   = "WarningShot v. #{WarningShot::VERSION}\n"
+        WarningShot::Config::PARSER.banner += "Dependency Resolution Framework\n\n"
+        WarningShot::Config::PARSER.banner += "Usage: warningshot [options]"
+        WarningShot::Config::PARSER.separator '*'*80
 
-        WarningShot.parser.on("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |config|
-          options[:resolver_gems] = config.split(':')
+        WarningShot::Config::PARSER.on("-e", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
+          @@cli_options[:environment] = env
         end
-
-        WarningShot.parser.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
-          template_path = options[:config_paths].first if template_path.nil? || template_path.empty?
+        WarningShot::Config::PARSER.on("--resolve","Resolve missing dependencies (run as sudo)") do |resolve|
+          @@cli_options[:resolve] = resolve
+        end
+        WarningShot::Config::PARSER.on("-a","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
+          @@cli_options[:application] = app
+        end
+        WarningShot::Config::PARSER.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
+          @@cli_options[:config_paths] = config.split(':')
+        end
+        WarningShot::Config::PARSER.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
+          @@cli_options[:resolvers] = config.split(':')
+        end
+        WarningShot::Config::PARSER.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
+          template_path = @@cli_options[:config_paths].first if template_path.nil? || template_path.empty?
           WarningShot::TemplateGenerator.create(template_path)
           exit
         end
-        WarningShot.parser.on("-l","--log LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
-          options[:log_path] = log_path
+        WarningShot::Config::PARSER.on("-l","--log=LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
+          @@cli_options[:log_path] = log_path
         end
-        WarningShot.parser.on("--loglevel [LEVEL]",[:debug, :info, :warn, :error, :fatal], "Default: #{DEFAULTS[:log_level]}") do |log_level|
-          options[:log_level] = log_level
+        WarningShot::Config::PARSER.on("--loglevel=LEVEL",[:debug, :info, :warn, :error, :fatal], "Default: #{DEFAULTS[:log_level]}") do |log_level|
+          @@cli_options[:log_level] = log_level
         end
-        WarningShot.parser.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
-          options[:growl] = growl
+        WarningShot::Config::PARSER.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
+          @@cli_options[:growl] = growl
         end
-        WarningShot.parser.on("-v", "--[no-]verbose", "Output verbose information") do |verbose|
-          options[:verbose] = verbose
+        WarningShot::Config::PARSER.on("-v", "--[no-]verbose", "Output verbose information") do |verbose|
+          @@cli_options[:verbose] = verbose
         end
-        WarningShot.parser.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
-          options[:colorize] = colorize
+        WarningShot::Config::PARSER.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
+          @@cli_options[:colorize] = colorize
         end
         # NOTE stubs for taking WarningShot.only_load && WarningShot.priority_load from command line, ran into a catch22
         #   with this so its removed for now. Cory ODaniel (11/8/2008)
         #
-        #WarningShot.parser.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
-        #  options[:oload] = oload.split(',')
-        #  WarningShot.only_load *options[:oload]
+        #WarningShot::Config::PARSER.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
+        #  @@cli_options[:oload] = oload.split(',')
+        #  WarningShot.only_load *@@cli_options[:oload]
         #end
-        #WarningShot.parser.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority (Command seperated)") do |pload|
-        #  options[:pload] = pload.split(',')
-        #  WarningShot.only_load *options[:pload]
+        #WarningShot::Config::PARSER.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority (Command seperated)") do |pload|
+        #  @@cli_options[:pload] = pload.split(',')
+        #  WarningShot.only_load *@@cli_options[:pload]
         #end
-        WarningShot.parser.on_tail("--version", "Show version"){ 
-          WarningShot.parser.parse!(argv)
-          conf = WarningShot::Config.new(options)
+        WarningShot::Config::PARSER.on_tail("--version", "Show version"){ 
+          WarningShot::Config::PARSER.parse!(argv)
+          conf = WarningShot::Config.create(@@cli_options)
           
           WarningShot.load_app(conf[:application])
           WarningShot.load_addl_resolvers(conf[:resolvers])
@@ -140,12 +164,11 @@ BANNER
               puts klass
               puts "  Tests: #{klass.tests.length}, Resolutions: #{klass.resolutions.length} [#{klass.resolutions.empty? ? 'irresolvable' : 'resolvable'}]"
               puts "  #{klass.description}" 
-              puts "  Command Line Options: #{klass.raw_cli_ext.inject([]){|m,c| m << c[:long]}.join(',')}" if klass.raw_cli_ext
             }
           exit
         }
-        WarningShot.parser.on_tail("-h", "--help","Show this help message") { puts WarningShot.parser; exit } 
-        WarningShot.parser.on_tail("--debugger","Enable debugging") do
+        WarningShot::Config::PARSER.on_tail("-h", "--help","Show this help message") { puts WarningShot::Config::PARSER; exit } 
+        WarningShot::Config::PARSER.on_tail("--debugger","Enable debugging") do
           begin
             require "ruby-debug"
             Debugger.start
@@ -157,11 +180,14 @@ BANNER
           end
         end
         
-        WarningShot.parser.parse!(argv)
-        return WarningShot::Config.new(options)
-      rescue OptionParser::InvalidOption, OptionParser::InvalidArgument => op
+        WarningShot::Config::PARSER.parse!(argv)
+        
+        @curr_config  = @@cli_options.clone
+        @@cli_options = {}
+        return WarningShot::Config.create(@curr_config)
+      rescue OptionParser::InvalidOption, OptionParser::InvalidArgument,OptionParser::NeedlessArgument => op
         puts op
-        puts WarningShot.parser; 
+        puts WarningShot::Config::PARSER; 
         exit;
       end
       

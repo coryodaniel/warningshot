@@ -14,21 +14,19 @@ class WarningShot::GemResolver
   
   # Default version to install
   DEFAULT_VERSION = ">=0.0.0".freeze
-     
-  cli(
-    :long         => "--gempath",
-    :description  => "Alternate gem path ':' separated to check.  First in path is where gems will be installed",
-    :name         => "gem_path",
-    :default      => nil
-  )
+ 
+  cli("--gempath=PATH", String, "Alternate gem path ':' separated to check.  First in path is where gems will be installed") do |val|
+    options[:gem_path] = val
+  end
+ 
+  cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |config|
+    options[:resolver_gems] = config.split(':')
+  end
     
-  cli(
-    :long         => "--minigems",
-    :description  => "Not supported yet.",
-    :name         => "minigems",
-    :default      => false
-  )
-         
+  cli("--minigems",String,"Not supported yet.") do |val|
+    options[:minigems] = val
+  end
+           
   GemResource = Struct.new(:name,:version,:source) do
     def installed?
       self.version ||= DEFAULT_VERSION
@@ -80,7 +78,7 @@ class WarningShot::GemResolver
 
   # loads gem paths from self.config
   def load_paths
-    if self.config.configuration.key?(:gem_path) && !self.config[:gem_path].nil?
+    if self.config.key?(:gem_path) && !self.config[:gem_path].nil?
       self.config[:gem_path].split(":").reverse.each do |path|
         Gem.path.unshift File.expand_path(path)
       end

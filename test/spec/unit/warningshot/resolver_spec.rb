@@ -29,17 +29,11 @@ describe WarningShot::Resolver do
   end
 
   it 'should allow the CLI to be extended' do
-    MockResolver.cli(
-      :short        => "-t",
-      :long         => "--test=STRING",
-      :description  => "Test extending the CLI",
-      :default      => 'whatever',
-      :name         => 'rspec_test',
-      :type         => String,
-      :default_desc => "Default: whatever"
-    )
+    MockResolver.cli("-t", "--test=STRING", "Test extending the CLI") do |val|
+      options[:rspec_test] = val
+    end
 
-    WarningShot.parser.to_s.include?("Test extending the CLI").should be(true)    
+    WarningShot::Config::PARSER.to_s.include?("Test extending the CLI").should be(true)    
   end
 
   it 'should be able to cast YAML data to an Object the resolver can work with' do
@@ -82,7 +76,7 @@ describe WarningShot::Resolver do
 
   it 'should be able to register a conditional test' do
     is_test_env = lambda{ |dependency| 
-      WarningShot::Config.new()[:environment] == 'test'
+      WarningShot::Config.create()[:environment] == 'test'
     }
     MockResolver.flush_tests!
     MockResolver.register :test, :if => is_test_env do |dependency|
@@ -163,7 +157,7 @@ describe WarningShot::Resolver do
   
   it 'should be able to register a conditional resolution' do
     is_test_env = lambda{ |dependency| 
-      WarningShot::Config.new()[:environment] == 'production'
+      WarningShot::Config.create()[:environment] == 'production'
     }
     MockResolver.flush_resolutions!
     MockResolver.register :resolution, :if => is_test_env do |dependency|
@@ -268,7 +262,7 @@ describe WarningShot::Resolver do
     MockResolver.flush!
     MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    mock_resolver = MockResolver.new(WarningShot::Config.new,'blue')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,'blue')
     mock_resolver.test!
     mock_resolver.passed.length.should be(1)
   end
@@ -277,7 +271,7 @@ describe WarningShot::Resolver do
     MockResolver.flush!
     MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
     mock_resolver.test!
     mock_resolver.failed.length.should be(1)
   end
@@ -290,7 +284,7 @@ describe WarningShot::Resolver do
       dep.value == :blue
     }
     
-    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
     mock_resolver.test!
     mock_resolver.resolve!
     mock_resolver.resolved.length.should be(1)
@@ -304,7 +298,7 @@ describe WarningShot::Resolver do
       dep.value == :blue
     }
     
-    mock_resolver = MockResolver.new(WarningShot::Config.new,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
     mock_resolver.test!
     mock_resolver.resolve!
     mock_resolver.unresolved.length.should be(1)

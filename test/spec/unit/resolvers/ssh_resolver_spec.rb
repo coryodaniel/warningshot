@@ -14,13 +14,13 @@ describe WarningShot::SshResolver do
     describe 'with heal instructions' do
       it 'should install the public key on the local user' do
         pending "rm your own pubkey from ~/.ssh/authorized_keys2 to run"
-        fd = WarningShot::SshResolver.new(WarningShot::Config.new,{:hostname => 'localhost', :username => ENV['USER']})
+        fd = WarningShot::SshResolver.new(WarningShot::Config.create,{:hostname => 'localhost', :username => ENV['USER']})
         fd.test!
         fd.failed.length.should be(1)
         fd.resolve!
         fd.resolved.length.should be(1)
 
-        fd = WarningShot::SshResolver.new(WarningShot::Config.new,{:hostname => 'localhost', :username => ENV['USER']})
+        fd = WarningShot::SshResolver.new(WarningShot::Config.create,{:hostname => 'localhost', :username => ENV['USER']})
         fd.test!
         fd.failed.length.should be(0)
       end
@@ -29,7 +29,7 @@ describe WarningShot::SshResolver do
     describe 'without heal instructions' do
 
       it 'should fail if you have a bogus username' do
-        fd = WarningShot::SshResolver.new(WarningShot::Config.new,{:hostname => 'localhost', :username => "128nisd89hg"})
+        fd = WarningShot::SshResolver.new(WarningShot::Config.create,{:hostname => 'localhost', :username => "128nisd89hg"})
         fd.test!
         fd.failed.length.should be(1)
       end

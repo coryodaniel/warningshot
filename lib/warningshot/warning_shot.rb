@@ -65,14 +65,7 @@ module WarningShot
         return "CONSOLE"
       end
     end
-        
-    # Parser used to parse Config hash
-    #
-    # @api private
-    def parser
-      @opt_parser ||= OptionParser.new
-    end
-    
+            
     # register a callback to be run before starting 
     #   the dependency resolver
     # @param block [Proc]
@@ -100,7 +93,7 @@ module WarningShot
     #
     # @api public
     def fire!(config=nil)
-      config ||= WarningShot::Config.new
+      config ||= WarningShot::Config.create
 
       ws_dr = DependencyResolver.new config
       

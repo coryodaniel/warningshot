@@ -12,55 +12,31 @@ require File.dirname(__FILE__) / 'warning_shot'
 module WarningShot
   module Resolver
     module ClassMethods
-      attr_reader :raw_cli_ext
-      
-      # extends command line interface
+
+      # provides shortcut to WarningShot::Config.cli_options
+      #
+      # @see WarningShot::Config
+      #
+      # @return [Hash]
+      #   
+      def options
+        WarningShot::Config.cli_options
+      end
+
+      # provides shortcut to WarningShot::Config.cli
+      #
+      # @see OptionParser
+      # @see WarningShot::Config
       # 
-      # @param opts [Hash]
-      #     Keys and example values
-      #       :short => "-s",
-      #       :long => "--longflag",
-      #       :default => "my_value",
-      #       :description => "Command line description",
-      #       :name => "keyname", #required
-      #       :type => String #[:list, :of, :available, :values]
-      #       :default_desc => "Default: my_value"
-      #       :callback => lambda 
-      #           a callback fired after the config value has been set, this wont be called if :action is specified, receives
-      #           value from command line
-      #       :action => lambda #Replace default action that sets the config value, receives value from command line
+      # @param *opts [Array]
+      #
+      # @param &block [Proc]
+      #
       # @api public
-      def cli(opts)
-        @raw_cli_ext ||= []
-        #Do not extend the interface if the class is being 
+      def cli(*opts,&block)
         return if self.disabled?
         
-        ##A keyname for the option is required
-        return if opts[:name].nil?
-        @raw_cli_ext << opts
-        
-        clean_opts = [
-          opts[:short],       # sort flag
-          opts[:long],        # long flag
-          opts[:type],        #Data type
-          opts[:description], #Description of what the option does
-          opts[:default_desc] #description of the default value
-        ]
-        clean_opts.delete(nil)
-        
-        #Set the default value if it was given
-        opt_name = opts[:name].intern
-        WarningShot::Config::DEFAULTS[opt_name] = opts[:default]
-        
-        if opts[:action].nil?
-          WarningShot.parser.on_tail(*clean_opts) do |val|
-            options[opt_name] = val
-            opts[:callback].call(val) if opts[:callback]
-          end
-        else
-          WarningShot.parser.on_tail(*clean_opts,&opts[:action])
-        end
-
+        WarningShot::Config.cli(*opts, &block)
       end
       
       # Setter/Getter for resolver branch, 
@@ -553,21 +529,21 @@ module WarningShot
          when 1
            dep
          when 2
-           [dep,self.config.configuration]
+           [dep,self.config]
          end
          
          if_params = case
          when 1
            dep
          when 2
-           [dep,self.config.configuration]
+           [dep,self.config]
          end if block_info[:if]
          
          unless_params = case
          when 1
            dep
          when 2
-           [dep,self.config.configuration]
+           [dep,self.config]
          end if block_info[:unless]
     
          if !block_info[:if] && !block_info[:unless]

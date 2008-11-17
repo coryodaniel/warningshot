@@ -25,7 +25,7 @@ describe WarningShot::DirectoryResolver do
       control_dir = File.expand_path('.')
       test_dir1 = @@base_path / 'test1'
       test_dir2 = @@base_path / 'test2'
-      resolver = WarningShot::DirectoryResolver.new WarningShot::Config.new, control_dir,test_dir1, test_dir2
+      resolver = WarningShot::DirectoryResolver.new WarningShot::Config.create, control_dir,test_dir1, test_dir2
       resolver.test!
       resolver.passed.length.should be(1)
       resolver.failed.length.should be(2)

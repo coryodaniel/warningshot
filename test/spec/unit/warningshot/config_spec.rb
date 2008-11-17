@@ -16,8 +16,8 @@ describe WarningShot::Config do
   end
   
   it 'should set defaults if no configuration is passed in' do
-    config = WarningShot::Config.new
-    config.configuration.should == WarningShot::Config::DEFAULTS
+    config = WarningShot::Config.create
+    config.should == WarningShot::Config::DEFAULTS
   end
   
   it 'should allow configurations to be done with a hash and still set defaults' do
@@ -25,14 +25,14 @@ describe WarningShot::Config do
       :growl => true,
       :environment => :rspec_test
     }
-    config = WarningShot::Config.new _config
+    config = WarningShot::Config.create _config
     config[:growl].should be(true)
     config[:environment].should == :rspec_test
     config[:colorize].should be(true)
   end
   
   it 'should allow configurations to be changed with a block' do
-    config = WarningShot::Config.new do|c|
+    config = WarningShot::Config.create do|c|
       c[:growl] = true
       c[:resolve]= true
     end
@@ -44,7 +44,7 @@ describe WarningShot::Config do
   
 
   it 'should allow a hash and block to be passed, block wins' do
-    conf = WarningShot::Config.new({:environment=>"hash",:something=>true}) do |c|
+    conf = WarningShot::Config.create({:environment=>"hash",:something=>true}) do |c|
       c[:environment] = "blk"
       c[:else] = true
     end
