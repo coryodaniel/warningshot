@@ -24,6 +24,6 @@ Dir['tasks/*.rb'].each {|r| require r}
 
 
 ##############################################################################
-# ADD YOUR CUSTOM TASKS IN /lib/tasks
-# NAME YOUR RAKE FILES file_name.rake
+# ADD YOUR CUSTOM TASKS IN ./tasks
+# NAME YOUR RAKE FILES file_name.rb
 ##############################################################################

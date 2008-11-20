@@ -15,16 +15,16 @@ class WarningShot::GemResolver
   # Default version to install
   DEFAULT_VERSION = ">=0.0.0".freeze
  
-  cli("--gempath=PATH", String, "Alternate gem path ':' separated to check.  First in path is where gems will be installed") do |val|
-    options[:gem_path] = val
+  cli("--gempath=PATH", String, "Alternate gem path ':' separated to check.  First in path is where gems will be installed") do |gpath|
+    options[:gem_path] = gpath
   end
  
-  cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |config|
-    options[:resolver_gems] = config.split(':')
+  cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |resolver_gems|
+    options[:resolver_gems] = resolver_gems.split(':')
   end
     
-  cli("--minigems",String,"Not supported yet.") do |val|
-    options[:minigems] = val
+  cli("--minigems",String,"Not supported yet.") do |minigems|
+    options[:minigems] = minigems
   end
            
   GemResource = Struct.new(:name,:version,:source) do

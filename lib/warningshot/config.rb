@@ -139,17 +139,14 @@ module WarningShot
         WarningShot::Config::PARSER.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
           @@cli_options[:colorize] = colorize
         end
-        # NOTE stubs for taking WarningShot.only_load && WarningShot.priority_load from command line, ran into a catch22
-        #   with this so its removed for now. Cory ODaniel (11/8/2008)
-        #
-        #WarningShot::Config::PARSER.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
-        #  @@cli_options[:oload] = oload.split(',')
-        #  WarningShot.only_load *@@cli_options[:oload]
-        #end
-        #WarningShot::Config::PARSER.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority (Command seperated)") do |pload|
-        #  @@cli_options[:pload] = pload.split(',')
-        #  WarningShot.only_load *@@cli_options[:pload]
-        #end
+        WarningShot::Config::PARSER.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
+          @@cli_options[:oload] = oload.split(',')
+          WarningShot.only_load *@@cli_options[:oload]
+        end
+        WarningShot::Config::PARSER.on("--pload=LIST", String, "Load specified resolvers only, setting sequential priority (Command seperated)") do |pload|
+          @@cli_options[:pload] = pload.split(',')
+          WarningShot.only_load *@@cli_options[:pload]
+        end
         WarningShot::Config::PARSER.on_tail("--version", "Show version"){ 
           WarningShot::Config::PARSER.parse!(argv)
           conf = WarningShot::Config.create(@@cli_options)

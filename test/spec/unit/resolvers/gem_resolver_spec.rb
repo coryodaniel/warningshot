@@ -85,7 +85,14 @@ describe WarningShot::GemResolver do
     pending
   end
   
-  it 'should install gems in --gempath when specified and resolving' do
+  it 'should install gems in first gempath when --gempath is specified and resolving' do
+    #config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
+
+    #resolver = WarningShot::GemResolver.new(config,{:name => "ws-dummy"})
+    #resolver.test!
+    #Dir['./test/output/gems/*ws-dummy*'].length.should be(0)
+    #resolver.resolve!
+    #Dir['./test/output/gems/*ws-dummy*'].length.should be(1)
     pending
   end
 end

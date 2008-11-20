@@ -1,5 +1,11 @@
 #! /usr/bin/env ruby
-require 'warningshot/suite'
+
+#pre scan ARGV for pload oload
+if ARGV.grep(/(o|p)load/i).empty?
+  require 'warningshot/suite'
+else
+  require 'warningshot'
+end
 
 # Create a config hash
 config = WarningShot::Config.parse_args

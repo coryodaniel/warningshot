@@ -3,8 +3,9 @@ require File.dirname(__FILE__) / 'resolver'
 require File.dirname(__FILE__) / 'dependency_resolver' 
 
 module WarningShot
-  BeforeCallbacks= []
-  AfterCallbacks   = []
+  BeforeCallbacks   = []
+  AfterCallbacks    = []
+  ApplicationTypes  = {}
   
   # Relative paths from WarningShot.root
   PATHS       = {
@@ -16,6 +17,10 @@ module WarningShot
   RecipeExt = "*.{yml,yaml}".freeze
   
   class << self
+    def register_application_type(type,&block)
+      ApplicationTypes[type] = block
+    end
+    
     def root
       File.expand_path(File.dirname(__FILE__)) / ".." / ".."
     end
@@ -51,19 +56,19 @@ module WarningShot
       end
     end
     
-    # the application/framework warningshot is running in
+    # the application type warningshot is running in
     #   uses constants to determine
+    # Additional application types can be registered with
+    #   WarningShot.register_application_type
     #
-    # @return [String] Name of framework/application
+    # @return [Symbol] Name of framework/application type
     # @api public
-    def framework
-      if defined?(RAILS_ROOT)
-        return "RAILS"
-      elsif defined?(Merb)
-        return "MERB"
-      else
-        return "CONSOLE"
-      end
+    def application_type
+      ApplicationTypes.each do |type,block| 
+        @@application_type = type if block.call
+      end if (@@application_type ||=nil).nil?
+      
+      @@application_type
     end
             
     # register a callback to be run before starting 
@@ -173,3 +178,7 @@ module WarningShot
     end
   end
 end
+
+WarningShot.register_application_type(:merb){ !!defined?(Merb) }
+WarningShot.register_application_type(:rails){ !!defined?(RAILS_ROOT) }
+WarningShot.register_application_type(:console){true}
