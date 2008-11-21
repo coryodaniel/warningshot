@@ -30,6 +30,10 @@ describe WarningShot::DependencyResolver do
     dr.stats.class.should be(Hash)
   end
   
+  it 'should ignore resolvers that dont have dependencies registered' do
+    pending
+  end
+  
   it 'should be able to run a set of resolvers' do
     config = WarningShot::Config.create({
       :config_paths => [$test_data],

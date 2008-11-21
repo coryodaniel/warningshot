@@ -78,7 +78,10 @@ module WarningShot
         branch = @dependency_tree[klass.branch.to_sym]
 
         if branch.nil?
-          @logger.info "No config file was found for branch #{klass.branch}"
+          @logger.info "[SKIPPING] #{klass}, #{klass.branch}; No machine recipes was registered"
+          next
+        elsif branch.empty?
+          @logger.info "[SKIPPING] #{klass}, #{klass.branch}; No dependencies in machine recipe"
           next
         end
         
