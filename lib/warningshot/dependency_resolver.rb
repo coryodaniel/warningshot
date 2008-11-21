@@ -73,6 +73,8 @@ module WarningShot
       @logger.info "On host: #{WarningShot.hostname}"
       
       WarningShot::Resolver.descendants.each do |klass|
+        next if klass.disabled?
+        
         @logger.info "\n#{'-'*60}"
 
         branch = @dependency_tree[klass.branch.to_sym]

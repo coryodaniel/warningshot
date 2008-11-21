@@ -5,7 +5,7 @@ begin
   require("highline"))
   require 'pp'
 rescue LoadError
-  warn "There was a problem loading net-ssh, net-scp, or highline. You will not be able to use an ssh-resolver until those gems are installed."
+  puts "There was a problem loading net-ssh, net-scp, or highline. You will not be able to use an ssh-resolver until those gems are installed."
 end
 
 class WarningShot::SshResolver

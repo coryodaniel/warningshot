@@ -8,7 +8,13 @@ class WarningShot::ManualResolver
     WarningShot::Resolver.descendants.each{|d| d.disable!}
     self.enable!
     
-    WarningShot.after {WarningShot::ManualResolver.notes}
+    config = WarningShot::Config.parse_args
+    config[:verbose] = true
+    
+    dr = WarningShot::DependencyResolver.new(config)    
+    dr.dependency_tree[:manual].each { |note| puts "~ #{note}" }
+    
+    exit
   end
   
   #Encapsulated in a struct so Resolver doesn't freak out when we instance_eval #met & #resolved
