@@ -11,7 +11,7 @@ end
 class WarningShot::SshResolver
   include WarningShot::Resolver
   order  100
-  # disable! 
+  disable! 
 
   branch :ssh
   description 'Validates ability to login to a remote server'
