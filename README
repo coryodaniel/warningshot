@@ -1,6 +1,21 @@
 WarningShot Dependency Resolution Framework
  * Additional documentation @ http://github.com/coryodaniel/warningshot/wikis/
 
+
+==== Installing WarningShot
+  WarningShot installs a little differently than most gems.  WarningShot itself has NO gem dependencies.  Gems become
+  a dependency based on what Plugins/Resolvers you have installed.  By default WarningShot will not install any additional gems.
+  When using WarningShot if a gem is missing that is needed for a feature you are using you will receive a warning that the gem
+  is missing.  Optionally you can list and build all of warningshots dependencies from the command line.
+  
+  sudo gem install warningshot
+  warningshot --list-deps (list all resolvers and their dependencies)
+  warningshot --build-deps (install all gems that resolvers are dependent on)
+  
+  This method provides a minimalist WarningShot.  WarningShot's dependencies essentially change depending on what you use
+  it for.  Thats neat, not a lot of extra gems that you don't need installed, installed.
+  
+
 ==== Terminology
   * Resolver
     A class that includes WarningShot::Resolver.  It should have the ability to test and resolve a type
@@ -27,7 +42,7 @@ WarningShot Dependency Resolution Framework
     repair or resolve the dependency.  The gem resolver can install missing gems and the file resolver can download
     missing files
   
-  * Machine Recipe
+  * Machine Recipes / Application Recipes
     A machine recipe is one or more dependency branches, the default file type is YAML, but that is configurable
     within warningshot.  A machine recipe can specify the complete configuration of a computer/application or just one
     aspect of it.  Example:  warningshot --templates will create a separate machine recipe for each branch supported.
@@ -107,7 +122,7 @@ WarningShot Dependency Resolution Framework
  * Config Files
  
  
-==== Using Config Files
+==== Using Machine Recipes
  * Coming Soon
 
  
@@ -117,6 +132,7 @@ WarningShot Dependency Resolution Framework
 
 ==== Extending WarningShot
  * Writing a Resolver (Coming Soon)
+    * Kernel#require vs Resolver#add_dependency
  * Modifying Resolvers at run-time (Coming Soon)
 
 

@@ -2,6 +2,7 @@ class WarningShot::ManualResolver
   include WarningShot::Resolver
   order  10000
   branch :manual
+  
   description 'A glorified todo list of things that need to be resolved manually'
       
   cli("--notes", "List all the notes in the manual branch") do |val|
@@ -26,11 +27,5 @@ class WarningShot::ManualResolver
   
   register :test do |dep|
     logger.info " ~ #{dep.msg}"
-  end
-  
-  class << self
-    def notes
-      puts "TODO Output notes here..."
-    end
   end
 end

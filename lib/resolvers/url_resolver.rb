@@ -1,12 +1,11 @@
-require 'uri'
-require 'net/http'
-require 'net/https'
-
 module WarningShot
   class UrlResolver
     include WarningShot::Resolver
+    add_dependency :core, 'uri'
+    add_dependency :core, 'net/http'
+    add_dependency :core, 'net/https'
+    
     order  900
-    #disable!
 
     branch :url
     description 'Validates that URLs are reachable.'

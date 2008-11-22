@@ -1,8 +1,3 @@
-require 'fileutils'
-require 'uri'
-require 'net/http'
-require 'net/https'
-
 # Tests and Heals File Dependencies
 #
 # @notes
@@ -10,6 +5,12 @@ require 'net/https'
 #   target is were the file should exist
 class WarningShot::FileResolver
   include WarningShot::Resolver
+  
+  add_dependency :core, 'fileutils'
+  add_dependency :core, 'uri'
+  add_dependency :core, 'net/http',   :disable => false, :unregister => [:http_protocol_resolver]
+  add_dependency :core, 'net/https',  :disable => false, :unregister => [:https_protocol_resolver]
+  
   order  500
 
   branch :file
@@ -30,7 +31,7 @@ class WarningShot::FileResolver
     FileResource.new URI.parse(file[:source] || ''), URI.parse(file[:target])
   end
     
-  register :test, {:name => :file_check} do |file|
+  register :test, {:name => :file_test} do |file|
     if file_found = file.exists?
       logger.debug " ~ [PASSED] file: #{file.target.path}"
     else
@@ -43,8 +44,8 @@ class WarningShot::FileResolver
   # Resolve files from target sources
   # @notes
   #   :if matches FILE_PROTOCOL or uri.scheme == nil
-  register(:resolution, { :name => :file_protocol,
-    :desc => "Resolves files from target sources",
+  register(:resolution, { :name => :file_protocol_resolver,
+    :desc => "Resolves files via local filesystem",
     :if => lambda { |file| 
       !!(file.source.scheme =~ /file/i || file.source.scheme == nil && !file.source.path.empty?)
     }
@@ -57,9 +58,25 @@ class WarningShot::FileResolver
     file.exists?
   end
   
-  register(:resolution, { :name => :http_protocol,
-    :desc => "Resolves files from HTTP sources",
-    :if => lambda { |file| !!(file.source.to_s =~ /http(s)?/i)}
+  register(:resolution, { :name => :http_protocol_resolver,
+    :desc => "Resolves files via HTTP",
+    :if => lambda { |file| !!(file.source.to_s =~ /http/i)}
+  }) do |file|
+    begin
+      http = Net::HTTP.new(file.source.host,file.source.port)
+      file.source.path = '/' if file.source.path.empty?
+      resp = http.get(file.source.path)
+
+      File.open(file.target.path,"w+"){ |fs| fs.puts resp.body }  if resp.code == "200"
+    rescue Exception => ex  
+      logger.error " ~ Could not restore file (#{file.target.path}) from #{file.source.path}"
+    end
+    file.exists?
+  end
+  
+  register(:resolution, { :name => :https_protocol_resolver,
+    :desc => "Resolves files via HTTPS",
+    :if => lambda { |file| !!(file.source.to_s =~ /https/i)}
   }) do |file|
     begin
       http = Net::HTTP.new(file.source.host,file.source.port)
@@ -73,6 +90,7 @@ class WarningShot::FileResolver
     end
     file.exists?
   end
+  
 =begin  
   register(:resolution, {:name => :scp_protocol,
     :desc => "Resolves files over SSH",

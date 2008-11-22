@@ -55,7 +55,7 @@ module WarningShot
       @logger = Logger.new(
         self[:verbose] ? STDOUT : self[:log_path], 10, 1024000
       )
-      _log_level = (self[:log_level] || :debug).to_s.upcase
+      _log_level = (self[:log_level] || :info).to_s.upcase
 
       _formatter = WarningShot::LoggerFormatter.new
       _formatter.colorize = self[:colorize]

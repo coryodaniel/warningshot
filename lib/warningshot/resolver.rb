@@ -12,7 +12,54 @@ require File.dirname(__FILE__) / 'warning_shot'
 module WarningShot
   module Resolver
     module ClassMethods
+      
+      # creates a list of gems that the resolver is dependent on for different features
+      #   The goal of this is that WarningShot will not need a bunch of libraries installed unless
+      #   the end users needs that specific functionality.  If a corelib/gem is missing the logger will
+      #   receive warnings if a particular functionality that needs that library is enabled and its missing
+      #   The missing GEMS can be installed with: warningshot --build-deps
+      #   All resolvers' dependencies can be viewed with: warningshot --list-deps
+      #
+      # @param type [Symbol[:core|:gem]]
+      #   the type of library it depends on, core lib or gem
+      #
+      # @param req_name [String]
+      #   What would normally go in 'require'
+      #
+      # @param dep_opts [Hash]
+      #   :disable [Boolean] Default: true  
+      #       Should the resolver be disabled if the gem is missing
+      #   :unregister [Array[Symbol]]       
+      #       Test / Resolutions to unregister
+      #   :name [String]                
+      #       Alternate name to use to install missing gem with warningshot --build-deps
+      #       Example: require 'net/scp' would need gem install net-scp
+      #   :version [String]
+      #       The version to install
+      #   :source [String]
+      #       Alternate gem source
+      #
+      def add_dependency(type,req_name,dep_opts={})
+        require req_name
+        dep_opts[:installed] = true
+      rescue LoadError => ex
+        self.disable! unless dep_opts[:disable] === false
+        dep_opts[:installed] = false        
+      ensure
+        @dependent_libs ||= {:core => [], :gem => []}
 
+        #if an alternate name isn't specified refer to it by the req_name
+        dep_opts[:name] ||= req_name
+        @dependent_libs[type].push dep_opts
+      end
+      
+      # list the gems the resolver relies on
+      #
+      # @return [Hash]
+      def depends_on
+        @dependent_libs ||= {:core => [], :gem => []}
+      end
+      
       # provides shortcut to WarningShot::Config.cli_options
       #
       # @see WarningShot::Config
@@ -562,12 +609,14 @@ module WarningShot
     end
     
     @@descendants = []
-    def self.descendants
+    def self.descendants(filter_disabled=true)
       #Filter out descendants that are disabled
       temp_descendants = []
-      @@descendants.each do |klass|
-        temp_descendants.push(klass) unless klass.disabled?
-      end
+      
+
+      @@descendants.each{ |klass|
+        temp_descendants.push(klass) unless filter_disabled && klass.disabled?
+      }
 
       #Sort by order
       temp_descendants.sort_by{|desc| desc.order}

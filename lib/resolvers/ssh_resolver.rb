@@ -1,18 +1,12 @@
-begin
-  (require("rubygems")
-  require("net/ssh")
-  require("net/scp")
-  require("highline"))
-  require 'pp'
-rescue LoadError
-  puts "There was a problem loading net-ssh, net-scp, or highline. You will not be able to use an ssh-resolver until those gems are installed."
-end
-
 class WarningShot::SshResolver
   include WarningShot::Resolver
+  add_dependency :core, 'rubygems'
+  add_dependency :gem,  'net/ssh', :name => 'net-ssh'
+  add_dependency :gem,  'net/scp', :name => 'net-scp'
+  add_dependency :gem,  'highline'
+  add_dependency :core, 'pp'
+  
   order  100
-  disable! 
-
   branch :ssh
   description 'Validates ability to login to a remote server'
 

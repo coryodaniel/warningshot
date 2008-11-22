@@ -20,7 +20,7 @@ require File.dirname(__FILE__) / 'template_generator'
 #     end
 #
 module WarningShot
-  class Config
+  module Config
     attr_reader :configuration
     PARSER    = OptionParser.new
 
@@ -99,45 +99,32 @@ module WarningShot
         @@cli_options = {}
         @@cli_options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
       
-        WarningShot::Config::PARSER.banner   = "WarningShot v. #{WarningShot::VERSION}\n"
+        WarningShot::Config::PARSER.banner   = WarningShot.header
+        WarningShot::Config::PARSER.banner += "\n"
         WarningShot::Config::PARSER.banner += "Dependency Resolution Framework\n\n"
         WarningShot::Config::PARSER.banner += "Usage: warningshot [options]"
-        WarningShot::Config::PARSER.separator '*'*80
 
-        WarningShot::Config::PARSER.on("-e", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
+
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Standard Flags".center(80,'-')   
+        WarningShot::Config::PARSER.on("-e=STRING", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
           @@cli_options[:environment] = env
         end
-        WarningShot::Config::PARSER.on("--resolve","Resolve missing dependencies (run as sudo)") do |resolve|
+        WarningShot::Config::PARSER.on("--resolve","Resolve missing dependencies (probably need sudo)") do |resolve|
           @@cli_options[:resolve] = resolve
         end
-        WarningShot::Config::PARSER.on("-a","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
+        WarningShot::Config::PARSER.on("-a=PATH","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
           @@cli_options[:application] = app
         end
-        WarningShot::Config::PARSER.on("-c","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
+        WarningShot::Config::PARSER.on("-c=PATH","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
           @@cli_options[:config_paths] = config.split(':')
         end
-        WarningShot::Config::PARSER.on("-r","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
+        
+
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Resolver Loading Flags".center(80,'-')   
+        WarningShot::Config::PARSER.on("-r=PATH","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
           @@cli_options[:resolvers] = config.split(':')
-        end
-        WarningShot::Config::PARSER.on("-t","--templates=PATH", String, "Generate template files", "Default: False") do |template_path|
-          template_path = @@cli_options[:config_paths].first if template_path.nil? || template_path.empty?
-          WarningShot::TemplateGenerator.create(template_path)
-          exit
-        end
-        WarningShot::Config::PARSER.on("-l","--log=LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
-          @@cli_options[:log_path] = log_path
-        end
-        WarningShot::Config::PARSER.on("--loglevel=LEVEL",[:debug, :info, :warn, :error, :fatal], "Default: #{DEFAULTS[:log_level]}") do |log_level|
-          @@cli_options[:log_level] = log_level
-        end
-        WarningShot::Config::PARSER.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
-          @@cli_options[:growl] = growl
-        end
-        WarningShot::Config::PARSER.on("-v", "--[no-]verbose", "Output verbose information") do |verbose|
-          @@cli_options[:verbose] = verbose
-        end
-        WarningShot::Config::PARSER.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
-          @@cli_options[:colorize] = colorize
         end
         WarningShot::Config::PARSER.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
           @@cli_options[:oload] = oload.split(',')
@@ -147,25 +134,114 @@ module WarningShot
           @@cli_options[:pload] = pload.split(',')
           WarningShot.only_load *@@cli_options[:pload]
         end
-        WarningShot::Config::PARSER.on_tail("--version", "Show version"){ 
+        
+
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Output Flags".center(80,'-')        
+        WarningShot::Config::PARSER.on("-l=LOG","--log=LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
+          @@cli_options[:log_path] = log_path
+        end
+        WarningShot::Config::PARSER.on("--loglevel=LEVEL",[:debug, :info, :warn, :error, :fatal], "Default: #{DEFAULTS[:log_level]}") do |log_level|
+          @@cli_options[:log_level] = log_level
+        end
+        WarningShot::Config::PARSER.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
+          @@cli_options[:growl] = growl
+        end
+        WarningShot::Config::PARSER.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
+          @@cli_options[:colorize] = colorize
+        end
+        WarningShot::Config::PARSER.on("-v", "--verbose", "Output verbose information") do |verbose|
+          @@cli_options[:verbose] = verbose
+        end
+        WarningShot::Config::PARSER.on("--very-verbose", "Outputs debugging information, same as --loglevel=DEBUG") do |verbose|
+          @@cli_options[:verbose]   = true
+          @@cli_options[:log_level] = :debug
+        end
+
+        
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Prestaging Flags".center(80,'-')        
+        WarningShot::Config::PARSER.on('--stage-remote=SERVERS',"Configures ruby and RubyGems on remote servers(':' separated)") do |servers|
+           servers = servers.split(':')
+           pm = nil
+        
+           if [:apt,:yum,:port].member?(servers.first.downcase.to_sym)
+             pm = servers.shift.downcase.to_sym
+           end
+        
+           puts %{Prestaging Servers: #{pm}}
+           servers.each{|s| puts s}
+           exit
+        end
+        WarningShot::Config::PARSER.on("--build-deps", "Installs gems that WarningShot resolvers depend on into standard RubyGems path (probably need sudo)") do |deps|
+          build_deps_config = WarningShot::Config.create
+          WarningShot.load_addl_resolvers build_deps_config[:resolvers]
+          
+          warningshot_gem_recipe = []
+          Resolver.descendants(false).each do |klass|
+            klass.depends_on[:gem].each{ |gem_dep| warningshot_gem_recipe.push(gem_dep) }
+          end
+          
+          gem_resolver = WarningShot::GemResolver.new build_deps_config, *warningshot_gem_recipe
+          gem_resolver.test!
+          
+          if gem_resolver.failed.length == 0
+            puts 'WarningShot is A-OK!!!'
+          else
+            gem_resolver.resolve!
+            gem_resolver.resolved.each{|res_gem| puts "[SUCCESS]\t\t#{res_gem.name}" }
+
+            gem_resolver.unresolved.each{|unres_gem| puts "[FAILURE]\t\t#{unres_gem.name}" }
+          end
+          
+          exit
+        end
+        WarningShot::Config::PARSER.on("--list-deps", "List all core libs and gems that each resolver is dependent on") do |deps|
+          puts WarningShot.header
+          puts "Resolvers' dependencies:"
+
+          Resolver.descendants(false).each do |klass|
+            puts "\n#{klass}"
+            puts "  Core Lib Dependencies:"
+            klass.depends_on[:core].each do |core|
+              puts "    [#{core[:installed] ? 'INSTALLED' : 'MISSING'}]\t\t#{core[:name]}"
+            end
+
+            puts "  Gem Dependencies:"
+            klass.depends_on[:gem].each do |gem|
+              puts "    [#{gem[:installed] ? 'INSTALLED' : 'MISSING'}]\t\t#{gem[:name]}"
+            end
+          end
+
+          exit
+        end
+        
+
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Help, Info, & Etc. Flags".center(80,'-')
+        WarningShot::Config::PARSER.on("-t[PATH]","--templates[PATH]", String, "Generate template files", "Default: .") do |template_path|
+          template_path = @@cli_options[:config_paths].first if template_path.nil? || template_path.empty?
+          WarningShot::TemplateGenerator.create(template_path)
+          exit
+        end
+        WarningShot::Config::PARSER.on("--version", "Show version"){ 
           WarningShot::Config::PARSER.parse!(argv)
           conf = WarningShot::Config.create(@@cli_options)
           
           WarningShot.load_app(conf[:application])
           WarningShot.load_addl_resolvers(conf[:resolvers])
           
-          puts "WarningShot v. #{WarningShot::VERSION}"
+          puts WarningShot.header
           puts "Installed resolvers:"
-            Resolver.descendants.each { |klass| 
-              puts "\n"
-              puts klass
+            Resolver.descendants(false).each { |klass| 
+              puts "\n#{klass}"
               puts "  Tests: #{klass.tests.length}, Resolutions: #{klass.resolutions.length} [#{klass.resolutions.empty? ? 'irresolvable' : 'resolvable'}]"
               puts "  #{klass.description}" 
             }
           exit
         }
-        WarningShot::Config::PARSER.on_tail("-h", "--help","Show this help message") { puts WarningShot::Config::PARSER; exit } 
-        WarningShot::Config::PARSER.on_tail("--debugger","Enable debugging") do
+        WarningShot::Config::PARSER.on("-h", "--help","Show this help message") { puts WarningShot::Config::PARSER; exit } 
+        WarningShot::Config::PARSER.on("--debugger","Enable debugging") do
           begin
             require "ruby-debug"
             Debugger.start
@@ -176,6 +252,10 @@ module WarningShot
             exit
           end
         end
+        
+        
+        WarningShot::Config::PARSER.separator "\n"
+        WarningShot::Config::PARSER.separator "Resolver Specific Flags".center(80,'-')
         
         WarningShot::Config::PARSER.parse!(argv)
         

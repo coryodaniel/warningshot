@@ -1,6 +1,6 @@
-require 'rubygems/dependency_installer'
 class WarningShot::GemResolver
   include WarningShot::Resolver
+  add_dependency :core, 'rubygems/dependency_installer'
   
   order  100
   branch :gem
@@ -19,13 +19,13 @@ class WarningShot::GemResolver
     options[:gem_path] = gpath
   end
  
-  cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |resolver_gems|
-    options[:resolver_gems] = resolver_gems.split(':')
-  end
+  #cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |resolver_gems|
+  #  options[:resolver_gems] = resolver_gems.split(':')
+  #end
     
-  cli("--minigems",String,"Not supported yet.") do |minigems|
-    options[:minigems] = minigems
-  end
+  #cli("--minigems",String,"Not supported yet.") do |minigems|
+  #  options[:minigems] = minigems
+  #end
            
   GemResource = Struct.new(:name,:version,:source) do
     def installed?

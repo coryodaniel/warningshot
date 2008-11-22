@@ -1,10 +1,9 @@
-require 'digest/md5'
-require 'digest/sha1'
-
 class WarningShot::IntegrityResolver
   include WarningShot::Resolver
+  add_dependency :core, 'digest/md5',   :disable => false, :unregister => [:md5_digest_test]
+  add_dependency :core, 'digest/sha1',  :disable => false, :unregister => [:sha1_digest_test]
+  
   order  600
-  #disable!
   
   # Uses the same config files as file resolver, just add md5 field to config YML
   branch :file
@@ -33,7 +32,7 @@ class WarningShot::IntegrityResolver
     FileResource.new URI.parse(file[:source] || ''), URI.parse(file[:target]), digest, digest_method
   end
   
-  register(:test,{:name=>:sha1_digest,
+  register(:test,{:name=>:sha1_digest_test,
     :if => lambda{|dep| dep.digest_method == :sha1}
   })do |dep|
     dep_ok = (dep.exists? ? Digest::SHA1.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
@@ -47,7 +46,7 @@ class WarningShot::IntegrityResolver
     dep_ok
   end
   
-  register(:test,{:name=>:md5_digest,
+  register(:test,{:name=>:md5_digest_test,
     :if => lambda{|dep| dep.digest_method == :md5}  
   })do |dep|
     dep_ok = (dep.exists? ? Digest::MD5.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)

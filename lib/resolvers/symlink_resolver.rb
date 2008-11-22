@@ -1,5 +1,6 @@
 class WarningShot::SymlinkResolver
   include WarningShot::Resolver
+  add_dependency :core, 'fileutils'
 
   order       50
   branch      :symlink

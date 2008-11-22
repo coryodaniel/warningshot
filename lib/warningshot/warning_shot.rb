@@ -151,6 +151,10 @@ module WarningShot
       end
     end
 
+    def header
+      "WarningShot v. #{WarningShot::VERSION}"
+    end
+
     # returns names of all loaded resolvers in priority order
     #
     # @see WarningShot::Resolver.descendants
@@ -170,7 +174,6 @@ module WarningShot
     end
     
     # Loads any additional resolvers specified by --resolvers= or self[:resolvers]
-    #   defaults to ~/.warningshot/*.rb
     def load_addl_resolvers(resolver_paths)
       resolver_paths.each do |resolver_path|
         Dir[File.expand_path(resolver_path)].each {|r| load r}

@@ -1,3 +1,6 @@
+# For great details on writing a resolver see:
+# http://github.com/coryodaniel/warningshot/wikis/an-example-resolver
+
 # attr_accessors: dependencies
 # attr_readers: config
 

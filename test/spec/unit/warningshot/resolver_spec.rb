@@ -27,6 +27,18 @@ describe WarningShot::Resolver do
     MockResolver.description "An awesome mock resolver"
     MockResolver.description.should == "An awesome mock resolver"
   end
+  
+  it 'should provide Resolver#add_dependency' do
+    pending
+  end
+  
+  it 'should disabled specified resolvers based on #add_dependency' do
+    pending
+  end
+  
+  it 'should disabled specified test & resolvers based on #add_dependency' do
+    pending
+  end
 
   it 'should allow the CLI to be extended' do
     MockResolver.cli("-t", "--test=STRING", "Test extending the CLI") do |val|
