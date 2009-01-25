@@ -12,6 +12,7 @@
 #    :global:
 #      - {name: "rails", :version ">=2.0.0"}
 #      - image_science
+#      - {name: 'coryodaniel-ws-dummy', :version = ">0.0.0", :source => "http://gems.github.com"}
 #    :test: []
 #    :qa: []
 #    :production: []

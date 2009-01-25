@@ -1,4 +1,5 @@
 require "." / "lib" / "resolvers" / "symlink_resolver"
+require 'digest/md5'
 
 describe WarningShot::SymlinkResolver do
   before :all do
@@ -41,4 +42,10 @@ describe WarningShot::SymlinkResolver do
       File.symlink?(symlink_dep[:target]).should be(true)
     end
   end # End healing enabled, instructions provided
+  
+  describe 'it should expand the target and source paths' do
+    sym = WarningShot::SymlinkResolver.yaml_to_object({:source => "./test_src_expand",:target => "../test_target_expand",:force => true})
+    sym.source.should == File.expand_path("./test_src_expand")
+    sym.target.should == File.expand_path("../test_target_expand")
+  end
 end

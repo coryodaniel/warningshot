@@ -16,7 +16,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/coryodaniel/warningshot}
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6")
-  s.rubygems_version = %q{1.2.0}
+  s.rubygems_version = %q{1.3.0}
   s.summary = s.description
 end
 

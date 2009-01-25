@@ -34,7 +34,7 @@ describe WarningShot::DependencyResolver do
     pending
   end
   
-  it 'should ignore disabled resolver' do
+  it 'should ignore disabled resolvers' do
     pending
   end
   

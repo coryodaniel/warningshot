@@ -105,7 +105,6 @@ module WarningShot
         WarningShot::Config::PARSER.banner += "Usage: warningshot [options]"
 
 
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Standard Flags".center(80,'-')   
         WarningShot::Config::PARSER.on("-e=STRING", "--environment=STRING", String, "Environment to test in","Default: #{DEFAULTS[:environment]}") do |env|
           @@cli_options[:environment] = env
@@ -121,9 +120,8 @@ module WarningShot
         end
         
 
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Resolver Loading Flags".center(80,'-')   
-        WarningShot::Config::PARSER.on("-r=PATH","--resolvers=PATH", String,"Path to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
+        WarningShot::Config::PARSER.on("-r=PATH","--resolvers=PATH", String,"Globs to add'l resolvers (':' seperated)","Default: #{DEFAULTS[:resolvers].join(':')}") do |config|
           @@cli_options[:resolvers] = config.split(':')
         end
         WarningShot::Config::PARSER.on("--oload=LIST", String, "Only load specified resolvers (Command seperated)") do |oload|
@@ -136,7 +134,6 @@ module WarningShot
         end
         
 
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Output Flags".center(80,'-')        
         WarningShot::Config::PARSER.on("-l=LOG","--log=LOG", String, "Path to log file", "Default: #{DEFAULTS[:log_path]}") do |log_path|        
           @@cli_options[:log_path] = log_path
@@ -159,20 +156,7 @@ module WarningShot
         end
 
         
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Prestaging Flags".center(80,'-')        
-        WarningShot::Config::PARSER.on('--stage-remote=SERVERS',"Configures ruby and RubyGems on remote servers(':' separated)") do |servers|
-           servers = servers.split(':')
-           pm = nil
-        
-           if [:apt,:yum,:port].member?(servers.first.downcase.to_sym)
-             pm = servers.shift.downcase.to_sym
-           end
-        
-           puts %{Prestaging Servers: #{pm}}
-           servers.each{|s| puts s}
-           exit
-        end
         WarningShot::Config::PARSER.on("--build-deps", "Installs gems that WarningShot resolvers depend on into standard RubyGems path (probably need sudo)") do |deps|
           build_deps_config = WarningShot::Config.create
           WarningShot.load_addl_resolvers build_deps_config[:resolvers]
@@ -217,7 +201,6 @@ module WarningShot
         end
         
 
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Help, Info, & Etc. Flags".center(80,'-')
         WarningShot::Config::PARSER.on("-t[PATH]","--templates[PATH]", String, "Generate template files", "Default: .") do |template_path|
           template_path = @@cli_options[:config_paths].first if template_path.nil? || template_path.empty?
@@ -254,7 +237,6 @@ module WarningShot
         end
         
         
-        WarningShot::Config::PARSER.separator "\n"
         WarningShot::Config::PARSER.separator "Resolver Specific Flags".center(80,'-')
         
         WarningShot::Config::PARSER.parse!(argv)
@@ -265,7 +247,6 @@ module WarningShot
       rescue OptionParser::InvalidOption, OptionParser::InvalidArgument,OptionParser::NeedlessArgument => op
         puts op
         puts WarningShot::Config::PARSER; 
-        exit;
       end
       
     end #End self

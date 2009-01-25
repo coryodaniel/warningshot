@@ -1,9 +1,9 @@
 describe WarningShot::Config do
     
   it 'should be able to parse an ARGV string' do
-    args = ['--no-verbose','--resolve','--environment=rspec_test','-g','-aRspecTest']
+    args = ['--very-verbose','--resolve','--environment=rspec_test','-g','-aRspecTest']
     config = WarningShot::Config.parse_args(args)
-    config[:verbose].should be(false)
+    config[:verbose].should be(true)
     config[:resolve].should be(true)
     config[:environment].should == 'rspec_test'
     config[:growl].should be(true)

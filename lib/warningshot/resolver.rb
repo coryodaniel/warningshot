@@ -223,13 +223,8 @@ module WarningShot
         end
         (@yaml_to_object_methods||={})[klass] = block
       end
-      
-      def cast(klass=nil,&block)
-        logger.warn "Resolver.cast is deprecated, use Resolver.typecast"
-        typecast(klass,&block)
-      end
-      
-      # calls the block defined by Resolver#cast to convert
+            
+      # calls the block defined by Resolver#typecast to convert
       #   the yaml data to an object
       #
       # @param data [~YAML::load]

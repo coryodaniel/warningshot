@@ -1,0 +1,5 @@
+---
+- :branch: faux_test
+  :environments:
+    :rspec:
+      - { fav_color: 'blue', fav_num: '8' }

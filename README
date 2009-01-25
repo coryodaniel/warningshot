@@ -13,7 +13,7 @@ WarningShot Dependency Resolution Framework
   warningshot --build-deps (install all gems that resolvers are dependent on)
   
   This method provides a minimalist WarningShot.  WarningShot's dependencies essentially change depending on what you use
-  it for.  Thats neat, not a lot of extra gems that you don't need installed, installed.
+  it for.  Thats neat, not a lot of extra gems that you don't need installed being installed.
   
 
 ==== Terminology
@@ -61,7 +61,25 @@ WarningShot Dependency Resolution Framework
   * DependencyResolver - Locates Resolver classes, creates a dependency tree, and matches resolvers to resolution branches
   * Resolver - Class that can be included to create plugins.  Composed of tests and resolutions that can determine if a dependency was met, and if not, how to fix it
   
-  
+==== Command Line Examples
+For a list of all flags do: warningshot --help
+
+	- Details on Resolvers
+		warningshot --version
+		
+	- Loading specific resolvers
+		warningshot --oload=gem,file 												# => Only gem and file resolvers will be run
+		warningshot --pload=directory,file 									# => Only loads specified gems and loads in specified order
+		warningshot --resolvers=/path/to/my/resolvers/*.rb 	# => Glob to find additional resolvers
+
+	- Creating Recipe templates
+		warningshot --templates=./path/to/where/you/want/templates
+		
+	- Warningshot's Dependencies
+		warningshot --list-deps															# => Depedencies per Resolver
+		warningshot --build-deps														# => Installs everything a full fledged warningshot needs
+
+
 ==== Ruby API
 
   - Configuring WarningShot

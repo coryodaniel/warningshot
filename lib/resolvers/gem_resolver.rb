@@ -1,56 +1,77 @@
 class WarningShot::GemResolver
   include WarningShot::Resolver
+  add_dependency :core, 'rubygems'
   add_dependency :core, 'rubygems/dependency_installer'
+  add_dependency :core, 'rubygems/uninstaller'
+  add_dependency :core, 'rubygems/dependency'
   
   order  100
   branch :gem
   description 'Installs ruby gems and their dependencies'
-
-  # Matches >, <, >=, <=
-  CONDITIONAL_RGX = /[^\d]*/.freeze
-  
-  # Matches digits in version
-  VERSION_RGX     = /[\d\.]+/.freeze
-  
+    
   # Default version to install
-  DEFAULT_VERSION = ">=0.0.0".freeze
+  DEFAULT_VERSION = ">= 0.0.0".freeze
  
   cli("--gempath=PATH", String, "Alternate gem path ':' separated to check.  First in path is where gems will be installed") do |gpath|
     options[:gem_path] = gpath
+  end
+  
+  cli("--update-sources","Update gem sources before installing") do |no_up_src|
+    options[:update_sources] = no_up_src
   end
  
   #cli("-m","--resolver-gems=GEMS", String,"Names of gems containing add'l resolvers (':' seperated)") do |resolver_gems|
   #  options[:resolver_gems] = resolver_gems.split(':')
   #end
-    
-  #cli("--minigems",String,"Not supported yet.") do |minigems|
-  #  options[:minigems] = minigems
-  #end
            
   GemResource = Struct.new(:name,:version,:source) do
-    def installed?
-      self.version ||= DEFAULT_VERSION
-      installed_versions = Gem::cache.search self.name
-      installed = false
+    def installed?   
+      return !!(Gem.source_index.find_name(self.name, self.version).first)
+    end
+    
+    def install!
+      orig_gem_sources = Gem.sources.clone
 
-      required_version = Gem::Requirement.new self.version
+      installer = Gem::DependencyInstaller.new({
+        :user_install => false,
+        :install_dir => Gem.path.first
+      })
 
-      installed_versions.each do |i_gem|
-        installed = case(required_version <=> Gem::Requirement.new(i_gem.version))
-        when 1,0
-          true
-        else
-          false
-        end
-        
-        break if installed
+      begin
+        Gem.sources.replace(self.source.kind_of?(Array) ? self.source : [self.source]) if self.source 
+        installer.install(self.name,self.version)
+      rescue Gem::InstallError => ex
+        WarningShot::GemResolver.logger.error " ~ Could not install gem: #{self.name}:#{self.version}%s" % [self.source ? " from #{self.source}" : ""]
+      rescue Gem::GemNotFoundException => ex
+        WarningShot::GemResolver.logger.error " ~ Gem (#{self.name}:#{self.version}) was not found%s" % [self.source ? " from #{self.source}" : ""]
+      ensure
+        Gem.sources.replace orig_gem_sources # replace our gem sources
       end
-      installed
+
+      !installer.installed_gems.empty?
+    end
+    
+    def uninstall!
+      opts = {
+        :user_install => false,
+        :install_dir => Gem.path.first,
+        :version  => self.version
+      }
+      WarningShot::GemResolver.update_source_index(opts[:install_dir])
+      Gem::Uninstaller.new(self.name, opts).uninstall rescue false
     end
   end #End GemResource
   
-  typecast(String){ |yaml| GemResource.new(yaml,DEFAULT_VERSION) }
-  typecast(Hash){ |yaml| GemResource.new yaml[:name], yaml[:version], yaml[:source] }
+  typecast(String){ |yaml| 
+    _ver = Gem::Requirement.new [DEFAULT_VERSION]
+    GemResource.new yaml, _ver 
+  }
+  
+  typecast(Hash){ |yaml| 
+    _ver = (yaml[:version].nil? || yaml[:version].empty?) ? DEFAULT_VERSION : yaml[:version]
+    _ver = Gem::Requirement.new [_ver]
+    GemResource.new yaml[:name], _ver, yaml[:source] 
+  }
     
   register :test do |dep|    
     if gem_found = dep.installed?
@@ -62,34 +83,33 @@ class WarningShot::GemResolver
   end
   
   register :resolution do |dep|
-    old_gem_sources = Gem.sources
-    begin
-      Gem.sources.replace(dep.source.kind_of?(Array) ? dep.source : [dep.source]) if dep.source 
-      dep_inst = Gem::DependencyInstaller.new({:install_dir => Gem.path.first})
-      dep_inst.install(dep.name,Gem::Requirement.new(dep.version))
-    rescue Exception => ex
-      logger.error " ~ Could not install gem: #{dep.name}:#{dep.version}%s" % [dep.source ? " from #{dep.source}" : ""]
-    ensure
-      Gem.sources.replace old_gem_sources # replace our gem sources
-    end
-    dep.installed?
+    dep.install!
   end
   
-
-  # loads gem paths from self.config
-  def load_paths
-    if self.config.key?(:gem_path) && !self.config[:gem_path].nil?
-      self.config[:gem_path].split(":").reverse.each do |path|
-        Gem.path.unshift File.expand_path(path)
-      end
-      
-      Gem::cache.class.from_gems_in self.config[:gem_path].split(":")
+  class << self
+    def update_source_index(*dirs)
+      spec_dirs = dirs.inject([]){|memo,dir| 
+        memo << File.join(File.expand_path(dir), 'specifications')
+      }
+            
+      Gem.send :class_variable_set, "@@source_index", Gem::SourceIndex.from_gems_in(*spec_dirs)
       Gem::cache.refresh!
     end
   end
   
   def initialize(config,*params)
     super
-    self.load_paths
+    
+    Gem.configuration.update_sources = !!(self.config[:update_sources])
+    
+    if self.config.key?(:gem_path) && !self.config[:gem_path].nil?
+      gem_dirs = self.config[:gem_path].split(':')
+      gem_dirs.reverse.each do |path|
+        Gem.path.unshift File.expand_path(path)
+      end
+ 
+      WarningShot::GemResolver.update_source_index *gem_dirs
+    end
   end
+    
 end

@@ -148,8 +148,13 @@ module WarningShot
     def parse_yml(file)
       #if only on branch is specified in a yaml file it may not come back as an array
       branches  = YAML::load(File.open(file,'r'))
-      branches = [branches] unless branches.is_a? Array
       
+      if branches === false
+        @logger.error "Skipping malformed Yaml file: #{file}"
+        return
+      end
+      
+      branches = [branches] unless branches.is_a? Array
       branches.each do |branch|
         branch_name = branch[:branch]
         dependency_tree[branch_name] ||= []

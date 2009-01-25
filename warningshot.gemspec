@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors = ["Cory ODaniel"]
   s.date = %q{2008-10-15}
   s.default_executable = %q{warningshot}
-  s.description = "WarningShot provides a simple YAML configurable interface to define dependencies that an application or machine depends on, then it builds them for you."
+  s.description = "WarningShot provides a simple configurable interface to define dependencies that an application or machine depends on, then it builds them for you."
   s.email = %q{warningshot@coryodaniel.com.com}
   s.executables = ["warningshot"]
   s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/coryodaniel/warningshot}
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6")
-  s.rubygems_version = %q{1.2.0}
+  s.rubygems_version = %q{1.3.0}
   s.summary = s.description
 end
