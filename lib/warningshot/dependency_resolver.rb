@@ -75,42 +75,43 @@ module WarningShot
       WarningShot::Resolver.descendants.each do |klass|
         next if klass.disabled?
         
-        @logger.info "\n#{'-'*60}"
-
-        branch = @dependency_tree[klass.branch.to_sym]
-
-        if branch.nil?
-          @logger.info "[SKIPPING] #{klass}, #{klass.branch}; No machine recipes was registered"
-          next
-        elsif branch.empty?
-          @logger.info "[SKIPPING] #{klass}, #{klass.branch}; No dependencies in machine recipe"
-          next
-        end
-        
         klass.logger = @logger
-        resolver = klass.new(@config,*branch)
+        klass.logger.info "\n#{'-'*60}"
+        klass.logger.info "#{klass.name}; branch: #{klass.branch.join(',')} [TESTING]"
 
-        @resolvers << resolver
+        #Process each branch for the Resolver Class (klass)
+        klass.branch.each do |branch_name|
+          branch = @dependency_tree[branch_name.to_sym]
+
+          if branch.nil?
+            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No machine recipes were registered"
+            next
+          elsif branch.empty?
+            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No dependencies in machine recipe"
+            next
+          end
         
-        @logger.info "#{resolver.class}; branch: #{klass.branch} [TESTING]"
-                
-        # Start test
-        klass.before_filters(:test).each{|p| p.call}
-        resolver.test!
-        klass.after_filters(:test).each{|p| p.call}
+          resolver = klass.new(@config,branch_name.to_sym,*branch)          
+          @resolvers << resolver
         
-        @logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
+          # Start test
+          klass.before_filters(:test).each{|p| p.call}
+          resolver.test!
+          klass.after_filters(:test).each{|p| p.call}
+        
+          klass.logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
 
-        if self[:resolve] && !klass.resolutions.empty?
-          @logger.info "#{resolver.class}; branch: #{klass.branch} [RESOLVING]"
+          if self[:resolve] && !klass.resolutions.empty?
+            klass.logger.info "#{resolver.class}; branch: #{resolver.current_branch} [RESOLVING]"
 
-          klass.before_filters(:resolution).each{|p| p.call}        
-          resolver.resolve! 
-          klass.after_filters(:resolution).each{|p| p.call}
+            klass.before_filters(:resolution).each{|p| p.call}        
+            resolver.resolve! 
+            klass.after_filters(:resolution).each{|p| p.call}
           
-          @logger.info "Resolved: #{resolver.resolved.size} / Unresolved: #{resolver.unresolved.size}"
-        end
-      end
+            klass.logger.info "Resolved: #{resolver.resolved.size} / Unresolved: #{resolver.unresolved.size}"
+          end
+        end #Branch Loop
+      end #Resolver Class Loop
       
       @logger.info "\nResults:"
       stats.each {|k,v| @logger.info(" ~ #{k}: \t#{v}")}

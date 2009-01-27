@@ -9,7 +9,7 @@ class MockResolver
   branch :mock
   description 'A mock resolver for testing'
 
-  def initialize(c,*d)
+  def initialize(c,b,*d)
     super
     MockResolver.logger.debug 'A mock resolver was initialized'
   end

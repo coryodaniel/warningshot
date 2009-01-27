@@ -17,13 +17,13 @@ describe WarningShot::PermissionResolver do
     _file   = $test_data / 'permission_test.txt'
     _file2  = $test_data / 'permission_test.fake'
     
-    resolver = WarningShot::PermissionResolver.new(WarningShot::Config.create,{
+    resolver = WarningShot::PermissionResolver.new(WarningShot::Config.create,:file,{
       :path => _file,       :mode   => '0755', 
       :user => 'www-data',  :group  => 'www-data', 
       :recursive => "none"
     })
     
-    resolver2 = WarningShot::PermissionResolver.new(WarningShot::Config.create,{
+    resolver2 = WarningShot::PermissionResolver.new(WarningShot::Config.create,:file,{
       :path => _file2,      :mode   => '0755', 
       :user => 'www-data',  :group  => 'www-data', 
       :recursive => "none"

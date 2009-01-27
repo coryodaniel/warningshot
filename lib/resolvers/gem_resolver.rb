@@ -97,7 +97,7 @@ class WarningShot::GemResolver
     end
   end
   
-  def initialize(config,*params)
+  def initialize(config,branch_name,*params)
     super
     
     Gem.configuration.update_sources = !!(self.config[:update_sources])

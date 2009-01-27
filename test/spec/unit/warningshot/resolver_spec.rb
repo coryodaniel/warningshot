@@ -18,9 +18,15 @@ describe WarningShot::Resolver do
     MockResolver.instance_variable_set('@disabled',false)
   end
 
-  it 'should allow a resolution branch to be set' do
+  it 'should take a single branch' do
     MockResolver.branch :a_test_branch
-    MockResolver.branch.should == :a_test_branch
+    MockResolver.branch.member?(:a_test_branch).should be(true)
+  end
+  
+  it 'should take multiple branches' do
+    MockResolver.branch :a_test_branch, :another_test_branch
+    MockResolver.branch.member?(:a_test_branch).should be(true)
+    MockResolver.branch.member?(:another_test_branch).should be(true)
   end
 
   it 'should allow a description to be set' do
@@ -274,7 +280,7 @@ describe WarningShot::Resolver do
     MockResolver.flush!
     MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    mock_resolver = MockResolver.new(WarningShot::Config.create,'blue')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,:mock_branch,'blue')
     mock_resolver.test!
     mock_resolver.passed.length.should be(1)
   end
@@ -283,7 +289,7 @@ describe WarningShot::Resolver do
     MockResolver.flush!
     MockResolver.register(:test,:name=>:fav_color_test) {|dep| dep.value == 'blue'}
 
-    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,:mock_branch,'red')
     mock_resolver.test!
     mock_resolver.failed.length.should be(1)
   end
@@ -296,7 +302,7 @@ describe WarningShot::Resolver do
       dep.value == :blue
     }
     
-    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,:mock_branch,'red')
     mock_resolver.test!
     mock_resolver.resolve!
     mock_resolver.resolved.length.should be(1)
@@ -310,7 +316,7 @@ describe WarningShot::Resolver do
       dep.value == :blue
     }
     
-    mock_resolver = MockResolver.new(WarningShot::Config.create,'red')
+    mock_resolver = MockResolver.new(WarningShot::Config.create,:mock_branch,'red')
     mock_resolver.test!
     mock_resolver.resolve!
     mock_resolver.unresolved.length.should be(1)

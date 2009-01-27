@@ -99,11 +99,13 @@ module WarningShot
       #   class MyResolver
       #     include WarningShot::Resolver
       #     branch :mock
+      #     # Alternatively pass a set of branches you want to pull from (see PermissionResolver)
+      #     # branch :mock, :faux, :test
       #   end
       #
       # @api public
-      def branch(b=nil)
-        @branch = b unless b.nil?
+      def branch(*b)
+        @branch = b unless b.empty?
         @branch
       end
       
@@ -432,6 +434,10 @@ module WarningShot
     end
     
     module InstanceMethods
+      # get the currently processed branch
+      def current_branch
+        return @current_branch
+      end
       
       # Loops through each dependency and runs applicable tests until one passes
       # 
@@ -511,6 +517,9 @@ module WarningShot
       # @param config [WarningShot::Config]
       #   Configuration to use
       #
+      # @param branch_name [Symbol]
+      #   Name of the branch being processed
+      #
       # @param *deps [Array]
       #   Dependencies from YAML file
       #
@@ -521,9 +530,10 @@ module WarningShot
       #       resolved [Boolean] Was teh dependency resolved
       #
       # @api semi-public
-      def initialize(config,*deps)
-        @config = config
-        @dependencies = Set.new
+      def initialize(config,branch_name,*deps)
+        @config           = config
+        @current_branch   = branch_name
+        @dependencies     = Set.new
         
         deps.each do |dep|
           # Cast YAML data as described in resolver.

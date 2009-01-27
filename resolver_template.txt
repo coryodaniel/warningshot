@@ -31,7 +31,7 @@ class WarningShot::RESOLVER_NAME
     
   end
   
-  def initialize(config,*params)
+  def initialize(config,branch_name,*params)
     super
     
   end

@@ -33,7 +33,7 @@ describe WarningShot::FileResolver do
           that_file = @@source_path / 'that.txt'
           this_file = @@dest_path / 'this.txt'
           
-          fd = WarningShot::FileResolver.new(WarningShot::Config.create,{:source  => "file://#{that_file}",:target => this_file})
+          fd = WarningShot::FileResolver.new(WarningShot::Config.create,:file,{:source  => "file://#{that_file}",:target => this_file})
           fd.test!
           
           fd.failed.length.should be(1)
@@ -43,7 +43,7 @@ describe WarningShot::FileResolver do
           that_file = @@source_path / 'that.txt'
           this_file = @@dest_path / 'this.txt'
           
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:source  => "file://#{that_file}",:target => this_file})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:source  => "file://#{that_file}",:target => this_file})
           fd.test!
           fd.failed.length.should be(1)
           fd.resolve!
@@ -51,7 +51,7 @@ describe WarningShot::FileResolver do
         end
         
         it 'should heal a file from http://' do
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:source  => "http://www.example.com/",:target => (@@dest_path / 'internetz.html')})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:source  => "http://www.example.com/",:target => (@@dest_path / 'internetz.html')})
           fd.test!
           fd.failed.length.should be(1)
           fd.resolve!
@@ -63,7 +63,7 @@ describe WarningShot::FileResolver do
         end
                 
         it 'should not increment #resolved if the resolution fails' do
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:source  => "http://www.example.com/DOESNT.EXIST",:target => (@@dest_path / 'doesnt_exist.html')})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:source  => "http://www.example.com/DOESNT.EXIST",:target => (@@dest_path / 'doesnt_exist.html')})
           fd.test!
           fd.failed.length.should be(1)
           fd.resolve!
@@ -76,12 +76,12 @@ describe WarningShot::FileResolver do
       it 'should be able to return unresolved dependencies' do
         this_file = @@dest_path / 'this.txt'
         
-        fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:target => this_file})
+        fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:target => this_file})
         fd.test!
         fd.resolve!
         fd.unresolved.length.should be(1)
 
-        fd = WarningShot::FileResolver.new WarningShot::Config.create, this_file
+        fd = WarningShot::FileResolver.new WarningShot::Config.create,:file, this_file
         fd.test!
         fd.resolve!
         fd.unresolved.length.should be(1)
@@ -91,7 +91,7 @@ describe WarningShot::FileResolver do
         it 'should add dependency to #failed' do
           this_file = @@dest_path / 'this.txt'
 
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:target => this_file})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:target => this_file})
           fd.test!
           fd.failed.length.should be(1)
           fd.resolve!
@@ -108,7 +108,7 @@ describe WarningShot::FileResolver do
           that_file = @@source_path / 'that.txt'
           this_file = @@dest_path / 'this.txt'
 
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:target => this_file,:source => that_file})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:target => this_file,:source => that_file})
           fd.test!
           fd.failed.length.should be(1)
         end
@@ -120,7 +120,7 @@ describe WarningShot::FileResolver do
         it 'should add dependency to #failed' do
           this_file = @@dest_path / 'this.txt'
 
-          fd = WarningShot::FileResolver.new( WarningShot::Config.create,{:target => this_file})
+          fd = WarningShot::FileResolver.new( WarningShot::Config.create,:file,{:target => this_file})
           fd.test!
           fd.failed.length.should be(1)
         end

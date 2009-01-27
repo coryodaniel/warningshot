@@ -1,3 +1,6 @@
+# SHOUDL DETERMINE IF LINK EXISTS (File.stat().ftype == "link")
+# and it points at proper file
+
 class WarningShot::SymlinkResolver
   include WarningShot::Resolver
   add_dependency :core, 'fileutils'
@@ -9,13 +12,18 @@ class WarningShot::SymlinkResolver
   SymlinkResource = Struct.new(:source,:target,:force) do
     def link!;FileUtils.ln_s(self.source,self.target,:force=>self.force);end;
     
-    def exists?
+    #Is the symlink present
+    def linked?
       self.target ? File.symlink?(self.target) : false
     end
     
     # Determines if link points at correct file
     def correct?
-      File.identical? self.source, self.target
+      !!(File.readlink(self.target) == self.source)
+    end
+    
+    def valid?
+      !!(self.linked? && self.correct?)
     end
       
   end
@@ -29,7 +37,7 @@ class WarningShot::SymlinkResolver
   
   # If the target wasn't specified, it doesn't exist
   register :test do |dep| 
-    if symlink_correct = dep.exists? && dep.correct?
+    if symlink_correct = dep.valid?
       logger.debug " ~ [PASSED] symlink #{dep.target}"
     else
       logger.warn " ~ [FAILED] symlink #{dep.target}"
@@ -43,6 +51,6 @@ class WarningShot::SymlinkResolver
     rescue Errno::EEXIST, Errno::ENOTDIR => ex
       logger.error " ~ Could not create symlink #{dep.source} => #{dep.target}"
     end
-    dep.exists?
+    dep.valid?
   end
 end

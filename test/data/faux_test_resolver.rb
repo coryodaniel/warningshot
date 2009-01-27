@@ -6,7 +6,7 @@ class FauxTestResolver
   branch :faux_test
   description "A resolver for testing DependencyResolver's test functionality"
 
-  def initialize(c,*d)
+  def initialize(c,b,*d)
     super
   end
   

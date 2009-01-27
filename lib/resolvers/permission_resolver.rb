@@ -1,29 +1,29 @@
-# TODO It would be really sweet if there was a way for FileResolver, 
-#   DirectoryResolver, and SymlinkResolver inherited this functionality if
-#   mode, user, or group is set in its config file.
+
+# TODO Branch should take a params of branches, here: file, directory, symlink
+# TODO uid, gid should be integer or string (string for name, interger for id)
+# 
+
 class WarningShot::PermissionResolver
   include WarningShot::Resolver
   order  100
   branch :permission
   description 'Validates mode, user, and group permission on files and directories'
-     
-  module UnixPermissionsInterface;end;  
-  module WindowsPermissionsInterface;end;
-       
-  if WarningShot.platform != :windows
-    include WarningShot::PermissionResolver::UnixPermissionsInterface
-    #http://www.ruby-doc.org/core/classes/File/Stat.html
-    #http://www.ruby-doc.org/stdlib/libdoc/etc/rdoc/index.html
-    #http://www.ruby-doc.org/stdlib/libdoc/pathname/rdoc/index.html
-    #http://www.ruby-doc.org/stdlib/libdoc/fileutils/rdoc/index.html
-    #http://www.ruby-doc.org/core/classes/File.html#M002574
-  else
-    include WarningShot::PermissionResolver::WindowsPermissionsInterface
-  end     
-    
+         
   PermissionResource = Struct.new(:path,:target_mode,:target_user,:target_group,:recursive) do
     def exists?
       File.exist? self.path
+    end
+    
+    def correct_owner!
+      false
+    end
+    
+    def correct_group!
+      false
+    end
+    
+    def correct_mode!
+      false
     end
     
     def correct_owner?

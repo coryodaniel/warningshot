@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+2009-01-26 	Cory ODaniel <warningshot@coryodaniel.com>
+	* Resolver.branch takes a *params now
+	* Added specs for Resolver.branch single & multiple branches
+	* DependencyResolver loops over branches
+	* SymlinkResolver checks symlink with File.readlink
+	* rbconfig is only loaded if Config::CONFIG is not defined (stops tons of warnings that show up in log)
+	* !IMPORTANT -> Changed public API for Writing resolvers.  YourResolver#initialize should take (config,branch_name,*deps)
+
 = 0.9.5
 2009-01-22 	Cory ODaniel <warningshot@coryodaniel.com>
 	* RubyGems 1.3 Support

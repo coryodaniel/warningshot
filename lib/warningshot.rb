@@ -2,7 +2,7 @@ require 'fileutils'
 require 'yaml'
 require 'logger'
 require 'set'
-require 'rbconfig'
+require 'rbconfig' unless defined?(::Config::CONFIG)
 require 'optparse'
 
 # Load core extensions

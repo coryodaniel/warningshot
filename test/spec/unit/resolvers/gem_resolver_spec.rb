@@ -36,7 +36,7 @@ describe WarningShot::GemResolver do
       
   it 'should override Gem.path if gempath is given' do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
-    WarningShot::GemResolver.new config
+    WarningShot::GemResolver.new config, :gem
     
     Gem.path[0].should == File.expand_path("./test/output/gems")
     Gem.path[1].should == File.expand_path("./test/outputs/gems2")
@@ -52,7 +52,7 @@ describe WarningShot::GemResolver do
   # The gem name is the healing instructions, so if its provide it is the instructions 
   it 'should install the gems when healing is enabled' do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
-    resolver = WarningShot::GemResolver.new(config,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new(config,:gem,{:name => "ws-dummy"})
     resolver.test!
     
     resolver.failed.size.should be(1)
@@ -64,12 +64,12 @@ describe WarningShot::GemResolver do
   it 'should be able to determine if a gem is installed' do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
 
-    resolver = WarningShot::GemResolver.new(config, {:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new(config,:gem, {:name => "ws-dummy"})
     resolver.test!
     resolver.failed.size.should be(1)
     resolver.resolve!
     
-    resolver = WarningShot::GemResolver.new( config,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new( config,:gem,{:name => "ws-dummy"})
     resolver.test!
     resolver.passed.size.should be(1)
   end
@@ -78,7 +78,7 @@ describe WarningShot::GemResolver do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
     dummy_gem = {:name => "ws-dummy", :version=>"= 0.2.0"}
     
-    resolver = WarningShot::GemResolver.new(config,dummy_gem)
+    resolver = WarningShot::GemResolver.new(config,:gem,dummy_gem)
     resolver.test!
     resolver.failed.size.should be(1)
     resolver.resolve!
@@ -92,19 +92,19 @@ describe WarningShot::GemResolver do
     config = WarningShot::Config.create
     dummy_gem = {:name => "ws-dummy", :version=>"= 0.2.0"}
     
-    resolver = WarningShot::GemResolver.new(config,dummy_gem)
+    resolver = WarningShot::GemResolver.new(config,:gem,dummy_gem)
     resolver.test!
     resolver.failed.size.should be(1)
     resolver.resolve!
     resolver.resolved.size.should be(1)
     resolver.resolved.first.version.to_s.should == dummy_gem[:version]
     
-    WarningShot::GemResolver::GemResource.new(dummy_gem[:name],dummy_gem[:version]).uninstall!
+    WarningShot::GemResolver::GemResource.new(dummy_gem[:name],:gem,dummy_gem[:version]).uninstall!
   end
   
   it 'should be able to determine if a gem is installed in a different path (--gempath)' do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
-    resolver = WarningShot::GemResolver.new(config,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new(config,:gem,{:name => "ws-dummy"})
     resolver.test!
     
     resolver.failed.size.should be(1)
@@ -113,7 +113,7 @@ describe WarningShot::GemResolver do
     resolver.resolved.size.should be(1)
     
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
-    resolver = WarningShot::GemResolver.new(config,{:name => "ws-dummy"})
+    resolver = WarningShot::GemResolver.new(config,:gem,{:name => "ws-dummy"})
     resolver.test!
     resolver.passed.size.should be(1)
 
@@ -124,12 +124,12 @@ describe WarningShot::GemResolver do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
     dummy_gem = {:name => "ws-dummy", :version=>"= 0.2.0"}
     
-    resolver = WarningShot::GemResolver.new(config,dummy_gem)
+    resolver = WarningShot::GemResolver.new(config,:gem,dummy_gem)
     resolver.test!
     resolver.failed.size.should be(1)
     resolver.resolve!
     
-    resolver = WarningShot::GemResolver.new(config,dummy_gem)
+    resolver = WarningShot::GemResolver.new(config,:gem,dummy_gem)
     resolver.test!
     resolver.passed.size.should be(1)
   end
@@ -138,7 +138,7 @@ describe WarningShot::GemResolver do
     config = WarningShot::Config.create({:gem_path => "./test/output/gems:./test/outputs/gems2"})
     dummy_gem = {:name => "coryodaniel-ws-dummy", :version=>"= 1.5.0", :source => "http://gems.github.com"}
 
-    resolver = WarningShot::GemResolver.new(config,dummy_gem)
+    resolver = WarningShot::GemResolver.new(config,:gem,dummy_gem)
     resolver.test!
     resolver.failed.size.should be(1)
     resolver.resolve!
