@@ -20,6 +20,30 @@
 # - { target: "/super/symlink", source: "/some/target/directory/"}
 # - { target: "/etc/my/awesome.conf", source: "/etc/the/real.conf"}
 
+# The PermissionResolver piggybacks on the FileResolver, SymlinkResolver and DirectoryResolver.
+#  Each of the config files associated with those resolvers can include the following
+#  options in their hash to be parsed by the permission resolver.  So you will not generally have a 'permission.yml' file.
+#  Instead these options should be specified on a file in files.yml directories.yml or symlinks.yml
+
+# Each environt takes an array hashes
+# @param target [String] REQUIRED
+#     the path to check permissions
+#
+# @param mode [String] OPTIONAL;
+#     MOde of file 0777, 0755, etc
+#
+# @param user [String|Integer] OPTIONAL;
+#     User that should own resource (name or ID)
+#
+# @param group [STring|Integer] OPTIONAL;
+#     Group that should own resource (name or ID)
+#
+# @param follow [String|nil] OPTIONAL; Default nil (doesnt follow)
+#     What methods should be recursvie: 'chmod','chown','both'
+#
+# You can additionally set permissions like:
+# - { target: "/tmp/somefile.txt", source: "~/my/link.txt", mode: "777", user: "www-data", group: "www-data", follow: 'both'}
+
 ---
 :branch: symlink
 :environments: 

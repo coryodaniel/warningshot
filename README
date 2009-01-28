@@ -1,6 +1,12 @@
 WarningShot Dependency Resolution Framework
  * Additional documentation @ http://github.com/coryodaniel/warningshot/wikis/
 
+==== Note on RSpecs
+	Currently the PermissionResolver RSpecs will probably fail that is because
+	I am not sure what the best way is to write them in regards to users & groups
+	that may or may not be on a remote machine.  I wrote the specs, and they work on
+	my laptop (given that I have the groups/users) mentioned in the tests.
+	See: ./test/spec/unit/resolvers/permission_resolver_spec.rb
 
 ==== Installing WarningShot
   WarningShot installs a little differently than most gems.  WarningShot itself has NO gem dependencies.  Gems become

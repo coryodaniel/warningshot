@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+2009-01-27  Cory ODaniel <warningshot@coryodaniel.com>
+	* PermissionResolver
+
 2009-01-26 	Cory ODaniel <warningshot@coryodaniel.com>
 	* Resolver.branch takes a *params now
 	* Added specs for Resolver.branch single & multiple branches

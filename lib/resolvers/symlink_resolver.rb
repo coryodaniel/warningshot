@@ -1,6 +1,3 @@
-# SHOUDL DETERMINE IF LINK EXISTS (File.stat().ftype == "link")
-# and it points at proper file
-
 class WarningShot::SymlinkResolver
   include WarningShot::Resolver
   add_dependency :core, 'fileutils'
