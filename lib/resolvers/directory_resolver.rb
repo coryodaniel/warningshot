@@ -6,10 +6,11 @@ class WarningShot::DirectoryResolver
   description 'Validates presence of directories'
 
   DirectoryResource = Struct.new(:target)
-  typecast(String) do |target|
+
+  typecast String do |target|
     DirectoryResource.new File.expand_path(target)
   end
-  typecast(Hash) do |yaml|
+  typecast Hash do |yaml|
     DirectoryResource.new File.expand_path(yaml[:target])
   end
   
