@@ -54,6 +54,8 @@ class WarningShot::PermissionResolver
       if(File.symlink?(self.target) && (self.no_follow == 'both' || self.no_follow == 'chown'))
         File.lchown *chown_params
       elsif(self.stat(:ftype) == 'directory' && (self.recursive == 'both' || self.recursive == 'chown'))
+        #DOcumenation for FileUtils.chown_R is wrong (at least for Ubuntu 8.1, takes ID as String.)
+        chown_params[1] = chown_params[1].to_s
         FileUtils.chown_R *chown_params
       else
         File.chown *chown_params
@@ -69,8 +71,11 @@ class WarningShot::PermissionResolver
       chown_params = [nil, tgt_gid, self.target]
 
       if(File.symlink?(self.target) && (self.no_follow == 'both' || self.no_follow == 'chown'))
+        #DOcumenation for FileUtils.chown_R is wrong (at least for Ubuntu 8.1, takes ID as String.)
+        chown_params[1] = chown_params[1].to_s
         File.lchown *chown_params
       elsif(self.stat(:ftype) == 'directory' && (self.recursive == 'both' || self.recursive == 'chown'))
+        c
         FileUtils.chown_R *chown_params
       else
         File.chown *chown_params
