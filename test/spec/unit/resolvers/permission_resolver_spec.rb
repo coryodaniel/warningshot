@@ -309,7 +309,7 @@ describe WarningShot::PermissionResolver do
       pr.resolved.length.should be(1)
 
       File.stat(@perm_test_file).mode.should == @orig_mode
-      ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)).to_i.should be(777)
+      ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)).to_i.should be(new_mode.to_i)
     end
   end
 end
