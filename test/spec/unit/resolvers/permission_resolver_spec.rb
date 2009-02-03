@@ -11,7 +11,7 @@ require '.' / 'lib' / 'resolvers' / 'permission_resolver'
 describe WarningShot::PermissionResolver do
   before :all do
     #You can add additional groups to try here...
-    @group_names = ['everyone']
+    @group_names = ['everyone','nogroup']
 
     # Test if user can chown/chmod files to found group... if not nil out names...
     @grp_chmod_test = File.expand_path($test_data / "group_w_test.txt")
