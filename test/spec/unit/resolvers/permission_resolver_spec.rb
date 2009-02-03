@@ -291,7 +291,8 @@ describe WarningShot::PermissionResolver do
     end
 
     it 'should be able to correct permissions on links and not targets (no follow)' do
-      if ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)) == 777
+      # Ive seen different systems set different default modes for symlinks...
+      if ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)) == "777"
         new_mode = "775"
       else
         new_mode = "777"

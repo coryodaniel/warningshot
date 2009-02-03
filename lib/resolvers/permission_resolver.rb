@@ -60,6 +60,9 @@ class WarningShot::PermissionResolver
       else
         File.chown *chown_params
       end
+    rescue NotImplementedError => ex
+      WarningShot::PermissionResolver.logger.error("lchown is not implemented on this machine, (disable nofollow).")
+      return false
     rescue Exception => ex
       WarningShot::PermissionResolver.logger.error("Unable to change user for file: #{self.target}; Exception: #{ex.message}")
       return false
@@ -79,6 +82,9 @@ class WarningShot::PermissionResolver
       else
         File.chown *chown_params
       end
+    rescue NotImplementedError => ex
+      WarningShot::PermissionResolver.logger.error("lchown is not implemented on this machine, (disable nofollow).")
+      return false
     rescue Exception => ex
       WarningShot::PermissionResolver.logger.error("Unable to change group for file: #{self.target}; Exception: #{ex.message}")
       return false
@@ -95,6 +101,9 @@ class WarningShot::PermissionResolver
       else
         File.chmod *chmod_params
       end
+    rescue NotImplementedError => ex
+      WarningShot::PermissionResolver.logger.error("lchmod is not implemented on this machine, (disable nofollow).")
+      return false
     rescue Exception => ex
       WarningShot::PermissionResolver.logger.error("Unable to change mode for file: #{self.target}; Exception: #{ex.message}")
       return false
