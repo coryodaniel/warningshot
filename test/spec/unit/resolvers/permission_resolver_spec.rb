@@ -168,7 +168,7 @@ describe WarningShot::PermissionResolver do
         #give it back to original group
         File.chown(@orig_user_uid,nil,@perm_test_file)
       else
-        puts " ~ To run this test specify the USER that the test file should be chown'd to. WSUSER=user_name"
+        puts " ~ To run this test specify the USER that the test file should be chown'd to it should not be the current user. WSUSER=user_name"
         puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSUSER=_unknown"
         pending
       end
@@ -195,7 +195,7 @@ describe WarningShot::PermissionResolver do
         #give it back to original group
         File.chown(@orig_user_uid,nil,@perm_test_file)
       else
-        puts " ~ To run this test specify the USER that the test file should be chown'd to. WSUSER=user_name"
+        puts " ~ To run this test specify the USER that the test file should be chown'd to it should not be the current user. WSUSER=user_name"
         puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSUSER=_unknown"
         pending
       end
@@ -222,7 +222,7 @@ describe WarningShot::PermissionResolver do
         #give it back to original group
         File.chown(nil,@orig_group_gid,@perm_test_file)
       else
-        puts " ~ To run this test specify the GROUP that the test file should be chown'd to. WSGROUP=group_name"
+        puts " ~ To run this test specify the GROUP that the test file should be chown'd to it should not be the current group. WSGROUP=group_name"
         puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSGROUP=everyone"
         pending
       end
@@ -249,7 +249,7 @@ describe WarningShot::PermissionResolver do
         #Give it back to the original group
         File.chown(nil,@orig_group_id,@perm_test_file)
       else
-        puts " ~ To run this test specify the GROUP that the test file should be chown'd to. WSGROUP=group_name"
+        puts " ~ To run this test specify the GROUP that the test file should be chown'd to it should not be the current group. WSGROUP=group_name"
         puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSGROUP=everyone"
         pending
       end
@@ -291,9 +291,14 @@ describe WarningShot::PermissionResolver do
     end
 
     it 'should be able to correct permissions on links and not targets (no follow)' do
+      if ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)) == 777
+        new_mode = "775"
+      else
+        new_mode = "777"
+      end
       perm_file = {
         :target => @perm_test_link_tgt,
-        :mode => '777',
+        :mode => new_mode,
         :no_follow => 'chmod'
       }
       pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
