@@ -1,5 +1,3 @@
-#See TODO's below... (maybe the best bet it to take command line flags for User/Group names?)
-
 # Auto-generated ruby debug require
 require 'rubygems'
 require "ruby-debug"
@@ -10,32 +8,8 @@ require '.' / 'lib' / 'resolvers' / 'permission_resolver'
 
 describe WarningShot::PermissionResolver do
   before :all do
-    #You can add additional groups to try here...
-    @group_names = ['everyone','nogroup','users']
-
-    # Test if user can chown/chmod files to found group... if not nil out names...
-    @grp_chmod_test = File.expand_path($test_data / "group_w_test.txt")
-    FileUtils.touch @grp_chmod_test
-
-    # Set the @test_group_* for the first group found
-    Etc.group {|grp|
-      if @group_names.member?(grp.name)
-        begin
-          if @test_group_name.nil? && @test_group_id.nil?
-            @test_group_name  = grp.name
-            @test_group_id    = grp.gid
-            File.chown(nil,@test_group_id,@grp_chmod_test)
-          end
-        rescue Exception => ex
-          #Could chown group, keep looking...
-          @test_group_name = nil
-          @test_group_id   = nil
-        end
-      end
-    }
-
-    #Remove the chmod/chown test file
-    FileUtils.rm @grp_chmod_test
+    @chown_user   = ENV['WSUSER']
+    @chown_group  = ENV['WSGROUP']
 
     #Test file for changing permissions
     @perm_test_file = File.expand_path($test_data / "permission_test_#{Time.now.to_i}.txt")
@@ -173,21 +147,13 @@ describe WarningShot::PermissionResolver do
       pr.passed.first.met.should be(true)
     end
 
-    it 'should be able to correct the user by name' do
-      # TODO How do you test this w/o SUDO, or without knowing the names of users/groups on test machine
-      pending
-    end
-    it 'should be able to correct the user by id' do
-       # TODO How do you test this w/o SUDO, or without knowing the names of users/groups on test machine
-      pending
-    end
+    it 'should be able to correct the user by name (may need SUDO)' do
+      # Mark the spec as pending if the group wasn't provided
+      if @chown_user
 
-    it 'should be able to correct the group by id' do
-      # Mark the spec as pending if it couldnt find a group to run this as
-      if @test_group_id
         perm_file = {
           :target => @perm_test_file,
-          :group  => @test_group_id
+          :user  => @chown_user
         }
 
         pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
@@ -197,22 +163,77 @@ describe WarningShot::PermissionResolver do
         pr.resolve!
         pr.resolved.length.should be(1)
 
-        (File.stat(@perm_test_file).gid).should == @test_group_id
+        Etc.getpwuid(File.stat(@perm_test_file).uid).name.should == @chown_user
 
         #give it back to original group
-        File.chown(nil,@orig_group_gid,@perm_test_file)
+        File.chown(@orig_user_uid,nil,@perm_test_file)
       else
-        # TODO How do you test this w/o SUDO, or without knowing the names of users/groups on test machine
+        puts " ~ To run this test specify the USER that the test file should be chown'd to. WSUSER=user_name"
+        puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSUSER=_unknown"
         pending
       end
     end
 
-    it 'should be able to correct the group by name' do
-      # Mark the spec as pending if it couldnt find a group to run this as
-      if @test_group_name
+    it 'should be able to correct the user by id (may need SUDO)' do
+      # Mark the spec as pending if the group wasn't provided
+      if @chown_user
+        chown_user_id = Etc.getpwnam(@chown_user).uid
         perm_file = {
           :target => @perm_test_file,
-          :group  => @test_group_name
+          :user  => chown_user_id
+        }
+
+        pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
+
+        pr.test!
+        pr.failed.length.should be(1)
+        pr.resolve!
+        pr.resolved.length.should be(1)
+
+        (File.stat(@perm_test_file).uid).should == chown_user_id
+
+        #give it back to original group
+        File.chown(@orig_user_uid,nil,@perm_test_file)
+      else
+        puts " ~ To run this test specify the USER that the test file should be chown'd to. WSUSER=user_name"
+        puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSUSER=_unknown"
+        pending
+      end
+    end
+
+    it 'should be able to correct the group by id (may need SUDO)' do
+      # Mark the spec as pending if the group wasn't provided
+      if @chown_group
+        chown_group_gid = Etc.getgrnam(@chown_group).gid
+        perm_file = {
+          :target => @perm_test_file,
+          :group  => chown_group_gid
+        }
+
+        pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
+
+        pr.test!
+        pr.failed.length.should be(1)
+        pr.resolve!
+        pr.resolved.length.should be(1)
+
+        (File.stat(@perm_test_file).gid).should == chown_group_gid
+
+        #give it back to original group
+        File.chown(nil,@orig_group_gid,@perm_test_file)
+      else
+        puts " ~ To run this test specify the GROUP that the test file should be chown'd to. WSGROUP=group_name"
+        puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSGROUP=everyone"
+        pending
+      end
+    end
+
+    it 'should be able to correct the group by name (may need SUDO)' do
+      # Mark the spec as pending if the group wasn't provided
+      if @chown_group
+        perm_file = {
+          :target => @perm_test_file,
+          :group  => @chown_group
         }
 
         pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
@@ -223,12 +244,13 @@ describe WarningShot::PermissionResolver do
         pr.resolve!
         pr.resolved.length.should be(1)
 
-        Etc.getgrgid(File.stat(@perm_test_file).gid).name.should == @test_group_name
+        Etc.getgrgid(File.stat(@perm_test_file).gid).name.should == @chown_group
 
         #Give it back to the original group
         File.chown(nil,@orig_group_id,@perm_test_file)
       else
-        # TODO How do you test this w/o SUDO, or without knowing the names of users/groups on test machine
+        puts " ~ To run this test specify the GROUP that the test file should be chown'd to. WSGROUP=group_name"
+        puts " ~ Example rake spec:unit CLASS=resolvers/permission_resolver WSGROUP=everyone"
         pending
       end
     end
