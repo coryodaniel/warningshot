@@ -4,7 +4,7 @@ class WarningShot::GemResolver
   add_dependency :core, 'rubygems/dependency_installer'
   add_dependency :core, 'rubygems/uninstaller'
   add_dependency :core, 'rubygems/dependency'
-  
+
   order  100
   branch :gem
   description 'Installs ruby gems and their dependencies'
@@ -34,7 +34,7 @@ class WarningShot::GemResolver
 
       installer = Gem::DependencyInstaller.new({
         :user_install => false,
-        :install_dir => Gem.path.first
+        :install_dir => Gem.dir
       })
 
       begin
@@ -54,7 +54,7 @@ class WarningShot::GemResolver
     def uninstall!
       opts = {
         :user_install => false,
-        :install_dir => Gem.path.first,
+        :install_dir => Gem.dir,
         :version  => self.version
       }
       WarningShot::GemResolver.update_source_index(opts[:install_dir])
@@ -103,12 +103,15 @@ class WarningShot::GemResolver
     Gem.configuration.update_sources = !!(self.config[:update_sources])
     
     if self.config.key?(:gem_path) && !self.config[:gem_path].nil?
-      gem_dirs = self.config[:gem_path].split(':')
-      gem_dirs.reverse.each do |path|
-        Gem.path.unshift File.expand_path(path)
-      end
- 
-      WarningShot::GemResolver.update_source_index *gem_dirs
+      #make sure user paths are expanded
+      tmp_paths = self.config[:gem_path].split(":").collect! do |gp|
+        File.expand_path(gp)
+      end.join(":")
+
+      Gem.send :set_paths, tmp_paths + ":" + Gem.path.join(":")
+      Gem.send :set_home, Gem.path.first
+
+      WarningShot::GemResolver.update_source_index *Gem.path
     end
   end
     

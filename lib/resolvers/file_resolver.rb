@@ -15,7 +15,7 @@ class WarningShot::FileResolver
 
   branch :file
   description 'Validates presence of files'
-  
+
   # Define FileResource struct
   FileResource = Struct.new(:source,:target) do
     def exists?;File.exists?(File.expand_path(target.path));end;
@@ -73,7 +73,7 @@ class WarningShot::FileResolver
     end
     file.exists?
   end
-  
+
   register(:resolution, { :name => :https_protocol_resolver,
     :desc => "Resolves files via HTTPS",
     :if => lambda { |file| !!(file.source.to_s =~ /https/i)}

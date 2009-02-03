@@ -9,6 +9,10 @@
 #      - { target: "./public/this.txt", source: "http://example.com/index.html"}
 #      - { target: "file:///tmp/somefile.txt", source: "~/.secret/file.txt"}
 
+# The IntegrityResolver piggybacks on the FileResolver.  And MD5 or SHA1 hash can be specified
+# - {target: "/path/to/file.txt", md5: "MY_MD5"}
+# - {target: "/path/to/file.txt", sha1: "MY_SHA1"}
+
 # The PermissionResolver piggybacks on the FileResolver, SymlinkResolver and DirectoryResolver.
 #  Each of the config files associated with those resolvers can include the following
 #  options in their hash to be parsed by the permission resolver.  So you will not generally have a 'permission.yml' file.
@@ -33,7 +37,8 @@
 ---
 - :branch: file
   :environments: 
-    :development: []
+    :development:
+      - { target: "http://example.com/tmp/somefile.txt", source: "~/.secret/file.txt", mode: "777", user: "www-data", group: "www-data", sha1: "picklepastaarmymassacre"}
     :global: []
     :test: []
     :qa: []

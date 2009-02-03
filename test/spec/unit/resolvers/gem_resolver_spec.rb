@@ -87,7 +87,7 @@ describe WarningShot::GemResolver do
     resolver.resolved.first.version.to_s.should == dummy_gem[:version]
   end
 
-  it 'should be able to determine if a gem is installed in the default gem path' do
+  it 'should be able to determine if a gem is installed in the default gem path (probably needs SUDO)' do
     Gem.clear_paths
     config = WarningShot::Config.create
     dummy_gem = {:name => "ws-dummy", :version=>"= 0.2.0"}

@@ -13,7 +13,7 @@ class WarningShot::DirectoryResolver
   typecast Hash do |yaml|
     DirectoryResource.new File.expand_path(yaml[:target])
   end
-  
+
   register :test do |dep|
     dir_found = File.directory? dep.target
     if dir_found

@@ -20,6 +20,8 @@ module WarningShot
       #   The missing GEMS can be installed with: warningshot --build-deps
       #   All resolvers' dependencies can be viewed with: warningshot --list-deps
       #
+      #   Note: add_dependency is essentially a replacement for 'require' when writing Resolvers
+      #
       # @param type [Symbol[:core|:gem]]
       #   the type of library it depends on, core lib or gem
       #

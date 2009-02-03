@@ -13,7 +13,7 @@ module WarningShot
     :images     => 'images',
     :resolvers  => 'lib' / 'resolvers'
   }
-  
+
   RecipeExt = "*.{yml,yaml}".freeze
   
   class << self
@@ -28,7 +28,7 @@ module WarningShot
     def hostname
       `hostname`.strip
     end
-    
+
     # Gets the absolute path for a resource.
     # if it is not listed in PATHS then the string is appended to
     # WarningShot.root
@@ -47,9 +47,9 @@ module WarningShot
     
     def platform
       case ::Config::CONFIG['host_os']
+      when /linux/i: :linux
       when /darwin/i: :mac
       when /mswin|windows/i: :windows
-      when /linux/i: :linux
       when /sunos|solaris/i: :solaris
       else
         :unknown
@@ -172,7 +172,7 @@ module WarningShot
     def load_app(app)
       Dir.chdir app
     end
-    
+
     # Loads any additional resolvers specified by --resolvers= or self[:resolvers]
     def load_addl_resolvers(resolver_paths)
       resolver_paths.each do |resolver_path|

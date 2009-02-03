@@ -16,18 +16,18 @@ module WarningShot
       self.init_logger
       WarningShot.load_app(self[:application])
       WarningShot.load_addl_resolvers(self[:resolvers])
-            
+
       # Parsed yml files
       self.load_configs
       @dependency_tree.symbolize_keys!
     end
-        
+
     def [](k)
-      @config[k]  
+      @config[k]
     end
-        
+
     # gets stats of all resolvers
-    # @return [Hash] 
+    # @return [Hash]
     #   :passed, :failed, :resolved, :unresolved
     #
     # @api public
@@ -35,23 +35,23 @@ module WarningShot
       _stats = {
         :passed => 0, :failed => 0, :resolved => 0, :unresolved => 0
       }
-      
+
       resolvers.each do |resolver|
         _stats[:passed]     += resolver.passed.size
         _stats[:failed]     += resolver.failed.size
         _stats[:resolved]   += resolver.resolved.size
         _stats[:unresolved] += resolver.unresolved.size
       end
-      
+
       _stats
     end
-    
+
     # initializes the logger
-    # 
+    #
     # @api private
     def init_logger
       FileUtils.mkdir_p(File.dirname(File.expand_path(self[:log_path]))) unless self[:verbose]
-      
+
       @logger = Logger.new(
         self[:verbose] ? STDOUT : self[:log_path], 10, 1024000
       )
@@ -63,7 +63,7 @@ module WarningShot
       @logger.formatter = _formatter
       @logger.level     = Object.class_eval("Logger::#{_log_level}")
     end
-    
+
     # runs all loaded resolvers
     #
     # @api private
@@ -71,52 +71,53 @@ module WarningShot
       @logger.info "WarningShot v. #{WarningShot::VERSION}"
       @logger.info "Environment: #{self.environment}; Application: #{WarningShot.application_type}"
       @logger.info "On host: #{WarningShot.hostname}"
-      
+
       WarningShot::Resolver.descendants.each do |klass|
         next if klass.disabled?
-        
+
         klass.logger = @logger
         klass.logger.info "\n#{'-'*60}"
-        klass.logger.info "#{klass.name}; branch: #{klass.branch.join(',')} [TESTING]"
 
         #Process each branch for the Resolver Class (klass)
         klass.branch.each do |branch_name|
           branch = @dependency_tree[branch_name.to_sym]
 
           if branch.nil?
-            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No machine recipes were registered"
+            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No recipes were registered"
             next
           elsif branch.empty?
-            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No dependencies in machine recipe"
+            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No dependencies in recipe"
             next
           end
-        
-          resolver = klass.new(@config,branch_name.to_sym,*branch)          
+
+          resolver = klass.new(@config,branch_name.to_sym,*branch)
           @resolvers << resolver
-        
+
+
+          klass.logger.info "#{klass.name}; branch: #{resolver.current_branch} [TESTING]"
           # Start test
           klass.before_filters(:test).each{|p| p.call}
           resolver.test!
           klass.after_filters(:test).each{|p| p.call}
-        
+
           klass.logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
 
           if self[:resolve] && !klass.resolutions.empty?
             klass.logger.info "#{resolver.class}; branch: #{resolver.current_branch} [RESOLVING]"
 
-            klass.before_filters(:resolution).each{|p| p.call}        
-            resolver.resolve! 
+            klass.before_filters(:resolution).each{|p| p.call}
+            resolver.resolve!
             klass.after_filters(:resolution).each{|p| p.call}
-          
+
             klass.logger.info "Resolved: #{resolver.resolved.size} / Unresolved: #{resolver.unresolved.size}"
           end
         end #Branch Loop
       end #Resolver Class Loop
-      
+
       @logger.info "\nResults:"
       stats.each {|k,v| @logger.info(" ~ #{k}: \t#{v}")}
     end
-    
+
     protected
     # Loads configuration files
     #
@@ -134,14 +135,15 @@ module WarningShot
         end
       end
     end
-    
+
+
     # parses dependencies info from a yaml file
     #
     # @param file [String]
     #   File path to parse
     #
     # @notes
-    #   yaml file should contain an array of configs, 
+    #   yaml file should contain an array of configs,
     #     get name of each config set, find global and current environment
     #     from set, merge into dependency_tree
     #
@@ -149,13 +151,15 @@ module WarningShot
     def parse_yml(file)
       #if only on branch is specified in a yaml file it may not come back as an array
       branches  = YAML::load(File.open(file,'r'))
-      
+
       if branches === false
         @logger.error "Skipping malformed Yaml file: #{file}"
         return
       end
-      
+
+      #Support for multiple dep branches in one file
       branches = [branches] unless branches.is_a? Array
+
       branches.each do |branch|
         branch_name = branch[:branch]
         dependency_tree[branch_name] ||= []
@@ -163,15 +167,15 @@ module WarningShot
         #Add current environment's configs to branch
         current_env = branch[:environments][@environment]
         @dependency_tree[branch_name].concat(current_env) unless current_env.nil?
-        
+
         #Add global environment's configs to branch
         global = branch[:environments][:global]
         @dependency_tree[branch_name].concat(global) unless global.nil?
-        
+
         #remove nil's if they made it into branch somehow (bad yaml probably)
         @dependency_tree[branch_name].delete(nil)
       end
     end
-      
+
   end
 end

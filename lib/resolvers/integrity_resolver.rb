@@ -47,7 +47,7 @@ class WarningShot::IntegrityResolver
   end
   
   register(:test,{:name=>:md5_digest_test,
-    :if => lambda{|dep| dep.digest_method == :md5}  
+    :if => lambda{|dep| dep.digest_method == :md5}
   })do |dep|
     dep_ok = (dep.exists? ? Digest::MD5.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
 
