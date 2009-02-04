@@ -12,6 +12,9 @@ require File.dirname(__FILE__) / 'warning_shot'
 module WarningShot
   module Resolver
     module ClassMethods
+      def demodulized_name
+        self.name.split("::").last
+      end
       
       # creates a list of gems that the resolver is dependent on for different features
       #   The goal of this is that WarningShot will not need a bunch of libraries installed unless
@@ -445,11 +448,12 @@ module WarningShot
       # 
       # @api private
       def test!
-        dependencies.each do |dep|  
+        dependencies.each_with_index do |dep,idx|  
           self.class.tests.each{ |test_meta|  
             dep.met = process_block :test, dep, test_meta
             break if dep.met
           }
+          yield(((idx / dependencies.length.to_f) * 100).floor) if block_given?
         end
       end
       
@@ -457,12 +461,13 @@ module WarningShot
       #
       # @api private
       def resolve!
-        dependencies.each do |dep|
+        dependencies.each_with_index do |dep,idx|  
           unless dep.met
             self.class.resolutions.each{ |resolution_meta|     
               dep.resolved = process_block :resolution, dep, resolution_meta
               break if dep.resolved
             }
+            yield(((idx / dependencies.length.to_f) * 100).floor) if block_given?
           end
         end
       end
@@ -472,7 +477,7 @@ module WarningShot
       # @return [Array<Objects>]
       #   dependencies that weren't resolved
       #
-      # @api private
+      # @api public
       def unresolved
         dependencies.inject([]){ |list,dep| 
           (!dep.met && !dep.resolved) ? (list << dep) : (list)
@@ -484,7 +489,7 @@ module WarningShot
       # @return [Array<Objects>]
       #   failed dependencies
       # 
-      # @api private
+      # @api public
       def failed
         dependencies.inject([]){ |list,dep|
           dep.met ? (list) : (list << dep)
@@ -495,7 +500,7 @@ module WarningShot
       #
       # @return [Array<Objects>]
       #
-      # @api private
+      # @api public
       def passed
         dependencies.inject([]){ |list,dep| 
           dep.met ? (list << dep) : (list)
@@ -507,7 +512,7 @@ module WarningShot
       # @return [Array<Objects>]
       #   resolved dependencies
       #
-      # @api private
+      # @api public
       def resolved        
         dependencies.inject([]){ |list,dep| 
           (!dep.met && dep.resolved) ? (list << dep) : (list)

@@ -56,6 +56,10 @@ module WarningShot
       end
     end
     
+    def header
+      "WarningShot v. #{WarningShot::VERSION}"
+    end
+    
     # the application type warningshot is running in
     #   uses constants to determine
     # Additional application types can be registered with
@@ -125,6 +129,9 @@ module WarningShot
     # 
     def only_load(*params)
       params.each{ |f| require WarningShot.dir_for(:resolvers) / "#{f}_resolver" }
+    rescue Exception => ex
+      puts "Error loading resolvers: #{ex.message}"
+      exit
     end
     
     # loads only specified resolvers
@@ -149,10 +156,9 @@ module WarningShot
         klass_name = _resolver_name.downcase.split('_').inject([]){|memo,part| memo << part.capitalize}.join('')
         const_get(klass_name).order(idx)
       end
-    end
-
-    def header
-      "WarningShot v. #{WarningShot::VERSION}"
+    rescue Exception => ex
+      puts "Error loading resolvers: #{ex.message}"
+      exit
     end
 
     # returns names of all loaded resolvers in priority order
@@ -178,6 +184,9 @@ module WarningShot
       resolver_paths.each do |resolver_path|
         Dir[File.expand_path(resolver_path)].each {|r| load r}
       end
+    rescue Exception => ex
+      puts "Error loading resolvers: #{ex.message}"
+      exit
     end
   end
 end

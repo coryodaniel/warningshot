@@ -48,14 +48,14 @@ module WarningShot
         page_found = (resp.code =~ valid_codes)
 
         if page_found
-          logger.debug " ~ [PASSED] url #{uri.to_s}"
+          logger.debug "[PASSED] URL Found: #{uri.to_s}"
         else
-          logger.warn " ~ [FAILED] url #{uri.to_s}"
+          logger.warn "[FAILED] URL Not Found: #{uri.to_s}"
         end
         
         page_found
       rescue Exception => ex
-        logger.error "Could not reach #{uri.to_s}"
+        logger.error "[FAILED] Could not reach #{uri.to_s}"
         false
       end
     end

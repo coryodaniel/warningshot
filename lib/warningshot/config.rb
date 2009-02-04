@@ -34,8 +34,7 @@ module WarningShot
       :log_path     => '.' / 'log' / 'warningshot.log',
       :log_level    => :info,
       :growl        => false,
-      :verbose      => false,
-      :colorize     => true,
+      :verbosity    => :none,
       :resolvers    => ['~' / '.warningshot' / '*.rb']
     }.freeze
   
@@ -99,7 +98,7 @@ module WarningShot
         @@cli_options = {}
         @@cli_options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
       
-        WarningShot::Config::PARSER.banner   = WarningShot.header
+        WarningShot::Config::PARSER.banner = WarningShot.header
         WarningShot::Config::PARSER.banner += "\n"
         WarningShot::Config::PARSER.banner += "Dependency Resolution Framework\n\n"
         WarningShot::Config::PARSER.banner += "Usage: warningshot [options]"
@@ -144,15 +143,11 @@ module WarningShot
         WarningShot::Config::PARSER.on("-g", "--growl", "Output results via growl (Requires growlnotify)") do |growl|
           @@cli_options[:growl] = growl
         end
-        WarningShot::Config::PARSER.on("-p", "--[no-]prettycolors", "Colorize output") do |colorize|
-          @@cli_options[:colorize] = colorize
+        WarningShot::Config::PARSER.on("-v", "--verbose", "Verbose console with statuses updated while running") do |verbose|
+          @@cli_options[:verbosity] = :verbose
         end
-        WarningShot::Config::PARSER.on("-v", "--verbose", "Output verbose information") do |verbose|
-          @@cli_options[:verbose] = verbose
-        end
-        WarningShot::Config::PARSER.on("--very-verbose", "Outputs debugging information, same as --loglevel=DEBUG") do |verbose|
-          @@cli_options[:verbose]   = true
-          @@cli_options[:log_level] = :debug
+        WarningShot::Config::PARSER.on("--very-verbose", "Outputs all logged information to standard out") do |verbose|
+          @@cli_options[:verbosity] = :very_verbose
         end
 
         

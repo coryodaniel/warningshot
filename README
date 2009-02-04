@@ -98,7 +98,6 @@ For a list of all flags do: warningshot --help
     c[:log_level]    = :debug
     c[:growl]        = false
     c[:verbose]      = true
-    c[:colorize]     = true
     c[:]
   end
   

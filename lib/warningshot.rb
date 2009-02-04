@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'yaml'
-require 'logger'
 require 'set'
 require 'rbconfig' unless defined?(::Config::CONFIG)
 require 'optparse'

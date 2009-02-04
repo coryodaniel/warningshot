@@ -17,9 +17,9 @@ class WarningShot::DirectoryResolver
   register :test do |dep|
     dir_found = File.directory? dep.target
     if dir_found
-      logger.debug " ~ [PASSED] directory: #{dep.target}"
+      logger.debug "[PASSED] Directory found: #{dep.target}"
     else
-      logger.warn " ~ [FAILED] directory: #{dep.target}"
+      logger.warn "[FAILED] Directory not found: #{dep.target}"
     end
     
     dir_found
@@ -28,8 +28,9 @@ class WarningShot::DirectoryResolver
   register :resolution do |dep|
     begin
       FileUtils.mkdir_p dep.target
+      logger.debug "[RESOLVED] Directory created: #{dep.target}"
     rescue Exception => ex
-      logger.error " ~ Could not create directory #{dep.target}"
+      logger.error "[UNRESOLVED] Directory not created: #{dep.target}"
     end
   end
 end

@@ -187,12 +187,12 @@ class WarningShot::PermissionResolver
       _valid &= resource.valid_mode?
 
       if _valid
-        logger.debug " ~ [PASSED] permission: #{resource.target}"
+        logger.debug "[PASSED] Permission correct on: #{resource.target}"
       else
-        logger.warn " ~ [FAILED] permission: #{resource.target}"
+        logger.warn "[FAILED] Permission incorrect on: #{resource.target}"
       end
     else
-      logger.debug " ~ [N/A] no permissions supplied: #{resource.target}"
+      logger.debug "[N/A] No permissions supplied for: #{resource.target}"
     end
 
     _valid
@@ -203,6 +203,12 @@ class WarningShot::PermissionResolver
     resource.change_group! unless resource.valid_group?
     resource.change_mode! unless resource.valid_mode?
 
-    resource.permissions_correct?
+    if _correct = resource.permissions_correct?
+      logger.debug "[RESOLVED] Corrected permission on: #{resource.target}"
+    else
+      logger.error "[UNRESOLVED] Could not correct permission on: #{resource.target}"
+    end
+    
+    _correct
   end
 end

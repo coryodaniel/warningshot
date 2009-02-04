@@ -38,9 +38,9 @@ class WarningShot::IntegrityResolver
     dep_ok = (dep.exists? ? Digest::SHA1.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
     
     if dep_ok
-      logger.debug " ~ [PASSED] checksum #{dep.target}"
+      logger.debug "[PASSED] Valid checksum #{dep.target}"
     else
-      logger.warn " ~ [FAILED] checksum #{dep.target}"
+      logger.warn "[FAILED] Invalid checksum #{dep.target}"
     end
     
     dep_ok
@@ -52,9 +52,9 @@ class WarningShot::IntegrityResolver
     dep_ok = (dep.exists? ? Digest::MD5.hexdigest(File.read(File.expand_path(dep.target.path))) == dep.digest : false)
 
     if dep_ok
-      logger.debug " ~ [PASSED] checksum #{dep.target}"
+      logger.debug "[PASSED] Valid checksum #{dep.target}"
     else
-      logger.warn " ~ [FAILED] checksum #{dep.target}"
+      logger.warn "[FAILED] Invalid checksum #{dep.target}"
     end
     
     dep_ok

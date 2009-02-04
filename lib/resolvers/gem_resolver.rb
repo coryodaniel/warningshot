@@ -75,15 +75,20 @@ class WarningShot::GemResolver
     
   register :test do |dep|    
     if gem_found = dep.installed?
-      logger.debug " ~ [PASSED] gem: #{dep.name}:#{dep.version}"
+      logger.debug "[PASSED] Gem found: #{dep.name}:#{dep.version}"
     else
-      logger.warn " ~ [FAILED] gem: #{dep.name}:#{dep.version}"
+      logger.warn "[FAILED] Gem not found: #{dep.name}:#{dep.version}"
     end
     gem_found
   end
   
   register :resolution do |dep|
-    dep.install!
+    if _installed = dep.install!
+      logger.debug "[RESOLVED] Gem installed: #{dep.name}:#{dep.version}"
+    else
+      logger.error "[UNRESOLVED] Gem not installed: #{dep.name}:#{dep.version}"
+    end
+    _installed
   end
   
   class << self

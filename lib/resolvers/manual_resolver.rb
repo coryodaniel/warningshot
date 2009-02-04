@@ -10,7 +10,7 @@ class WarningShot::ManualResolver
     self.enable!
     
     config = WarningShot::Config.parse_args
-    config[:verbose] = true
+    config[:verbosity] = :verbose
     
     dr = WarningShot::DependencyResolver.new(config)    
     dr.dependency_tree[:manual].each { |note| puts "~ #{note}" }

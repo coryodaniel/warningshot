@@ -5,7 +5,7 @@ require File.dirname(__FILE__) / 'logger'
 
 module WarningShot
   class DependencyResolver
-    
+    LINE_LENGTH = 71
     attr_reader :environment, :dependency_tree, :resolvers
     def initialize(config={})
       @config           = config
@@ -13,7 +13,13 @@ module WarningShot
       @dependency_tree  = {}
       @resolvers        = []
         
-      self.init_logger
+      # set up logger
+      @logger           = WarningShot::Logger.new(self[:log_path],10,1024000)
+      @logger.formatter = WarningShot::LoggerFormatter.new
+      @logger.level     = (self[:log_level] || :info).to_s.upcase
+      @logger.verbosity = self[:verbosity]
+
+      # Move to app dir, load add'l resolvers
       WarningShot.load_app(self[:application])
       WarningShot.load_addl_resolvers(self[:resolvers])
 
@@ -22,6 +28,7 @@ module WarningShot
       @dependency_tree.symbolize_keys!
     end
 
+    # config accessor; shortcut for @config
     def [](k)
       @config[k]
     end
@@ -46,23 +53,7 @@ module WarningShot
       _stats
     end
 
-    # initializes the logger
-    #
-    # @api private
-    def init_logger
-      FileUtils.mkdir_p(File.dirname(File.expand_path(self[:log_path]))) unless self[:verbose]
-
-      @logger = Logger.new(
-        self[:verbose] ? STDOUT : self[:log_path], 10, 1024000
-      )
-      _log_level = (self[:log_level] || :info).to_s.upcase
-
-      _formatter = WarningShot::LoggerFormatter.new
-      _formatter.colorize = self[:colorize]
-
-      @logger.formatter = _formatter
-      @logger.level     = Object.class_eval("Logger::#{_log_level}")
-    end
+    
 
     # runs all loaded resolvers
     #
@@ -71,59 +62,98 @@ module WarningShot
       @logger.info "WarningShot v. #{WarningShot::VERSION}"
       @logger.info "Environment: #{self.environment}; Application: #{WarningShot.application_type}"
       @logger.info "On host: #{WarningShot.hostname}"
+      @logger.display_stdout_queue
 
+      @logger.display "\n#{'-'*LINE_LENGTH}"
+      @logger.display line_item('RESOLVER','BRANCH','MODE',"%% COMPLETE",'RESULTS')
+      @logger.display "#{'-'*LINE_LENGTH}"
+      
       WarningShot::Resolver.descendants.each do |klass|
-        next if klass.disabled?
-
+        next if klass.disabled?        
         klass.logger = @logger
-        klass.logger.info "\n#{'-'*60}"
 
         #Process each branch for the Resolver Class (klass)
         klass.branch.each do |branch_name|
           branch = @dependency_tree[branch_name.to_sym]
 
           if branch.nil?
-            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No recipes were registered"
+            klass.logger.warn "Skipping #{klass.demodulized_name}, #{branch_name}; No recipes were registered"
             next
           elsif branch.empty?
-            klass.logger.info "[SKIPPING] #{klass}, #{branch_name}; No dependencies in recipe"
+            klass.logger.warn "Skipping #{klass.demodulized_name}, #{branch_name}; No dependencies in recipe"
             next
           end
 
-          resolver = klass.new(@config,branch_name.to_sym,*branch)
-          @resolvers << resolver
+          @resolvers << klass.new(@config,branch_name.to_sym,*branch)
+          run_tests(@resolvers.last)
+          run_resolutions(@resolvers.last)
 
-
-          klass.logger.info "#{klass.name}; branch: #{resolver.current_branch} [TESTING]"
-          # Start test
-          klass.before_filters(:test).each{|p| p.call}
-          resolver.test!
-          klass.after_filters(:test).each{|p| p.call}
-
-          klass.logger.info "Passed: #{resolver.passed.size} / Failed: #{resolver.failed.size}"
-
-          if self[:resolve] && !klass.resolutions.empty?
-            klass.logger.info "#{resolver.class}; branch: #{resolver.current_branch} [RESOLVING]"
-
-            klass.before_filters(:resolution).each{|p| p.call}
-            resolver.resolve!
-            klass.after_filters(:resolution).each{|p| p.call}
-
-            klass.logger.info "Resolved: #{resolver.resolved.size} / Unresolved: #{resolver.unresolved.size}"
-          end
+          generate_results(@resolvers.last)
         end #Branch Loop
-      end #Resolver Class Loop
 
-      @logger.info "\nResults:"
-      stats.each {|k,v| @logger.info(" ~ #{k}: \t#{v}")}
+      end #Resolver Class Loop
+      
+      @logger.display "#{'-'*LINE_LENGTH}"
+      @logger.info "Results:"
+      stats.each {|k,v| @logger.info("\t#{k}: \t#{v}")}
+      
+      @logger.display_stdout_queue
     end
 
     protected
+    
+    #run all tests for a resolver
+    def run_tests(resolver)
+      @logger.update line_item(resolver.class.demodulized_name, resolver.current_branch,'TESTING','0','-')
+      
+      resolver.class.before_filters(:test).each{|p| p.call}
+      resolver.test!{|pct|          
+        @logger.update line_item(resolver.class.demodulized_name, resolver.current_branch,'TESTING',pct.to_s,'-')
+      }
+      resolver.class.after_filters(:test).each{|p| p.call}
+    end
+    
+    #Run all resolutions for a resolver
+    def run_resolutions(resolver)
+      @logger.update line_item(resolver.class.demodulized_name, resolver.current_branch,'RESOLVING','0','-')
+
+       resolver.class.before_filters(:resolution).each{|p| p.call}
+       resolver.resolve!{|pct|          
+         @logger.update line_item(resolver.class.demodulized_name, resolver.current_branch,'RESOLVING',pct.to_s,'-')
+       }
+       resolver.class.after_filters(:resolution).each{|p| p.call}
+    end
+    
+    #Determines output that should be displayed on screen
+    #
+    def generate_results(resolver)
+      if !self[:resolve] || resolver.class.resolutions.empty?
+        _num_failed = resolver.failed.size
+        
+        @logger.display line_item(resolver.class.demodulized_name, resolver.current_branch,'TESTING','100',"Failed: #{_num_failed}",(_num_failed > 0 ? :red : :green))
+      else #resolve and update interface
+        _num_unresolved = resolver.unresolved.size
+        
+        @logger.display line_item(resolver.class.demodulized_name, resolver.current_branch,'RESOLVING','100',"Unresolved: #{_num_unresolved}",(_num_unresolved > 0 ? :red : :green))
+      end
+    end
+    
+    # formats output for a console line
+    #
+    def line_item(c_resolver, c_branch, c_mode, c_complete, c_results,color=:reset)
+      '|' + c_resolver.center(20).send(color)     + 
+      '|' + c_branch.to_s.center(10).send(color)  + 
+      '|' + c_mode.center(10).send(color)         + 
+      '|' + c_complete.center(10).send(color)     + 
+      '|' + c_results.center(15).send(color)      + '|'
+    end
+    
     # Loads configuration files
     #
     # @api protected
     def load_configs
       self[:config_paths].each do |config_path|
+        @logger.debug "Parsing config: #{config_path}"
         #Parse the global/running env configs out of the YAML files.
         Dir[config_path / WarningShot::RecipeExt].each do |config_file|
           # Use WarningShot::RecipeExt & regexp on extension to make supporting add'l
@@ -161,6 +191,7 @@ module WarningShot
       branches = [branches] unless branches.is_a? Array
 
       branches.each do |branch|
+        @logger.debug "Parsing branch (#{branch[:branch]}) into dependency tree"
         branch_name = branch[:branch]
         dependency_tree[branch_name] ||= []
 

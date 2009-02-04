@@ -3,7 +3,7 @@ describe WarningShot::Config do
   it 'should be able to parse an ARGV string' do
     args = ['--very-verbose','--resolve','--environment=rspec_test','-g','-aRspecTest']
     config = WarningShot::Config.parse_args(args)
-    config[:verbose].should be(true)
+    config[:verbosity].should == :very_verbose
     config[:resolve].should be(true)
     config[:environment].should == 'rspec_test'
     config[:growl].should be(true)
@@ -28,7 +28,6 @@ describe WarningShot::Config do
     config = WarningShot::Config.create _config
     config[:growl].should be(true)
     config[:environment].should == :rspec_test
-    config[:colorize].should be(true)
   end
   
   it 'should allow configurations to be changed with a block' do
@@ -39,7 +38,6 @@ describe WarningShot::Config do
     
     config[:growl].should be(true)
     config[:resolve].should be(true)
-    config[:colorize].should be(true)
   end
   
 
@@ -52,6 +50,5 @@ describe WarningShot::Config do
     conf[:environment].should == "blk"
     conf[:something].should be(true)
     conf[:else].should be(true)
-    conf[:colorize].should be(true)
    end
 end

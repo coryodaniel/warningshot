@@ -35,9 +35,9 @@ class WarningShot::SymlinkResolver
   # If the target wasn't specified, it doesn't exist
   register :test do |dep| 
     if symlink_correct = dep.valid?
-      logger.debug " ~ [PASSED] symlink #{dep.target}"
+      logger.debug "[PASSED] Symlink found: #{dep.target}"
     else
-      logger.warn " ~ [FAILED] symlink #{dep.target}"
+      logger.warn "[FAILED] Symlink not found: #{dep.target}"
     end
     symlink_correct
   end
@@ -45,8 +45,9 @@ class WarningShot::SymlinkResolver
   register :resolution do |dep|
     begin
       dep.link! if dep.target
+      logger.debug "[RESOLVED] Symlink created: #{dep.target}"
     rescue Errno::EEXIST, Errno::ENOTDIR => ex
-      logger.error " ~ Could not create symlink #{dep.source} => #{dep.target}"
+      logger.error "[UNRESOLVED] Symlink not created: #{dep.source} => #{dep.target}"
     end
     dep.valid?
   end
