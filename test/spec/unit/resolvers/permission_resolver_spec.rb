@@ -291,26 +291,35 @@ describe WarningShot::PermissionResolver do
     end
 
     it 'should be able to correct permissions on links and not targets (no follow)' do
-      # Ive seen different systems set different default modes for symlinks...
-      if ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)) == "777"
-        new_mode = "775"
-      else
-        new_mode = "777"
+      begin
+        initial_mode = ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777))
+        #Try to lchmod the link to its CURRENT settings to see if it raises a NotImplementedError
+        File.lchmod(Integer("0" + initial_mode),@perm_test_link_tgt)
+
+        # Ive seen different systems set different default modes for symlinks...
+        if initial_mode == "777"
+          new_mode = "775"
+        else
+          new_mode = "777"
+        end
+        perm_file = {
+          :target => @perm_test_link_tgt,
+          :mode => new_mode,
+          :no_follow => 'chmod'
+        }
+        pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
+
+        pr.test!
+        pr.failed.length.should be(1)
+        pr.resolve!
+        pr.resolved.length.should be(1)
+
+        File.stat(@perm_test_file).mode.should == @orig_mode
+        ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)).to_i.should be(new_mode.to_i)
+      rescue NotImplementedError => ex
+        puts "lchown/lchmod is not supported on this system"
+        pending
       end
-      perm_file = {
-        :target => @perm_test_link_tgt,
-        :mode => new_mode,
-        :no_follow => 'chmod'
-      }
-      pr = WarningShot::PermissionResolver.new(WarningShot::Config.create, :file, perm_file)
-
-      pr.test!
-      pr.failed.length.should be(1)
-      pr.resolve!
-      pr.resolved.length.should be(1)
-
-      File.stat(@perm_test_file).mode.should == @orig_mode
-      ("%o" % (File.lstat(@perm_test_link_tgt).mode & 007777)).to_i.should be(new_mode.to_i)
     end
   end
 end
