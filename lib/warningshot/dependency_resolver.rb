@@ -86,7 +86,7 @@ module WarningShot
 
           @resolvers << klass.new(@config,branch_name.to_sym,*branch)
           run_tests(@resolvers.last)
-          run_resolutions(@resolvers.last)
+          run_resolutions(@resolvers.last) if self[:resolve] && !@resolvers.last.resolutions.empty?
 
           generate_results(@resolvers.last)
         end #Branch Loop
