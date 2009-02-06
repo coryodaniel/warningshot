@@ -1,3 +1,9 @@
+require 'rubygems'
+# Auto-generated ruby debug require       
+require "ruby-debug"
+Debugger.start
+Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+
 class WarningShot::PermissionResolver
   include WarningShot::Resolver
   add_dependency :core, 'etc'
@@ -21,7 +27,7 @@ class WarningShot::PermissionResolver
     end
 
     def exists?
-      File.exist? self.target
+      @exists ||= File.exist?(self.target)
     end
 
     # @param type [Symbol]
@@ -29,6 +35,8 @@ class WarningShot::PermissionResolver
     #
     def user(type=:name)
       file_uid = self.stat(:uid)
+      debugger
+      puts 'x'
       (type == :name) ? Etc.getpwuid(file_uid).name : file_uid
     end
 
@@ -181,34 +189,48 @@ class WarningShot::PermissionResolver
   register :test do |resource|
     _valid = resource.exists?
 
-    if _valid && resource.permissions_supplied?
-      _valid &= resource.valid_user?
-      _valid &= resource.valid_group?
-      _valid &= resource.valid_mode?
+    if _valid 
+      if resource.permissions_supplied?
+        _valid &= resource.valid_user?
+        _valid &= resource.valid_group?
+        _valid &= resource.valid_mode?
 
-      if _valid
-        logger.debug "[PASSED] Permission correct on: #{resource.target}"
+        if _valid
+          logger.debug "[PASSED] Permission correct on: #{resource.target}"
+        else
+          logger.warn "[FAILED] Permission incorrect on: #{resource.target}"
+        end
       else
-        logger.warn "[FAILED] Permission incorrect on: #{resource.target}"
+        logger.debug "[N/A] No permissions supplied for: #{resource.target}"
       end
     else
-      logger.debug "[N/A] No permissions supplied for: #{resource.target}"
+      logger.warn "[FAILED] Resource does not exist: #{resource.target}"
     end
 
     _valid
   end
 
   register :resolution do |resource|
-    resource.change_user! unless resource.valid_user?
-    resource.change_group! unless resource.valid_group?
-    resource.change_mode! unless resource.valid_mode?
+    _valid = resource.exists?
 
-    if _correct = resource.permissions_correct?
-      logger.debug "[RESOLVED] Corrected permission on: #{resource.target}"
+    if _valid 
+      if _valid = resource.permissions_supplied?
+        resource.change_user! unless resource.valid_user?
+        resource.change_group! unless resource.valid_group?
+        resource.change_mode! unless resource.valid_mode?
+
+        if _valid = resource.permissions_correct?
+          logger.debug "[RESOLVED] Corrected permission on: #{resource.target}"
+        else
+          logger.error "[UNRESOLVED] Could not correct permission on: #{resource.target}"
+        end
+      else
+        logger.error "[UNRESOLVED] No permissions supplied for: #{resource.target}"
+      end
     else
-      logger.error "[UNRESOLVED] Could not correct permission on: #{resource.target}"
+      logger.error "[UNRESOLVED] Resource does not exist: #{resource.target}"
     end
-    
-    _correct
+        
+    _valid    
   end
 end
