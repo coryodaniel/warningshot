@@ -1,7 +1,7 @@
 describe WarningShot::DependencyResolver do
   before :all do
     @config = WarningShot::Config.create({
-      :config_paths => [$test_data],
+      :config_paths => [$test_data / "*.{yml,yaml}"],
       :environment => 'rspec',
       :log_path => $log_file
     })
@@ -9,8 +9,8 @@ describe WarningShot::DependencyResolver do
   end
   
   it 'should accept a glob to find config files' do
-    # Consider taking a glob instead of a set of paths
-    pending
+    dr = WarningShot::DependencyResolver.new(@config)
+    dr.dependency_tree.length.should_not be(0)
   end
   
   it 'should create a dependency tree from a set of config files' do    

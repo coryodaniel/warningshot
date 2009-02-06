@@ -29,7 +29,7 @@ module WarningShot
       :oload        => [],
       :environment  => 'development',
       :resolve      => false,
-      :config_paths => ['.'  / 'config' / 'warningshot', '~' / '.warningshot'],
+      :config_paths => ['.'  / 'config' / 'warningshot' / "*.{yml,yaml}", '~' / '.warningshot' / "*.{yml,yaml}"],
       :application  => '.',
       :log_path     => '.' / 'log' / 'warningshot.log',
       :log_level    => :info,
@@ -94,7 +94,9 @@ module WarningShot
         WarningShot::Config::DEFAULTS.clone.merge(opt_config)
       end
       
-      def parse_args(argv = ARGV)
+      def parse_args(argv=nil)
+        argv ||= ARGV.clone
+        
         @@cli_options = {}
         @@cli_options[:environment] = ENV["WARNING_SHOT_ENV"] if ENV["WARNING_SHOT_ENV"]
       
@@ -111,10 +113,10 @@ module WarningShot
         WarningShot::Config::PARSER.on("--resolve","Resolve missing dependencies (probably need sudo)") do |resolve|
           @@cli_options[:resolve] = resolve
         end
-        WarningShot::Config::PARSER.on("-a=PATH","--app=PATH", String, "Path to application", "Default: #{DEFAULTS[:application]}") do |app|
+        WarningShot::Config::PARSER.on("-a=PATH","--app=PATH", String, "Path to application (Base for all relative paths)", "Default: #{DEFAULTS[:application]}") do |app|
           @@cli_options[:application] = app
         end
-        WarningShot::Config::PARSER.on("-c=PATH","--configs=PATH", String,"Path to config directories (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
+        WarningShot::Config::PARSER.on("-c=PATH","--configs=PATH", String,"Globs to config files (':' seperated)","Default: #{DEFAULTS[:config_paths].join(':')}") do |config|
           @@cli_options[:config_paths] = config.split(':')
         end
         

@@ -155,9 +155,7 @@ module WarningShot
       self[:config_paths].each do |config_path|
         @logger.debug "Parsing config: #{config_path}"
         #Parse the global/running env configs out of the YAML files.
-        Dir[config_path / WarningShot::RecipeExt].each do |config_file|
-          # Use WarningShot::RecipeExt & regexp on extension to make supporting add'l
-          # file types easier in the future
+        Dir[config_path].each do |config_file|
           case File.extname(config_file)
           when /.y(a)?ml/
             parse_yml config_file
@@ -179,12 +177,11 @@ module WarningShot
     #
     # @api protected
     def parse_yml(file)
-      #if only on branch is specified in a yaml file it may not come back as an array
+      #if only one branch is specified in a yaml file it may not come back as an array
       branches  = YAML::load(File.open(file,'r'))
 
-      if branches === false
-        @logger.error "Skipping malformed Yaml file: #{file}"
-        return
+      unless branches.is_a?(Array) || branches.is_a?(Hash)
+        raise Exception, "Malformed config file: #{file}"
       end
 
       #Support for multiple dep branches in one file
@@ -206,6 +203,8 @@ module WarningShot
         #remove nil's if they made it into branch somehow (bad yaml probably)
         @dependency_tree[branch_name].delete(nil)
       end
+    rescue Exception => ex
+      @logger.error ex.message
     end
 
   end

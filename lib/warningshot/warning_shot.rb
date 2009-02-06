@@ -13,8 +13,6 @@ module WarningShot
     :images     => 'images',
     :resolvers  => 'lib' / 'resolvers'
   }
-
-  RecipeExt = "*.{yml,yaml}".freeze
   
   class << self
     def register_application_type(type,&block)
