@@ -32,7 +32,7 @@ WarningShot Dependency Resolution Framework
     Configurations can be created with WarningShot::Config
     
   * Dependency
-    A dependency is an entry in a machine recipe.  A dependency should consist of some means of identifying the
+    A dependency is an entry in a recipe.  A dependency should consist of some means of identifying the
     dependency and optionally (but suggested) have some way of describing how it should be resolved.
       Ex: File Dependencies specify where the file should be located, and where WarningShot can download it if it
           does not exist
@@ -48,12 +48,14 @@ WarningShot Dependency Resolution Framework
     repair or resolve the dependency.  The gem resolver can install missing gems and the file resolver can download
     missing files
   
-  * Machine Recipes / Application Recipes
-    A machine recipe is one or more dependency branches, the default file type is YAML, but that is configurable
-    within warningshot.  A machine recipe can specify the complete configuration of a computer/application or just one
-    aspect of it.  Example:  warningshot --templates will create a separate machine recipe for each branch supported.
+  * Recipes / Application Recipes
+    A recipe is one or more dependency branches, the default file type is YAML, but that is configurable
+    within warningshot.  A recipe can consist of one or more dependency branches.
+
+		Example:  warningshot --templates will create a separate recipe for each branch supported.
     In the wiki (http://github.com/coryodaniel/warningshot/wikis/example-merbnginx-app-recipe-once-aptquality-dependencies-are-supported)
-    is an example of a machine recipe that specifies dependencies of files, gems, apt binaries, etc.
+    is an example of a recipe that specifies dependencies of files, gems, apt binaries, etc.  Essentially all the dependencies needed for
+		the web server role.
     
   * DependencyTree
     After WarningShot locates all of the Machine Recipes they are parsed into the dependency tree.  The dependency

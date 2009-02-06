@@ -25,6 +25,8 @@ module WarningShot
 
       # Parsed yml files
       self.load_configs
+      @logger.debug "Dependencies were found for: #{@dependency_tree.keys.join(', ')}"
+      
       @dependency_tree.symbolize_keys!
     end
 
@@ -94,7 +96,7 @@ module WarningShot
       end #Resolver Class Loop
       
       @logger.display "#{'-'*LINE_LENGTH}"
-      @logger.info "Results:"
+      @logger.info "Results: (See log for details: #{self[:log_path]})"
       stats.each {|k,v| @logger.info("\t#{k}: \t#{v}")}
       
       @logger.display_stdout_queue

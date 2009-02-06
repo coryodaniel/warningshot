@@ -1,12 +1,14 @@
 require File.dirname(__FILE__) / 'warning_shot' 
 require 'logger'
 
-
 # This is a ghetto simple interface ontop of ruby stnd logger
 # The goal is to provide an updateable console interface and log things
 # to screen & a log file.
 #
-# 
+# You  may or may not agree that one class should be used to manage the interface
+# and the log, feel free to change that ;) 
+#
+#
 module WarningShot
   class Logger
     def initialize(dev,shift_age=0,shift_size=1048576)
@@ -72,8 +74,8 @@ module WarningShot
     
     def display_stdout_queue
       if is_verbose?
-        output = @stdout_queue.join("\n") + "\n"
-        printf(output) 
+        output = @stdout_queue.join("\n")
+        puts(output) 
         @stdout_queue = []
       end
     end
