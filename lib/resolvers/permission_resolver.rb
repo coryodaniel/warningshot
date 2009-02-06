@@ -161,10 +161,19 @@ class WarningShot::PermissionResolver
       return false
     end
 
+    
+    def wrong_permissions
+      @wrong_permissions = []
+      @wrong_permissions << :user unless valid_user?
+      @wrong_permissions << :group unless valid_group?
+      @wrong_permissions << :mode unless valid_mode?
+      @wrong_permissions
+    end
+
     # is the target's current mode correct
     def valid_mode?
       unless self.target_mode.nil?
-        !!(self.mode == self.target_mode)
+        !!(self.mode == ("%o" % self.target_mode))
       else
         return true
       end
@@ -213,14 +222,15 @@ class WarningShot::PermissionResolver
 
     if _valid 
       if _valid = resource.permissions_supplied?
+        
         resource.change_user! unless resource.valid_user?
         resource.change_group! unless resource.valid_group?
         resource.change_mode! unless resource.valid_mode?
-
+        
         if _valid = resource.permissions_correct?
           logger.debug "[RESOLVED] Corrected permission on: #{resource.target}"
         else
-          logger.error "[UNRESOLVED] Could not correct permission on: #{resource.target}"
+          logger.error "[UNRESOLVED] Could not correct permission (#{resource.wrong_permissions.join(',')}) on: #{resource.target}"
         end
       else
         logger.error "[UNRESOLVED] No permissions supplied for: #{resource.target}"
