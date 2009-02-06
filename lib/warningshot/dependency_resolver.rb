@@ -101,8 +101,8 @@ module WarningShot
       @logger.info "\tFailed: #{stats[:failed]}"
       
       if self[:resolve]
-        @logger.info "\tNum of failed items " + "resolved".green +":" + " #{stats[:resolved]}".green
-        @logger.info "\tNum of failed items " + "unresolved".red +":" + " #{stats[:unresolved]}".green
+        @logger.info("\tNum of failed items " + "resolved".green + ":" + " #{stats[:resolved]}".green)
+        @logger.info("\tNum of failed items " + "unresolved".red + ":" + " #{stats[:unresolved]}".red)
       end
       
       @logger.display_stdout_queue
