@@ -46,7 +46,7 @@ class WarningShot::SymlinkResolver
     begin
       dep.link! if dep.target
       logger.debug "[RESOLVED] Symlink created: #{dep.target}"
-    rescue Errno::EEXIST, Errno::ENOTDIR => ex
+    rescue Errno::EIO, Errno::EEXIST, Errno::ENOTDIR => ex
       logger.error "[UNRESOLVED] Symlink not created: #{dep.source} => #{dep.target}"
     end
     dep.valid?
