@@ -97,7 +97,13 @@ module WarningShot
       
       @logger.display "#{'-'*LINE_LENGTH}"
       @logger.info "Results: (See log for details: #{self[:log_path]})"
-      stats.each {|k,v| @logger.info("\t#{k}: \t#{v}")}
+      @logger.info "\tPassed: #{stats[:passed]}"
+      @logger.info "\tFailed: #{stats[:failed]}"
+      
+      if self[:resolve]
+        @logger.info "\tNum of failed items " + "resolved".green +":" + " #{stats[:resolved]}".green
+        @logger.info "\tNum of failed items " + "unresolved".red +":" + " #{stats[:unresolved]}".green
+      end
       
       @logger.display_stdout_queue
     end
