@@ -97,12 +97,12 @@ module WarningShot
       
       @logger.display "#{'-'*LINE_LENGTH}"
       @logger.info "Results: (See log for details: #{self[:log_path]})"
-      @logger.info "\tPassed: #{stats[:passed]}"
-      @logger.info "\tFailed: #{stats[:failed]}"
+      pct_passed = ((stats[:passed] / (stats[:passed] + stats[:failed]).to_f) * 100).ceil
+      @logger.info "> #{pct_passed}% of dependencies met"
       
       if self[:resolve]
-        @logger.info("\tNum of failed items " + "resolved".green + ":" + " #{stats[:resolved]}".green)
-        @logger.info("\tNum of failed items " + "unresolved".red + ":" + " #{stats[:unresolved]}".red)
+        @logger.info("> " + stats[:resolved].to_s.green + " dependencies resolved.") if stats[:resolved] > 0
+        @logger.info("> " + stats[:unresolved].to_s.red + " dependencies " + "not".red + " resolved") if stats[:unresolved] > 0
       end
       
       @logger.display_stdout_queue
