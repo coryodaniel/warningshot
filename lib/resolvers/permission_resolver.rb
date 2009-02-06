@@ -35,8 +35,6 @@ class WarningShot::PermissionResolver
     #
     def user(type=:name)
       file_uid = self.stat(:uid)
-      debugger
-      puts 'x'
       (type == :name) ? Etc.getpwuid(file_uid).name : file_uid
     end
 
