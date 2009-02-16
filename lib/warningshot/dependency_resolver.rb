@@ -8,6 +8,7 @@ module WarningShot
     LINE_LENGTH = 71
     attr_reader :environment, :dependency_tree, :resolvers
     def initialize(config={})
+      @config_files     = [] #list of found config files to parse found by globbing config paths
       @config           = config
       @environment      = @config[:environment].to_sym
       @dependency_tree  = {}
@@ -161,15 +162,19 @@ module WarningShot
     #
     # @api protected
     def load_configs
+      #Glob each config path
       self[:config_paths].each do |config_path|
-        @logger.debug "Parsing config: #{config_path}"
+        @config_files += Dir[config_path]
+      end
+      
+      raise Exception, "No config files found in: #{self[:config_paths].join(', ')}" if @config_files.length == 0
+      
+      @config_files.each do |config_file|
         #Parse the global/running env configs out of the YAML files.
-        raise Exception, "Configuration file not found: #{config_path}" unless File.exist?(config_path)
-        Dir[config_path].each do |config_file|
-          case File.extname(config_file)
-          when /.y(a)?ml/
-            parse_yml config_file
-          end
+        @logger.debug "Parsing config: #{config_file}"
+        case File.extname(config_file)
+        when /.y(a)?ml/
+          parse_yml config_file
         end
       end
     end
