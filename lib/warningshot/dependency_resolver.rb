@@ -97,6 +97,7 @@ module WarningShot
       
       @logger.display "#{'-'*LINE_LENGTH}"
       @logger.info "Results: (See log for details: #{self[:log_path]})"
+      
       pct_passed = ((stats[:passed] / (stats[:passed] + stats[:failed]).to_f) * 100).ceil
       @logger.info "> #{pct_passed}% of dependencies met"
       
@@ -163,6 +164,7 @@ module WarningShot
       self[:config_paths].each do |config_path|
         @logger.debug "Parsing config: #{config_path}"
         #Parse the global/running env configs out of the YAML files.
+        raise Exception, "Configuration file not found: #{config_path}" unless File.exist?(config_path)
         Dir[config_path].each do |config_file|
           case File.extname(config_file)
           when /.y(a)?ml/
@@ -213,6 +215,7 @@ module WarningShot
       end
     rescue Exception => ex
       @logger.error ex.message
+      @logger.display ex.message
     end
 
   end
