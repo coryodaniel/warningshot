@@ -20,8 +20,8 @@ stats = dep_resolver.stats
 WarningShot::Growl.say stats.to_a.join('/') if config[:growl]
 
 #Return an exit status based on number of unresolved dependencies
-if config[:resolve]
-  exit(stats[:unresolved])
-else
-  exit(stats[:failed])
-end
+#if config[:resolve]
+#  exit(stats[:unresolved])
+#else
+#  exit(stats[:failed])
+#end
